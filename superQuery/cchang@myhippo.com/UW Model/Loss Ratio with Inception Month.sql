@@ -39,6 +39,9 @@ select cd.*
 ,org_id
 ,renewal_number
 ,uw_action
+,date_trunc(date_of_loss, MONTH) as accident_month
+,date_trunc(date_first_notice_of_loss, MONTH) as report_month
+,date_trunc(date_effective, MONTH) as inception_month
 , case when peril = 'equipment_breakdown' or peril = 'service_line' then 'Y'
       else 'N' end as EBSL
 , case when peril = 'wind' or peril = 'hail' then 'Y'
@@ -57,8 +60,8 @@ policy_id
 ,state
 ,carrier
 ,product
-,date_trunc(date_of_loss, MONTH) as accident_month
-,date_trunc(date_effective, MONTH) as inception_month
+,accident_month
+,inception_month
 ,reinsurance_treaty
 ,org_id as organization_id
 ,uw_action
@@ -73,6 +76,7 @@ policy_id
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
+-- and DATE_DIFF(report_month, inception_month, MONTH) <= 1
 group by 1,2,3,4,5,6,7,8,9,10
 )
 select p.*
@@ -98,4 +102,8 @@ and p.accounting_treaty = c.reinsurance_treaty
 and p.organization_id = c.organization_id
 and p.uw_action = c.uw_action
 and p.tenure = c.tenure
-where DATE_DIFF(p.accident_month, p.inception_month, MONTH) <= 2
+where 1=1
+-- and DATE_DIFF(p.accident_month, p.inception_month, MONTH) <= 1
+and p.tenure = 'New'
+and p.product <> 'HO5'
+and policy_id = 634122
