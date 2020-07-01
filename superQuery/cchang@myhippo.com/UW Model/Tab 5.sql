@@ -42,8 +42,8 @@ sum(total_incurred) as total_incurred
 ,sum(case when CAT = 'N' then total_incurred else 0 end) as non_cat_incurred
 ,sum(case when CAT = 'Y' then total_incurred else 0 end) as cat_incurred
 ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as total_claim_count_x_cnp
-,sum(case when claim_closed_no_total_payment is true and CAT = 'N' then 0 else 1 end) as non_cat_claim_count_x_cnp
-,sum(case when claim_closed_no_total_payment is true and CAT = 'Y' then 0 else 1 end) as cat_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'N' then 1 else 0 end) as non_cat_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'Y' then 1 else 0 end) as cat_claim_count_x_cnp
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then 100000 else total_incurred end) as capped_non_cat_incurred
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
