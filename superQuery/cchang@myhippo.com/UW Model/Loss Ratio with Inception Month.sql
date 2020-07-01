@@ -23,12 +23,12 @@ mon.policy_id
 ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
 ,sum(written_exposure) as written_exposure
 ,sum(earned_exposure) as earned_exposure
-from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
+from dw_prod_extracts.ext_policy_monthly_premiums mon
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id,date_trunc(date_effective, MONTH) as inception_month from dw_prod.dim_policies) dp 
     on mon.policy_id = dp.policy_id
 left join snapshot eps 
     on mon.policy_id = eps.policy_id
-where date_knowledge = '2020-07-01'
+where date_knowledge = '2020-06-30'
 and date_report_period_start >= '2019-09-01'
 and carrier <> 'Canopius'
 -- and product <> 'HO5'
@@ -51,7 +51,7 @@ from dw_prod_extracts.ext_claims_inception_to_date cd
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on cd.policy_id = dp.policy_id
 left join snapshot eps 
     on cd.policy_id = eps.policy_id
-  WHERE date_knowledge = '2020-06-29'
+  WHERE date_knowledge = '2020-06-30'
   and carrier <> 'Canopius'
 )
 , claims as (
@@ -69,14 +69,14 @@ policy_id
 ,sum(total_incurred) as total_incurred
 ,sum(case when CAT = 'N' then total_incurred else 0 end) as non_cat_incurred
 ,sum(case when CAT = 'Y' then total_incurred else 0 end) as cat_incurred
-,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as total_claim_count_x_cnp
-,sum(case when claim_closed_no_total_payment is true and CAT = 'N' then 0 else 1 end) as non_cat_claim_count_x_cnp
-,sum(case when claim_closed_no_total_payment is true and CAT = 'Y' then 0 else 1 end) as cat_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false then 1 else 0 end) as total_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'N' then 1 else 0 end) as non_cat_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'Y' then 1 else 0 end) as cat_claim_count_x_cnp
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then 100000 else total_incurred end) as capped_non_cat_incurred
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
--- and DATE_DIFF(report_month, inception_month, MONTH) <= 1
+and DATE_DIFF(report_month, inception_month, MONTH) <= 1
 group by 1,2,3,4,5,6,7,8,9,10
 )
 select p.*
@@ -103,7 +103,7 @@ and p.organization_id = c.organization_id
 and p.uw_action = c.uw_action
 and p.tenure = c.tenure
 where 1=1
--- and DATE_DIFF(p.accident_month, p.inception_month, MONTH) <= 1
+and DATE_DIFF(p.accident_month, p.inception_month, MONTH) <= 1
 and p.tenure = 'New'
 and p.product <> 'HO5'
-and policy_id = 634122
+-- and policy_id = 634122
