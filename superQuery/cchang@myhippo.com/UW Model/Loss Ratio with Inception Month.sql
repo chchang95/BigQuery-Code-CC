@@ -84,7 +84,7 @@ select p.*
 ,coalesce(cat_claim_count_x_cnp,0) as cat_claim_count
 ,coalesce(capped_non_cat_incurred,0) as capped_non_cat_incurred
 ,coalesce(excess_non_cat_incurred,0) as excess_non_cat_incurred
-,DATE_DIFF(p.inception_month, p.accident_month, MONTH)
+,DATE_DIFF(p.accident_month, p.inception_month, MONTH)
 from premium p 
 left join claims c
 on 1=1
