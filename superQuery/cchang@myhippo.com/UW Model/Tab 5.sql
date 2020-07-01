@@ -82,10 +82,10 @@ converted_policies as
         DATE_TRUNC(a.date_effective, MONTH) AS Effective_Month, 
         DATE_TRUNC(a.date_effective, WEEK) AS Effective_Week, 
         a.date_effective AS Effective_Date, 
-        b.state,
-        b.city,
-        b.zip_code,
-        product,
+        a.state,
+        a.city,
+        a.zip_code,
+        a.product,
 --         year_built,
         case when year_built is null then 'Missing'
               when cast(year_built as numeric) >= 2000 then 'Post 2000' 
