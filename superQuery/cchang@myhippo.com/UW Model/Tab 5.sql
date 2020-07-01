@@ -13,8 +13,6 @@ select cd.*
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date cd
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on cd.policy_id = dp.policy_id
-left join snapshot eps 
-    on cd.policy_id = eps.policy_id
   WHERE date_knowledge = '2020-06-29'
   and carrier <> 'Canopius'
 ) select
