@@ -70,7 +70,7 @@ SELECT DISTINCT
   ,cause_of_loss
   ,closed_date
   ,CAT as CAT_indicator
-  ,CAT_code as internal_CAT_code
+--   ,CAT_code as internal_CAT_code
   ,'' as placeholder
   ,EBSL
   ,loss_paid
