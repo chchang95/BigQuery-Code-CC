@@ -1,3 +1,4 @@
+with x as (
 select cd.*
 -- ,org_id
 -- ,renewal_number
@@ -16,3 +17,5 @@ from dw_prod_extracts.ext_claims_inception_to_date cd
     -- on cd.policy_id = eps.policy_id
   WHERE date_knowledge = '2020-06-30'
   and carrier <> 'Canopius'
+  )
+  select * from x where CAT is null
