@@ -76,6 +76,7 @@ where ebsl = 'N'
 group by 1,2,3,4,5,6,7,8,9,10
 )
 select p.*
+,DATE_DIFF(p.accident_month, p.inception_month, MONTH) as term
 ,coalesce(total_incurred,0) as total_incurred
 ,coalesce(non_cat_incurred,0) as non_cat_incurred
 ,coalesce(cat_incurred,0) as cat_incurred
@@ -84,7 +85,6 @@ select p.*
 ,coalesce(cat_claim_count_x_cnp,0) as cat_claim_count
 ,coalesce(capped_non_cat_incurred,0) as capped_non_cat_incurred
 ,coalesce(excess_non_cat_incurred,0) as excess_non_cat_incurred
-,DATE_DIFF(p.accident_month, p.inception_month, MONTH)
 from premium p 
 left join claims c
 on 1=1
@@ -98,3 +98,4 @@ and p.accounting_treaty = c.reinsurance_treaty
 and p.organization_id = c.organization_id
 and p.uw_action = c.uw_action
 and p.tenure = c.tenure
+where DATE_DIFF(p.accident_month, p.inception_month, MONTH) <= 2
