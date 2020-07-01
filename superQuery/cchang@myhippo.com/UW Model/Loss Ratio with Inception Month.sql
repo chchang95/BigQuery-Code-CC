@@ -1,3 +1,12 @@
+with snapshot as (
+select policy_id
+,renewal_number
+, case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
+        when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
+        else calculated_fields_non_cat_risk_class end as uw_action 
+from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-06-30'
+)
+-- , premium as (
 select 
 mon.policy_id
 ,state
