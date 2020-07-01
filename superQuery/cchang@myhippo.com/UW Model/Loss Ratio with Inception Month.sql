@@ -16,7 +16,7 @@ mon.policy_id
 ,date_report_period_start as accident_month
 ,inception_month
 ,reinsurance_treaty_accounting as accounting_treaty
--- ,org_id as organization_id
+,org_id as organization_id
 ,uw_action
 ,case when mon.renewal_number = 0 then "New" else "Renewal" end as tenure
 ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
@@ -32,11 +32,11 @@ where date_knowledge = '2020-07-01'
 and date_report_period_start >= '2019-09-01'
 and carrier <> 'Canopius'
 -- and product <> 'HO5'
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8,9,10
 )
 , claims_supp as (
 select cd.*
--- ,org_id
+,org_id
 ,renewal_number
 ,uw_action
 , case when peril = 'equipment_breakdown' or peril = 'service_line' then 'Y'
@@ -60,7 +60,7 @@ policy_id
 ,date_trunc(date_of_loss, MONTH) as accident_month
 ,date_trunc(date_effective, MONTH) as inception_month
 ,reinsurance_treaty
--- ,org_id as organization_id
+,org_id as organization_id
 ,uw_action
 ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
 ,sum(total_incurred) as total_incurred
@@ -73,7 +73,7 @@ policy_id
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8,9,10
 )
 select p.*
 ,coalesce(total_incurred,0) as total_incurred
@@ -84,6 +84,7 @@ select p.*
 ,coalesce(cat_claim_count_x_cnp,0) as cat_claim_count
 ,coalesce(capped_non_cat_incurred,0) as capped_non_cat_incurred
 ,coalesce(excess_non_cat_incurred,0) as excess_non_cat_incurred
+,DATEDIFF(inception_month, accident_month, MONTH)
 from premium p 
 left join claims c
 on 1=1
@@ -94,6 +95,6 @@ and p.product = c.product
 and p.accident_month = c.accident_month
 and p.inception_month = c.inception_month
 and p.accounting_treaty = c.reinsurance_treaty
--- and p.organization_id = c.organization_id
+and p.organization_id = c.organization_id
 and p.uw_action = c.uw_action
 and p.tenure = c.tenure
