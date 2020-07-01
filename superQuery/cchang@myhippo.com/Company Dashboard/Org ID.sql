@@ -1,0 +1,1 @@
+select policy_id, policy_number, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies
