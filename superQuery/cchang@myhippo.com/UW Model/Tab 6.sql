@@ -18,4 +18,4 @@ from dw_prod_extracts.ext_claims_inception_to_date cd
   WHERE date_knowledge = '2020-06-30'
   and carrier <> 'Canopius'
   )
-  select * from x where CAT is null
+  select * from x where CAT <> 'N' or CAT <> 'Y'
