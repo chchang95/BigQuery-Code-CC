@@ -83,4 +83,5 @@ SELECT DISTINCT
 --   ,damage_description
 --   ,Total_Recoverable_Depreciation
   from x
+  where claim_number = 'CCA-0878834-00-02'
 --   where ebsl = 'N'
