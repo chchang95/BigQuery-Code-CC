@@ -15,11 +15,13 @@ with premium as (
         ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
         ,sum(written_exposure) as written_exposure
         ,sum(earned_exposure) as earned_exposure
+        ,sum(written_policy_fee) as written_policy_fee
+        ,sum(earned_policy_fee) as earned_policy_fee
 from dw_prod_extracts.ext_policy_update_monthly_premiums epud
     left join (select policy_id, policy_number, reinsurance_treaty, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on epud.policy_id = dp.policy_id
         where date_knowledge = '2020-06-30'
         and carrier <> 'Canopius'
-        and product <> 'HO5'
+        -- and product <> 'HO5'
 group by 1,2,3,4,5,6,7,8,9
 )
     select 
@@ -32,12 +34,14 @@ group by 1,2,3,4,5,6,7,8,9
         ,accounting_treaty
         ,organization_id
         ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
-        ,sum(earned_prem_x_ebsl) as earned_prem_x_ebsl
         ,sum(written_prem_x_ebsl) as written_prem_x_ebsl
+        ,sum(earned_prem_x_ebsl) as earned_prem_x_ebsl
         ,sum(written_exposure) as written_exposure
         ,sum(earned_exposure) as earned_exposure
         ,sum(written_exposure * TIV) as written_TIV
         ,sum(earned_exposure * TIV) as earned_TIV
+        ,sum(written_policy_fee) as written_policy_fee
+        ,sum(earned_policy_fee) as earned_policy_fee
 from premium p
 left join (select policy_id, date_snapshot, coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0) as TIV, renewal_number
       from dw_prod_extracts.ext_policy_snapshots) eps on p.policy_id = eps.policy_id and p.date_accounting_end = eps.date_snapshot
