@@ -105,7 +105,7 @@ SELECT
             LEFT JOIN dw_prod.dim_quotes q USING (quote_id)
             LEFT JOIN quotes_supp qs using (quote_id)
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
-      where q.date_quote_first_seen >= '2020-04-01'
+      where q.date_quote_first_seen >= '2020-01-01'
 --       and q.state = 'CA'
       and q.product <> 'HO5'
 --       and q.carrier = 'Topa'
