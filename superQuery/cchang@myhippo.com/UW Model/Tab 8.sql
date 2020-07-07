@@ -74,18 +74,25 @@ select cast(id as string)   as policy_number
 )
 , quotes as (
 select quote_id, policy_id, lead_id, product, carrier, state
-,coverage_a
+,coverage_a 
 ,insurance_score
-,num_bathroom
-,roof_type
-,roof_shape
-,construction_type
-,deductible
-,rebuilding_cost
-,water_backup
+,qs.guard as property_data_guard
+,num_bathroom as property_data_bathroom
+,roof_type as property_data_roof_type
+,roof_shape as property_data_roof_shape
+,qs.Hoa_Membership as property_data_hoa_membership
+,construction_type as property_data_construction_type
+,qs.Number_Of_Stories as property_data_number_of_stories
+,qs.age_of_home as calculated_fields_age_of_home
+,qs.age_of_insured as calculated_fields_age_of_insured
+,qs.Three_Years_Claims as calculated_fields_three_years_claims
+,deductible as coverage_deductible
+,rebuilding_cost as coverage_extended_rebuilding_cost
+,water_backup as coverage_water_backup
 ,coverage_e
-,qs.*
 from dw_prod.dim_quotes q
 left join quotes_supp qs on coalesce(q.lead_id,cast(q.policy_id as string)) = qs.policy_number
+      where q.date_quote_first_seen >= '2020-01-01'
+      and q.product <> 'HO5'
 )
 select * from quotes
