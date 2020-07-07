@@ -1,1 +1,1 @@
-select *, JSON_EXTRACT(data,'$.promotional_score.report.insurance_score') from postgres_public.leads where id = 'e27dbe9d-bae1-4676-bdb0-919fc33a404b'
+select *, JSON_EXTRACT(data,'$.promotional_score.report.insurance_score') from postgres_public.policies
