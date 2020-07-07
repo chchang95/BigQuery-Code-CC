@@ -291,8 +291,9 @@ quote_id, state, carrier, product
 , exp(lin_comb) / (1+ exp(lin_comb)) as risk_score
 from scoring_inter
 )
-select *
+select case when risk_score = 0 then 'Missing' else 'Good' end as check, count(*) 
 -- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
 from scoring_final
+group by 1
 -- where tenure = 'New'
 -- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
