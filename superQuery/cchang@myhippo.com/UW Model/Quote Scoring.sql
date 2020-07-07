@@ -11,8 +11,7 @@ with pg_quotes_supp as (
              , json_extract_scalar(transaction,'$.calculated_fields.three_years_claims')           as Three_Years_Claims
              , json_extract_scalar(transaction,'$.property_data.number_of_stories')                as Number_Of_Stories
              , json_extract_scalar(transaction,'$.property_data.hoa_membership') as Hoa_Membership
-                          , JSON_EXTRACT(data,'$.promotional_score.report.insurance_score') as pg_insurance_score
-
+             , JSON_EXTRACT(data,'$.promotional_score.report.insurance_score') as pg_insurance_score
             --  case
             --       when coalesce(json_extract_scalar(transaction,'$.property_data.hoa_membership'), 'false') = 'false' then 'No'
             --       else 'Yes' end                                                      as Hoa_Membership
