@@ -241,12 +241,8 @@ when coverage_e = 500000 or coverage_e = 1000000 then -0.073082463 else -999 end
 ,-1.63517384735612 as score_intercept
 from quotes
 where 1=1
--- and date_snapshot = '2020-06-29'
 and product <> 'HO5'
 and carrier <> 'Canopius'
--- and status = 'active'
--- and date_policy_effective >= '2020-05-15'
--- and renewal_number = 0
 )
 ,scoring_inter as (
 select *
@@ -273,28 +269,11 @@ from scoring_begin
 , scoring_final as (
 select 
 quote_id, state, carrier, product
--- , case when renewal_number > 0 then 'Renewal' else 'New' end as tenure
--- , calculated_fields_non_cat_risk_class
--- , calculated_fields_non_cat_risk_score
--- , cov_a
--- , written_base
--- , property_data_number_of_family_units
--- , JSON_EXTRACT_SCALAR(property_data_zillow, '$.zestimate') as zillow_estimate
--- , property_data_rebuilding_cost
--- , property_data_swimming_pool
--- , case when property_data_year_built is null then 'Missing'
---       when cast(property_data_year_built as numeric) >= 2000 then 'Post 2000' 
---       when cast(property_data_year_built as numeric) > 1980 then 'Pre 2000' 
---       else 'Pre 1980' end as year_built
 -- , lin_comb
 -- , exp(lin_comb) as exponent
-, exp(lin_comb) / (1+ exp(lin_comb)) as risk_score
+, ROUND(exp(lin_comb) / (1+ exp(lin_comb)),5) as risk_score
 from scoring_inter
 )
 select *
--- case when risk_score = 0 then 'Missing' else 'Good' end as check, count(*) 
--- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
-from scoring_final
--- group by 1
--- where tenure = 'New'
--- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
+from score_inter
+where quote_id = 'ac852830c60236f3b4469f816c767fca'
