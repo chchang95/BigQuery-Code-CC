@@ -1,4 +1,3 @@
-with premium as (
     select 
         epud.policy_id
         ,lower(state) as state
