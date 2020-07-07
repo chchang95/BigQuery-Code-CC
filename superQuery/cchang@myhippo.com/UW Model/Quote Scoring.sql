@@ -81,7 +81,7 @@ select cast(id as string)   as policy_number
 , quotes as (
 select quote_id, policy_id, lead_id, product, carrier, state
 ,coverage_a 
-,case when insurance_score is null and quote_type = 'lead' then pg_insurance_score else insurance_score end as insurance_score
+,case when q.insurance_score is null and qs.quote_type = 'lead' then pg_insurance_score else insurance_score end as insurance_score
 ,qs.guard as property_data_guard
 ,cast(num_bathroom as string) as property_data_bathroom
 ,roof_type as property_data_roof_type
@@ -110,7 +110,7 @@ quote_id, state, carrier, product, non_cat_risk_score
 ,ln(coverage_a) * -0.141714902  as score_cov_a
 ,insurance_score  
 ,case when state = 'CA' or state = 'MD' then -0.078330927  
-when insurance_score is null or insurance_score = 'no_hit' then 0.093400276  
+when insurance_score is null or insurance_score = 'no_hit' or insurance_score = '"no_hit"' then 0.093400276  
 when insurance_score = 'no_score' then -0.078330927  
 when cast(insurance_score as numeric) < 500 then 0  
 when cast(insurance_score as numeric) >= 500 and cast(insurance_score as numeric) < 575 then -0.062269523  
