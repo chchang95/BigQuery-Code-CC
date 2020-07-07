@@ -111,7 +111,7 @@ quote_id, state, carrier, product, non_cat_risk_score
 ,insurance_score  
 ,case when state = 'CA' or state = 'MD' then -0.078330927  
 when insurance_score is null or insurance_score = 'no_hit' or insurance_score = '"no_hit"' then 0.093400276  
-when insurance_score = 'no_score' then -0.078330927  
+when insurance_score = 'no_score' or insurance_score = '"no_score"' then -0.078330927  
 when cast(insurance_score as numeric) < 500 then 0  
 when cast(insurance_score as numeric) >= 500 and cast(insurance_score as numeric) < 575 then -0.062269523  
 when cast(insurance_score as numeric) >= 575 and cast(insurance_score as numeric) < 625 then -0.181704818  
