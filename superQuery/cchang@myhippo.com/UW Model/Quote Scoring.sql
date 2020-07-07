@@ -293,6 +293,6 @@ from scoring_inter
 )
 select *
 -- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
-from scoring_final
+from scoring_inter
 -- where tenure = 'New'
 -- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
