@@ -87,7 +87,7 @@ select quote_id, policy_id, lead_id, product, carrier, state
 ,qs.age_of_insured as calculated_fields_age_of_insured
 ,qs.Three_Years_Claims as calculated_fields_three_years_claims
 ,deductible as coverage_deductible
-,rebuilding_cost as coverage_extended_rebuilding_cost
+,extended_rebuilding_cost as coverage_extended_rebuilding_cost
 ,cast(water_backup as string) as coverage_water_backup
 ,coverage_e
 from dw_prod.dim_quotes q
