@@ -286,4 +286,4 @@ from scoring_inter
 where quote_id = '04f0213dbcf81b4a2c9b2eae2b19de0a'
 
 
-select quote_id, policy_id, lead_id, non_cat_risk_score from dw_prod.dim_quotes where quote_id = '04f0213dbcf81b4a2c9b2eae2b19de0a'
+-- select quote_id, policy_id, lead_id, non_cat_risk_score from dw_prod.dim_quotes where quote_id = '04f0213dbcf81b4a2c9b2eae2b19de0a'
