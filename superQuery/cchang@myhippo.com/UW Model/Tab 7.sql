@@ -1,0 +1,1 @@
+select * from postgres_public.leads where id = '7b1373c1-9341-4c51-8db4-f78d6676d9b1'
