@@ -11,6 +11,8 @@ with pg_quotes_supp as (
              , json_extract_scalar(transaction,'$.calculated_fields.three_years_claims')           as Three_Years_Claims
              , json_extract_scalar(transaction,'$.property_data.number_of_stories')                as Number_Of_Stories
              , json_extract_scalar(transaction,'$.property_data.hoa_membership') as Hoa_Membership
+                          , JSON_EXTRACT(data,'$.promotional_score.report.insurance_score') as pg_insurance_score
+
             --  case
             --       when coalesce(json_extract_scalar(transaction,'$.property_data.hoa_membership'), 'false') = 'false' then 'No'
             --       else 'Yes' end                                                      as Hoa_Membership
@@ -47,6 +49,7 @@ select cast(id as string)   as policy_number
              , json_extract_scalar(coalesce(policy_info,transaction),'$.calculated_fields.three_years_claims')           as Three_Years_Claims
              , json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.number_of_stories')                as Number_Of_Stories
              , json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.hoa_membership') as hoa_membership
+             , '0'                                         as pg_insurance_score
             --  case
             --       when coalesce(json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.hoa_membership'), 'false') = 'false' then 'No'
             --       else 'Yes' end                                                      as Hoa_Membership
@@ -79,7 +82,7 @@ select cast(id as string)   as policy_number
 , quotes as (
 select quote_id, policy_id, lead_id, product, carrier, state
 ,coverage_a 
-,insurance_score
+,case when insurance_score is null and quote_type = 'lead' then pg_insurance_score else insurance_score end as insurance_score
 ,qs.guard as property_data_guard
 ,cast(num_bathroom as string) as property_data_bathroom
 ,roof_type as property_data_roof_type
@@ -282,8 +285,8 @@ from scoring_inter
 )
 select *
 from scoring_inter
--- where abs(non_cat_risk_score - risk_score) > 0.02 
-where quote_id = '32a80315317099c92f6de1769fb0fc79'
+where abs(non_cat_risk_score - risk_score) > 0.02 
+-- where quote_id = '32a80315317099c92f6de1769fb0fc79'
 -- 'a451ca5420f33dfd94e7c1abe89a1812'
 
 -- select quote_id, policy_id, lead_id, non_cat_risk_score from dw_prod.dim_quotes where quote_id = '04f0213dbcf81b4a2c9b2eae2b19de0a'
