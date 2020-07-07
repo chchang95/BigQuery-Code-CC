@@ -1,4 +1,4 @@
-with quotes_supp as (
+with pg_quotes_supp as (
     with leads as (
         select cast(id as string)   as policy_number
              , least(cast(json_extract_scalar(transaction,'$.calculated_fields.age_of_home') as numeric),
@@ -94,14 +94,15 @@ select quote_id, policy_id, lead_id, product, carrier, state
 ,extended_rebuilding_cost as coverage_extended_rebuilding_cost
 ,cast(water_backup as string) as coverage_water_backup
 ,coverage_e
+,round(cast(q.non_cat_risk_score as numeric),5) as non_cat_risk_score
 from dw_prod.dim_quotes q
-left join quotes_supp qs on coalesce(q.lead_id,cast(q.policy_id as string)) = qs.policy_number
+left join pg_quotes_supp qs on coalesce(q.lead_id,cast(q.policy_id as string)) = qs.policy_number
       where q.date_quote_first_seen >= '2020-01-01'
       and q.product <> 'HO5'
 )
 , scoring_begin as (
 select 
-quote_id, state, carrier, product
+quote_id, state, carrier, product, non_cat_risk_score
 -- *
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
@@ -247,6 +248,7 @@ from quotes
 where 1=1
 and product <> 'HO5'
 and carrier <> 'Canopius'
+and non_cat_risk_score is not null
 )
 ,scoring_inter as (
 select *
@@ -272,7 +274,7 @@ from scoring_begin
 )
 , scoring_final as (
 select 
-quote_id, state, carrier, product
+quote_id, state, carrier, product, non_cat_risk_score
 -- , lin_comb
 -- , exp(lin_comb) as exponent
 , ROUND(exp(lin_comb) / (1+ exp(lin_comb)),5) as risk_score
@@ -280,7 +282,8 @@ from scoring_inter
 )
 select *
 from scoring_final
-where quote_id = 'ac852830c60236f3b4469f816c767fca'
+where non_cat_risk_score - risk_score <> 0
+-- where quote_id = 'ac852830c60236f3b4469f816c767fca'
 
 
 -- select quote_id, policy_id, lead_id, non_cat_risk_score from dw_prod.dim_quotes where quote_id = 'ac852830c60236f3b4469f816c767fca'
