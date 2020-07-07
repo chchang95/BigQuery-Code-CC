@@ -97,8 +97,8 @@ left join quotes_supp qs on coalesce(q.lead_id,cast(q.policy_id as string)) = qs
 )
 , scoring_begin as (
 select 
--- policy_id, state, carrier, product, calculated_fields_non_cat_risk_score
-*
+quote_id, state, carrier, product
+-- *
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
 ,insurance_score  
