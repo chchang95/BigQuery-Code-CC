@@ -282,7 +282,8 @@ from scoring_inter
 )
 select *
 from scoring_final
-where non_cat_risk_score - risk_score = 0
+where non_cat_risk_score - risk_score <> 0
+and state <> 'nm'
 -- where quote_id = '0c5d29d6e490011e8f8fc4f809606dd5'
 
 
