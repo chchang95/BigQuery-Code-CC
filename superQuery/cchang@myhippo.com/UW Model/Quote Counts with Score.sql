@@ -23,18 +23,9 @@ with pg_quotes_supp as (
                               and bound = true) b
                            on cast(a.id as string) = cast(b.lead_id as string)
         where 1 = 1
---       and bound = 'true'
---       and status not in ('pending_active', 'pending_bind')
---       and effective_date::date <= '2020-04-31'::date
           and cast(initial_quote_date as date) >= '2019-10-20'
---       and state = 'tx'
           and carrier <> 'canopius'
           and product not in ('ho5')
-          and json_extract_scalar(transaction,'$.quote.premium.total') is not null
-          and state is not null
-          and initial_quote_date is not null
-          and json_extract_scalar(transaction,'$.effective_date') is not null
-        --   LIMIT 50000
     )
        , quotes as (
 select cast(id as string)   as policy_number
@@ -55,18 +46,9 @@ select cast(id as string)   as policy_number
              , cast('quote' as string)                                                                  as quote_type
         from postgres_public.policies a
         where 1 = 1
---       and bound = 'true'
---       and status not in ('pending_active', 'pending_bind')
---       and effective_date::date <= '2020-04-31'::date
           and cast(initial_quote_date as date) >= '2019-10-20'
---       and state = 'tx'
           and carrier <> 'canopius'
           and product not in ('ho5')
-          and json_extract_scalar(coalesce(policy_info,transaction),'$.quote.premium.total') is not null
-          and state is not null
-          and initial_quote_date is not null
-          and effective_date is not null
-        --   LIMIT 100000
     )
        , combined as (
         select *
@@ -250,7 +232,6 @@ from quotes
 where 1=1
 and product <> 'HO5'
 and carrier <> 'Canopius'
-and non_cat_risk_score is not null
 )
 ,scoring_inter as (
 select *
