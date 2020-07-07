@@ -281,9 +281,9 @@ quote_id, state, carrier, product, non_cat_risk_score
 from scoring_inter
 )
 select *
-from scoring_inter
--- where abs(non_cat_risk_score - risk_score) > 0.05 
-where quote_id = '9aaa0a919622ac04b3da925f702c6438'
-
+from scoring_final
+where abs(non_cat_risk_score - risk_score) > 0.02 
+-- where quote_id = '9aaa0a919622ac04b3da925f702c6438'
+-- 'a451ca5420f33dfd94e7c1abe89a1812'
 
 -- select quote_id, policy_id, lead_id, non_cat_risk_score from dw_prod.dim_quotes where quote_id = '04f0213dbcf81b4a2c9b2eae2b19de0a'
