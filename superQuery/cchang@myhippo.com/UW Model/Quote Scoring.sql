@@ -279,8 +279,8 @@ quote_id, state, carrier, product
 from scoring_inter
 )
 select *
-from scoring_inter
+from scoring_final
 where quote_id = 'ac852830c60236f3b4469f816c767fca'
 
 
--- select quote_id, policy_id, lead_id from dw_prod.dim_quotes where quote_id = 'ac852830c60236f3b4469f816c767fca'
+-- select quote_id, policy_id, lead_id, non_cat_risk_score from dw_prod.dim_quotes where quote_id = 'ac852830c60236f3b4469f816c767fca'
