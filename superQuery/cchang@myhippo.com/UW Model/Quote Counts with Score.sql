@@ -335,14 +335,14 @@ SELECT
       when cast(q.year_built as numeric) > 1980 then 'Pre 2000' 
       else 'Pre 1980' end as year_built
     --   ,q.zip_code
-      ,q.county
+    --   ,q.county
 --       ,q.roof_type
 --       ,q.construction_type
 --       ,2020 - q.year_built + 1 as age_of_home
-      ,q.coverage_a
-      ,q.deductible
-      ,q.insurance_score
-      ,round(cast(q.non_cat_risk_score as numeric),5) as non_cat_risk_score
+    --   ,q.coverage_a
+    --   ,q.deductible
+    --   ,q.insurance_score
+    --   ,round(cast(q.non_cat_risk_score as numeric),5) as non_cat_risk_score
 --       ,q.cat_risk_score
       ,q.non_cat_risk_class
 --       ,q.cat_risk_class
@@ -376,4 +376,4 @@ SELECT
 --       and q.state = 'CA'
       and q.product <> 'HO5'
 --       and q.carrier = 'Topa'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
