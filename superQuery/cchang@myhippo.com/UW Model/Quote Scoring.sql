@@ -282,7 +282,7 @@ from scoring_inter
 )
 select *
 from scoring_final
-where abs(non_cat_risk_score - risk_score) > 0.02 
+-- where abs(non_cat_risk_score - risk_score) > 0.02 
 -- where quote_id = '9aaa0a919622ac04b3da925f702c6438'
 -- 'a451ca5420f33dfd94e7c1abe89a1812'
 
