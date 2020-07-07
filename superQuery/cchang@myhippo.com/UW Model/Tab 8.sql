@@ -84,6 +84,7 @@ select quote_id, policy_id, lead_id, product, carrier, state
 ,rebuilding_cost
 ,water_backup
 ,coverage_e
+,qs.*
 from dw_prod.dim_quotes q
 left join quotes_supp qs on coalesce(q.lead_id,cast(q.policy_id as string)) = qs.policy_number
 )
