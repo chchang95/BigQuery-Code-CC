@@ -275,5 +275,5 @@ quote_id, state, carrier, product
 from scoring_inter
 )
 select *
-from score_inter
+from scoring_inter
 where quote_id = 'ac852830c60236f3b4469f816c767fca'
