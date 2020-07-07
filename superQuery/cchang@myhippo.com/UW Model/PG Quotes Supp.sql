@@ -1,2 +1,2 @@
 select *, JSON_EXTRACT(data,'$.promotional_score.report.insurance_score') from postgres_public.policies
-where id = 2387290
+where id = 2215488
