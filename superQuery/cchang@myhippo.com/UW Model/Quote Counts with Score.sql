@@ -4,10 +4,17 @@ with pg_quotes_supp as (
              , least(cast(json_extract_scalar(transaction,'$.calculated_fields.age_of_home') as numeric),
                      77)                                                               as age_of_home
              , json_extract_scalar(transaction,'$.property_data.guard') as guard
+            --  case
+            --       when coalesce(json_extract_scalar(transaction,'$.property_data.guard'), 'false') = 'false' then 'No'
+            --       else 'Yes' end                                                      as Guard
              , json_extract_scalar(transaction,'$.calculated_fields.age_of_insured')               as age_of_insured
              , json_extract_scalar(transaction,'$.calculated_fields.three_years_claims')           as Three_Years_Claims
              , json_extract_scalar(transaction,'$.property_data.number_of_stories')                as Number_Of_Stories
              , json_extract_scalar(transaction,'$.property_data.hoa_membership') as Hoa_Membership
+             , JSON_EXTRACT(data,'$.promotional_score.report.insurance_score') as pg_insurance_score
+            --  case
+            --       when coalesce(json_extract_scalar(transaction,'$.property_data.hoa_membership'), 'false') = 'false' then 'No'
+            --       else 'Yes' end                                                      as Hoa_Membership
              , cast('lead' as string)                                                                  as quote_type
         from postgres_public.leads a
                  left join (select lead_id, bound, status
@@ -34,10 +41,17 @@ select cast(id as string)   as policy_number
              , least(cast(json_extract_scalar(coalesce(policy_info,transaction),'$.calculated_fields.age_of_home') as numeric),
                      77)                                                               as age_of_home
              , json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.guard') as guard
+            --  case
+            --       when coalesce(json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.guard'), 'false') = 'false' then 'No'
+            --       else 'Yes' end                                                      as Guard
              , json_extract_scalar(coalesce(policy_info,transaction),'$.calculated_fields.age_of_insured')               as age_of_insured
              , json_extract_scalar(coalesce(policy_info,transaction),'$.calculated_fields.three_years_claims')           as Three_Years_Claims
              , json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.number_of_stories')                as Number_Of_Stories
              , json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.hoa_membership') as hoa_membership
+             , '0'                                         as pg_insurance_score
+            --  case
+            --       when coalesce(json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.hoa_membership'), 'false') = 'false' then 'No'
+            --       else 'Yes' end                                                      as Hoa_Membership
              , cast('quote' as string)                                                                  as quote_type
         from postgres_public.policies a
         where 1 = 1
@@ -67,7 +81,7 @@ select cast(id as string)   as policy_number
 , quotes as (
 select quote_id, policy_id, lead_id, product, carrier, state
 ,coverage_a 
-,insurance_score
+,case when q.insurance_score is null and qs.quote_type = 'lead' then pg_insurance_score else insurance_score end as insurance_score
 ,qs.guard as property_data_guard
 ,cast(num_bathroom as string) as property_data_bathroom
 ,roof_type as property_data_roof_type
@@ -82,6 +96,7 @@ select quote_id, policy_id, lead_id, product, carrier, state
 ,extended_rebuilding_cost as coverage_extended_rebuilding_cost
 ,cast(water_backup as string) as coverage_water_backup
 ,coverage_e
+,round(cast(q.non_cat_risk_score as numeric),5) as non_cat_risk_score
 from dw_prod.dim_quotes q
 left join pg_quotes_supp qs on coalesce(q.lead_id,cast(q.policy_id as string)) = qs.policy_number
       where q.date_quote_first_seen >= '2020-01-01'
@@ -89,14 +104,14 @@ left join pg_quotes_supp qs on coalesce(q.lead_id,cast(q.policy_id as string)) =
 )
 , scoring_begin as (
 select 
-quote_id, state, carrier, product
+quote_id, state, carrier, product, non_cat_risk_score
 -- *
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
 ,insurance_score  
 ,case when state = 'CA' or state = 'MD' then -0.078330927  
-when insurance_score is null or insurance_score = 'no_hit' then 0.093400276  
-when insurance_score = 'no_score' then -0.078330927  
+when insurance_score is null or insurance_score = 'no_hit' or insurance_score = '"no_hit"' then 0.093400276  
+when insurance_score = 'no_score' or insurance_score = '"no_score"' then -0.078330927  
 when cast(insurance_score as numeric) < 500 then 0  
 when cast(insurance_score as numeric) >= 500 and cast(insurance_score as numeric) < 575 then -0.062269523  
 when cast(insurance_score as numeric) >= 575 and cast(insurance_score as numeric) < 625 then -0.181704818  
@@ -235,6 +250,7 @@ from quotes
 where 1=1
 and product <> 'HO5'
 and carrier <> 'Canopius'
+and non_cat_risk_score is not null
 )
 ,scoring_inter as (
 select *
@@ -345,7 +361,7 @@ SELECT
       ,q.coverage_a
       ,q.deductible
       ,q.insurance_score
-      ,q.non_cat_risk_score
+      ,round(cast(q.non_cat_risk_score as numeric),5) as non_cat_risk_score
 --       ,q.cat_risk_score
       ,q.non_cat_risk_class
 --       ,q.cat_risk_class
