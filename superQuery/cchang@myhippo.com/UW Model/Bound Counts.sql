@@ -6,12 +6,14 @@ with bind_updates as
    calculated_fields_cat_risk_score, 
    calculated_fields_non_cat_risk_class, 
    calculated_fields_cat_risk_class,
+--    term_quote_inspection_fee as quote_inspection_fee,
    case 
     when state = 'TX' and calculated_fields_cat_risk_class = "referral" then "referral" 
     else calculated_fields_non_cat_risk_class
    end as calculated_fields_non_cat_risk_with_cat_risk_class
   from
     dw_prod.fct_policy_updates a
+--     left join dw_prod.fct_premium_updates fpu on a.policy_update_id = fpu.policy_update_id
     left join dw_prod.dim_policies b on a.policy_id = b.policy_id
     left join dw_prod.dim_policy_histories c on b.policy_history_id = c.policy_history_id
   where
@@ -75,6 +77,7 @@ converted_policies as
 (
     select 
         a.policy_number,
+        a.policy_id,
         date_trunc(a.date_bound, MONTH) AS Bind_Month, 
         date_trunc(a.date_bound, WEEK) AS Bind_Week, 
         cast(a.date_quote_first_seen as date) as quote_date,
@@ -108,6 +111,7 @@ converted_policies as
         f.calculated_fields_non_cat_risk_class,
         f.calculated_fields_non_cat_risk_with_cat_risk_class,
         f.calculated_fields_non_cat_risk_score,
+        ps.written_inspection_fee,
         pgl.visible_damage,
         d.quote_rater_version,
         d.coverage_a,
@@ -130,6 +134,7 @@ converted_policies as
     left join dw_prod.dim_organizations o2 on a.attributed_root_organization_id = o2.organization_id
     left join dw_prod.fct_policy_updates e on a.policy_id = e.policy_id
     left join bind_updates f on a.policy_id = f.policy_id
+    left join (select policy_id, written_inspection_fee from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-07-08') ps on a.policy_id = ps.policy_id
     left join (with leads as (
 select cast(id as string) as id,json_extract_scalar(transaction,'$.property_data.visible_damage') as visible_damage from postgres_public.leads pgl)
 , quotes as (select cast(id as string) as id,json_extract_scalar(coalesce(transaction, policy_info),'$.property_data.visible_damage') as visible_damage from postgres_public.policies pgl)
@@ -139,7 +144,7 @@ select * from leads union all select * from quotes) as pgl on coalesce(a.lead_id
     AND a.renewal_number = 0 
     AND a.rewritten_policy_id IS NULL
     and e.is_update_most_recent = true 
-   GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
+   GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33
 )
 
 SELECT 
@@ -177,6 +182,7 @@ SELECT
     organization_name,
     product,
     calculated_fields_non_cat_risk_score,
+    calculated_fields_non_cat_risk_with_cat_risk_class as UW_Class_with_TX,
     case when bind_date <= '2020-04-29' then 'not_applicable' else coalesce(calculated_fields_non_cat_risk_class,'not_applicable') end as UW_Action,
     case  when bind_date <= '2020-04-29' then 'not_applicable'
     when calculated_fields_non_cat_risk_class = 'exterior_inspection_required' or calculated_fields_non_cat_risk_class = 'interior_inspection_required' or calculated_fields_non_cat_risk_class = 'referral' then 'rocky'
@@ -184,16 +190,18 @@ SELECT
     else 'not_applicable' end as UW_Path,
     visible_damage,
     is_policy_in_effect,
+    written_inspection_fee,
     Effective_Date,
     date_activation,
 --     quote_rater_version,
     coverage_a,
     deductible,
+    policy_id,
     SUM(num_bound_policies) tot_bound_pol,
     SUM(tot_bound_premium) AS tot_bound_premium
 FROM 
     converted_policies
-    where Bind_Date >= '2020-01-01'
+    where Bind_Date >= '2020-04-30'
     and product <> 'HO5'
     and carrier <> 'Canopius'
-GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30
