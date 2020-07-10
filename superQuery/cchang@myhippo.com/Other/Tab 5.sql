@@ -1,0 +1,1 @@
+select count(*) from dw_prod.ext_policy_snapshots where state = 'GA' and product = 'HO5' and status = 'active'
