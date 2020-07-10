@@ -1,1 +1,1 @@
-select count(*) from dw_prod.ext_policy_snapshots where state = 'GA' and product = 'HO5' and status = 'active'
+select count(*) from dw_prod_extracts.ext_policy_snapshots where state = 'GA' and product = 'HO5' and status = 'active' and date_snapshot = '2020-07-09'
