@@ -1,1 +1,2 @@
-select count(*) from dw_prod_extracts.ext_policy_snapshots where state = 'GA' and product = 'HO5' and status = 'active' and date_snapshot = '2020-07-09'
+select max(snapshot_date) from dw_prod.dim_organization_mappings_snapshot 
+-- group by organization_id
