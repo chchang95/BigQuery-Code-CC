@@ -1,2 +1,3 @@
-select max(snapshot_date) from dw_prod.dim_organization_mappings_snapshot 
--- group by organization_id
+select * from dw_prod.dim_organization_mappings_snapshot 
+where snapshot_date = '2020-07-13'
+group by organization_id
