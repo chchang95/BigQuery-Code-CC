@@ -70,7 +70,6 @@ SELECT DISTINCT
   ,cause_of_loss
   ,closed_date
   ,CAT as CAT_indicator
---   ,CAT_code as internal_CAT_code
   ,'' as placeholder
   ,EBSL
   ,loss_paid
@@ -79,6 +78,7 @@ SELECT DISTINCT
   ,expense_net_reserve
   ,Total_Recovery
   ,organization_id
+  ,CAT_code as internal_CAT_code
 --   ,loss_description
 --   ,damage_description
 --   ,Total_Recoverable_Depreciation
