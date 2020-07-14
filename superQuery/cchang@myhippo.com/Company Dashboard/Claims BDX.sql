@@ -85,5 +85,5 @@ SELECT DISTINCT
   from x
   where ebsl = 'N'
   
-  select * from dw_prod_extracts.ext_claims_inception_to_date mon
-  where claim_number = 'HCA-0288707-00-01'
+--   select * from dw_prod_extracts.ext_claims_inception_to_date mon
+--   where claim_number = 'HCA-0288707-00-01'
