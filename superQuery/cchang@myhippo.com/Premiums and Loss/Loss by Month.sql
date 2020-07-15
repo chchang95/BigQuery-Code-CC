@@ -24,4 +24,4 @@
   where is_ebsl is false
 --   and month_knowledge = '2020-04-01'
 --   and month_of_loss = '2020-01-01'
-  group by 1,2,3,4,5,6,7,8,9,10
+  group by 1,2,3,4,5,6,7,8,9
