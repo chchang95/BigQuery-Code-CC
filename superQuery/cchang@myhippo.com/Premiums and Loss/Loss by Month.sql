@@ -10,7 +10,7 @@
       when is_catastrophe is true then 'Y'
       else 'N' end as CAT
     ,reinsurance_treaty
-    ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
+    -- ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
     ,mon.peril
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as claim_count_x_cnp
     ,sum(total_incurred_inception_to_date) as total_incurred_cumulative
