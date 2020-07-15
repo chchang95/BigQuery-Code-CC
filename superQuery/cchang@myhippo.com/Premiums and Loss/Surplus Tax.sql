@@ -10,3 +10,4 @@
 from dw_prod_extracts.ext_policy_update_monthly_premiums epud
 where carrier = 'Canopius'
 group by 1,2
+order by 1,2
