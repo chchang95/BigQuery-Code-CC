@@ -1,1 +1,1 @@
-select * from dw_prod_extracts.ext_policy_snapshots where state = 'tx' and calculated_fields_cat_risk_score is not null
+select * from dw_prod_extracts.ext_policy_snapshots where state = 'TX' and calculated_fields_cat_risk_score is not null
