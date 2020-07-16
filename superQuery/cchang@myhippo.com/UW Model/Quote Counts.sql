@@ -55,8 +55,8 @@ with quotes_supp as (
       ORDER BY street, city, state
 )
 SELECT
-      q.policy_number,
-      q.policy_id,
+    --   q.policy_number,
+    --   q.policy_id,
       cast(q.date_quote_first_seen as DATE) as quote_date
       ,date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
       ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
@@ -73,6 +73,7 @@ SELECT
       ,q.zip_code
       ,q.county
       ,q.roof_type as quote_roof_type
+      ,q.prefilled_roof_type as prefilled_roof_type
       ,property_data_roof_type as policy_roof_type
       ,q.construction_type
       ,q.square_footage
@@ -113,8 +114,8 @@ SELECT
             LEFT JOIN quotes_supp qs using (quote_id)
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-07-08') ps on q.policy_id = ps.policy_id
-      where q.date_quote_first_seen >= '2020-01-01'
-      and q.state = 'TX'
+      where q.date_quote_first_seen >= '2020-05-01'
+    --   and q.state = 'TX'
       and q.product <> 'HO5'
---       and q.carrier = 'Topa'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32
+      and q.carrier <> 'Canopius'
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30
