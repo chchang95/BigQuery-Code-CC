@@ -8,4 +8,4 @@ where date_snapshot = '2020-06-30'
 and carrier <> 'Canopius'
 and state not in ('TX', 'CA')
 and product <> 'HO5'
-and calculated_fields_non_cat_risk_class = 'interior_inspection_required'
+and calculated_fields_non_cat_risk_class = 'exterior_inspection_required'
