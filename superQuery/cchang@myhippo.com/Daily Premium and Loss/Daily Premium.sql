@@ -12,7 +12,7 @@ select state
 ,sum(earned_exposure) as earned_exposure
 from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-where date_knowledge = '2020-07-17'
+where date_knowledge = '2020-07-20'
 and date_report_period_start >= '2020-01-01'
 and carrier <> 'Canopius'
 -- and product <> 'HO5'
@@ -27,7 +27,7 @@ select *
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date cd
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on cd.policy_id = dp.policy_id
-  WHERE date_knowledge = '2020-07-16'
+  WHERE date_knowledge = '2020-07-19'
   and carrier <> 'Canopius'
 )
 , claims as (
@@ -41,9 +41,9 @@ state
 ,sum(total_incurred) as total_incurred
 ,sum(case when CAT = 'N' then total_incurred else 0 end) as non_cat_incurred
 ,sum(case when CAT = 'Y' then total_incurred else 0 end) as cat_incurred
-,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as total_claim_count_x_cnp
-,sum(case when claim_closed_no_total_payment is true and CAT = 'N' then 0 else 1 end) as non_cat_claim_count_x_cnp
-,sum(case when claim_closed_no_total_payment is true and CAT = 'Y' then 0 else 1 end) as cat_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false then 1 else 0 end) as total_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'N' then 1 else 0 end) as non_cat_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'Y' then 1 else 0 end) as cat_claim_count_x_cnp
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then 100000 else total_incurred end) as capped_non_cat_incurred
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
