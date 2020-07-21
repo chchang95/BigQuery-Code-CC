@@ -12,7 +12,7 @@ select state
 ,sum(earned_exposure) as earned_exposure
 from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-where date_knowledge = '2020-07-20'
+where date_knowledge = '2020-07-21'
 and date_report_period_start >= '2020-01-01'
 and carrier <> 'Canopius'
 -- and product <> 'HO5'
@@ -27,7 +27,7 @@ select *
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date cd
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on cd.policy_id = dp.policy_id
-  WHERE date_knowledge = '2020-07-19'
+  WHERE date_knowledge = '2020-07-20'
   and carrier <> 'Canopius'
 )
 , claims as (
@@ -49,7 +49,8 @@ state
 from claims_supp
 where ebsl = 'N'
 group by 1,2,3,4,5,6
-)
+) 
+, combined as (
 select p.*
 ,coalesce(total_incurred,0) as total_incurred
 ,coalesce(non_cat_incurred,0) as non_cat_incurred
@@ -67,3 +68,12 @@ and p.product = c.product
 and p.accident_month = c.accident_month
 and p.accounting_treaty = c.reinsurance_treaty
 and p.organization_id = c.organization_id
+)
+, aggregated as (
+select reinsurance_treaty, sum(earned_prem_x_ebsl) as earned_prem
+, sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl) as capped_NC
+, sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl) as excess_NC
+, sum(cat_incurred) / sum(earned_prem_x_ebsl) as cat
+, sum(total_incurred) / sum(earned_prem_x_ebsl) as total_incurred
+group by 1
+)
