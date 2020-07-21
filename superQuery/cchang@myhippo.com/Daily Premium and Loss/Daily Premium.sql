@@ -75,6 +75,7 @@ select reinsurance_treaty, sum(earned_prem_x_ebsl) as earned_prem
 , sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl) as excess_NC
 , sum(cat_incurred) / sum(earned_prem_x_ebsl) as cat
 , sum(total_incurred) / sum(earned_prem_x_ebsl) as total_incurred
+from combined
 group by 1
 )
 select * from aggregated
