@@ -74,7 +74,7 @@ select accounting_treaty, sum(earned_prem_x_ebsl) as earned_prem
 , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),1) as capped_NC
 , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),1) as excess_NC
 , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),1) as cat
-, round(sum(total_incurred) / sum(earned_prem_x_ebsl),1) as total_incurred
+, round(sum(total_incurred) / sum(earned_prem_x_ebsl),2) as total_incurred
 from combined
 group by 1
 )
