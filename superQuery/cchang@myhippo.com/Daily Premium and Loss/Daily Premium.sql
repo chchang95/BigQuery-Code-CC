@@ -70,7 +70,7 @@ and p.accounting_treaty = c.reinsurance_treaty
 and p.organization_id = c.organization_id
 )
 , aggregated as (
-select reinsurance_treaty, sum(earned_prem_x_ebsl) as earned_prem
+select accounting_treaty, sum(earned_prem_x_ebsl) as earned_prem
 , sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl) as capped_NC
 , sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl) as excess_NC
 , sum(cat_incurred) / sum(earned_prem_x_ebsl) as cat
