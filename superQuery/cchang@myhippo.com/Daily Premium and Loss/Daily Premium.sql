@@ -77,3 +77,4 @@ select reinsurance_treaty, sum(earned_prem_x_ebsl) as earned_prem
 , sum(total_incurred) / sum(earned_prem_x_ebsl) as total_incurred
 group by 1
 )
+select * from aggregated
