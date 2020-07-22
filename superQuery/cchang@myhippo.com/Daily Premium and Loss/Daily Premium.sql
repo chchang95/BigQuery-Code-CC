@@ -76,7 +76,7 @@ select accounting_treaty, sum(earned_prem_x_ebsl) as earned_prem
 , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
 , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
-where state = 'CA'
+-- where state = 'CA'
 group by 1
 )
 select * from aggregated
