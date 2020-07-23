@@ -78,5 +78,6 @@ select accounting_treaty, accident_month, sum(earned_prem_x_ebsl) as earned_prem
 from combined
 where carrier = 'Topa'
 group by 1,2
+order by 1,2
 )
 select * from aggregated
