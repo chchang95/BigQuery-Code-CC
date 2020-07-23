@@ -70,13 +70,13 @@ and p.accounting_treaty = c.reinsurance_treaty
 and p.organization_id = c.organization_id
 )
 , aggregated as (
-select accounting_treaty, sum(earned_prem_x_ebsl) as earned_prem
+select accounting_treaty, accident_month, sum(earned_prem_x_ebsl) as earned_prem
 , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
 , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
 , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
 , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
--- where state = 'CA'
-group by 1
+where carrier = 'Topa'
+group by 1,2
 )
 select * from aggregated
