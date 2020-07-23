@@ -119,5 +119,5 @@ SELECT
     --   and q.state = 'TX'
     --   and q.product <> 'HO5'
     --   and q.carrier <> 'Canopius'
-    and q.city = 'Portland'
+    and q.state = 'OR'
       group by 1,2,3,4,5,6,7,8,9,10,11
