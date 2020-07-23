@@ -71,6 +71,9 @@ and p.organization_id = c.organization_id
 )
 , aggregated as (
 select accounting_treaty, accident_month, sum(earned_prem_x_ebsl) as earned_prem
+, sum(capped_non_cat_incurred) as capped_non_cat_incurred
+, sum(excess_non_cat_incurred) as excess_non_cat_incurred
+, sum(cat_incurred) as cat_incurred
 , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
 , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
 , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
