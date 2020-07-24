@@ -70,7 +70,7 @@ and p.accounting_treaty = c.reinsurance_treaty
 and p.organization_id = c.organization_id
 )
 , aggregated as (
-select accounting_treaty, accident_month, sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
+select accounting_treaty, sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
 , sum(cat_incurred) as cat_incurred
@@ -80,7 +80,7 @@ select accounting_treaty, accident_month, sum(written_prem_x_ebsl) as written_pr
 , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
 where accounting_treaty = 'Spkr20_Classic'
-group by 1,2
-order by 1,2
+group by 1
+-- order by 1,2
 )
 select * from aggregated
