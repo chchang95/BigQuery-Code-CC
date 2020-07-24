@@ -79,7 +79,7 @@ select accounting_treaty, accident_month, sum(earned_prem_x_ebsl) as earned_prem
 , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
 , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
-where carrier = 'Topa'
+where accounting_treaty = 'Spkr20_Classic'
 group by 1,2
 order by 1,2
 )
