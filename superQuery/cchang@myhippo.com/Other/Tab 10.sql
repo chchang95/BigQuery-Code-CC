@@ -15,3 +15,4 @@ where date_knowledge = '2020-06-30'
 and carrier <> 'Canopius'
 and product <> 'HO5'
 group by 1,2
+order by 1,2
