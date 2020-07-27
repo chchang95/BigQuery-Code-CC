@@ -79,7 +79,7 @@ select accounting_treaty, sum(written_prem_x_ebsl) as written_prem, sum(earned_p
 , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
 , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
-where accounting_treaty = 'Spkr20_Classic'
+-- where accounting_treaty = 'Spkr20_Classic'
 group by 1
 -- order by 1,2
 )
