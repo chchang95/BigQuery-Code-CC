@@ -1,3 +1,8 @@
-select state, min(date_effective) from dw_prod.dim_policies
-group by 1
-order by 2
+select state, carrier,
+sum(case when renewal_number > 0 then 1 else 0 end) as renewal_count,
+sum(case when renewal_number = 0 then 1 else 0 end) as new_business_count
+from dw_prod_extracts.ext_policy_snapshots 
+where date_snapshot = '2020-06-30'
+and carrier <> 'Canopius'
+group by 1,2
+order by 2,1
