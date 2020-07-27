@@ -5,6 +5,7 @@ count(policy_id) as total_PIF_count
 from dw_prod_extracts.ext_policy_snapshots 
 where date_snapshot = '2020-06-30'
 and carrier <> 'Canopius'
+and product <> 'HO5'
 and status = 'active'
 group by 1,2
 order by 2,1
