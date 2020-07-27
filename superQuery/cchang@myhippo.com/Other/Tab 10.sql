@@ -14,4 +14,4 @@ left join (select policy_id, policy_number, reinsurance_treaty from dw_prod.dim_
 where date_knowledge = '2020-06-30'
 and carrier <> 'Canopius'
 and product <> 'HO5'
-group by 1,2,3,4,5,6,7
+group by 1,2
