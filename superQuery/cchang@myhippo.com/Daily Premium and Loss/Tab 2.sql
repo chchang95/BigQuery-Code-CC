@@ -16,3 +16,4 @@ and date_report_period_start >= '2020-01-01'
 and carrier <> 'Canopius'
 -- and product <> 'HO5'
 group by 1,2
+order by 1,2
