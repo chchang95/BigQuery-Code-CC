@@ -14,6 +14,6 @@ left join (select policy_id, case when organization_id is null then 0 else organ
 where date_knowledge = '2020-07-27'
 and date_report_period_start >= '2020-01-01'
 and carrier <> 'Canopius'
--- and product <> 'HO5'
+and product <> 'HO5'
 group by 1,2
 order by 1,2
