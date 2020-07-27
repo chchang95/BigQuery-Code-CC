@@ -1,9 +1,9 @@
 select state
-,carrier
-,product
+-- ,carrier
+-- ,product
 ,date_calendar_month_accounting_basis as accounting_month
-,reinsurance_treaty_accounting as accounting_treaty
-,org_id as organization_id
+-- ,reinsurance_treaty_accounting as accounting_treaty
+-- ,org_id as organization_id
 -- ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
 ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
 ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
@@ -15,4 +15,4 @@ where date_knowledge = '2020-07-27'
 and date_report_period_start >= '2020-01-01'
 and carrier <> 'Canopius'
 -- and product <> 'HO5'
-group by 1,2,3,4,5,6
+group by 1,2
