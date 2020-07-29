@@ -81,7 +81,7 @@ and p.organization_id = c.organization_id
 and p.tenure = c.tenure
 and p.policy_inception_month = c.policy_inception_month
 )
-, aggregated as (
+, summary as (
 select 
 state, accounting_treaty, accident_month, tenure, policy_inception_month
 -- accounting_treaty
@@ -90,6 +90,9 @@ state, accounting_treaty, accident_month, tenure, policy_inception_month
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
 , sum(cat_incurred) as cat_incurred
 , sum(total_incurred) as total_incurred
+, sum(non_cat_claim_count) as non_cat_claim_count
+, sum(cat_claim_count) as cat_claim_count
+, sum(total_claim_count) as total_claim_count
 -- , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
 -- , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
 -- , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
@@ -101,4 +104,4 @@ and accident_month >= '2019-09-01'
 group by 1,2,3,4,5
 order by 1,2,3
 )
-select * from aggregated
+select * from summary
