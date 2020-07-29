@@ -96,7 +96,7 @@ accounting_treaty
 from combined
 where 1=1
 and accident_month >= '2019-09-01'
-and accounting_treaty = 'Spkr20_Classic'
+-- and accounting_treaty = 'Spkr20_Classic'
 group by 1
 -- order by 1,2
 )
