@@ -5,7 +5,7 @@ select state
 ,date_report_period_start as accident_month
 ,reinsurance_treaty_accounting as accounting_treaty
 ,org_id as organization_id
--- ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
+,case when renewal_number = 0 then "New" else "Renewal" end as tenure
 ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
 ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
 ,sum(written_exposure) as written_exposure
@@ -13,10 +13,10 @@ select state
 from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
 where date_knowledge = '2020-07-29'
-and date_report_period_start >= '2020-01-01'
+and date_report_period_start >= '2019-09-01'
 and carrier <> 'Canopius'
 -- and product <> 'HO5'
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7
 )
 , claims_supp as (
 select * 
@@ -27,6 +27,7 @@ select *
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date cd
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on cd.policy_id = dp.policy_id
+left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-07-28') eps on eps.policy_id = cd.policy_id
   WHERE date_knowledge = '2020-07-28'
   and carrier <> 'Canopius'
 )
@@ -38,6 +39,7 @@ state
 ,date_trunc(date_of_loss, MONTH) as accident_month
 ,reinsurance_treaty
 ,org_id as organization_id
+,case when renewal_number = 0 then "New" else "Renewal" end as tenure
 ,sum(total_incurred) as total_incurred
 ,sum(case when CAT = 'N' then total_incurred else 0 end) as non_cat_incurred
 ,sum(case when CAT = 'Y' then total_incurred else 0 end) as cat_incurred
@@ -48,7 +50,7 @@ state
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7
 ) 
 , combined as (
 select p.*
@@ -68,6 +70,7 @@ and p.product = c.product
 and p.accident_month = c.accident_month
 and p.accounting_treaty = c.reinsurance_treaty
 and p.organization_id = c.organization_id
+and p.tenure = c.tenure
 )
 , aggregated as (
 select accounting_treaty, sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
