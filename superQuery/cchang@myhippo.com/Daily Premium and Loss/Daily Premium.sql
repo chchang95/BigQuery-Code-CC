@@ -13,9 +13,7 @@ select state
 from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
 where date_knowledge = '2020-07-29'
-and date_report_period_start >= '2019-09-01'
 and carrier <> 'Canopius'
--- and product <> 'HO5'
 group by 1,2,3,4,5,6,7
 )
 , claims_supp as (
@@ -83,6 +81,7 @@ select accounting_treaty, sum(written_prem_x_ebsl) as written_prem, sum(earned_p
 , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
 -- where accounting_treaty = 'Spkr20_Classic'
+where accident_month >= '2020-09-01'
 group by 1
 -- order by 1,2
 )
