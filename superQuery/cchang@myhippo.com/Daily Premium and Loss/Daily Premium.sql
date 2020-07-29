@@ -81,7 +81,8 @@ select accounting_treaty, sum(written_prem_x_ebsl) as written_prem, sum(earned_p
 , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
 -- where accounting_treaty = 'Spkr20_Classic'
-where accident_month >= '2020-09-01'
+where 1=1
+and accident_month >= '2019-09-01'
 group by 1
 -- order by 1,2
 )
