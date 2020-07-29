@@ -71,7 +71,8 @@ and p.organization_id = c.organization_id
 and p.tenure = c.tenure
 )
 , aggregated as (
-select accounting_treaty, sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
+select state, accounting_treaty, accident_month, tenure
+, sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
 , sum(cat_incurred) as cat_incurred
@@ -80,10 +81,10 @@ select accounting_treaty, sum(written_prem_x_ebsl) as written_prem, sum(earned_p
 , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
 , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
--- where accounting_treaty = 'Spkr20_Classic'
 where 1=1
 and accident_month >= '2019-09-01'
-group by 1
+and accounting_treaty = 'Spkr20_Classic'
+group by 1,2,3,4
 -- order by 1,2
 )
 select * from aggregated
