@@ -83,8 +83,8 @@ and p.policy_inception_month = c.policy_inception_month
 )
 , aggregated as (
 select 
---state, accounting_treaty, accident_month, tenure
-accounting_treaty
+state, accounting_treaty, accident_month, tenure, policy_inception_month
+-- accounting_treaty
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
@@ -97,7 +97,7 @@ from combined
 where 1=1
 and accident_month >= '2019-09-01'
 -- and accounting_treaty = 'Spkr20_Classic'
-group by 1
--- order by 1,2
+group by 1,2,3,4,5
+order by 1,2
 )
 select * from aggregated
