@@ -46,9 +46,13 @@ SELECT DISTINCT
       else 'N' end as CAT
       ,fc.*
       ,dp.org_id as organization_id
+      , eps.*
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
   left join (select claim_id, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_id)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
+  left join (select policy_id, case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
+        when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
+        else calculated_fields_non_cat_risk_class end as uw_action from dw_prod_extracts.ext_policy_snapshots where date_snapshot = @date_snapshot) eps on eps.policy_id = mon.policy_id 
   WHERE date_knowledge = @date_snapshot
   and carrier <> 'Canopius'
   )
@@ -82,6 +86,7 @@ SELECT DISTINCT
 --   ,loss_description
 --   ,damage_description
 --   ,Total_Recoverable_Depreciation
+, uw_action
   from x
   where ebsl = 'N'
 -- where product = 'HO5'
