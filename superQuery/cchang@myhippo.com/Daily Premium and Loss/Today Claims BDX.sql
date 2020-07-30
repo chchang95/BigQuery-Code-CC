@@ -83,5 +83,5 @@ SELECT DISTINCT
 --   ,damage_description
 --   ,Total_Recoverable_Depreciation
   from x
---   where ebsl = 'N'
-where product = 'HO5'
+  where ebsl = 'N'
+-- where product = 'HO5'
