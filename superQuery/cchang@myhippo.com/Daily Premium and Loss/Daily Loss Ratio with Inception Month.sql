@@ -108,7 +108,7 @@ from combined
 where 1=1
 and accident_month >= '2019-09-01'
 -- and accounting_treaty = 'Spkr20_Classic'
-group by 1,2,3,4,5
+group by 1,2,3,4,5,6
 order by 1,2,3
 )
 select * from summary
