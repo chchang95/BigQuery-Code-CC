@@ -87,4 +87,19 @@ and accounting_treaty = 'Spkr20_Classic'
 group by 1,2,3,4
 -- order by 1,2
 )
-select * from aggregated
+, summary as (
+select accounting_treaty
+, sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
+, sum(capped_non_cat_incurred) as capped_non_cat_incurred
+, sum(excess_non_cat_incurred) as excess_non_cat_incurred
+, sum(cat_incurred) as cat_incurred
+, round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
+, round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
+, round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
+, round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
+from combined
+where 1=1
+and accident_month >= '2020-01-01'
+group by 1
+)
+select * from summary
