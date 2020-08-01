@@ -15,8 +15,8 @@
         ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
         ,sum(written_exposure) as written_exposure
         ,sum(earned_exposure) as earned_exposure
-        ,sum(written_policy_fee) as written_policy_fee
-        ,sum(earned_policy_fee) as earned_policy_fee
+        -- ,sum(written_policy_fee) as written_policy_fee
+        -- ,sum(earned_policy_fee) as earned_policy_fee
 from dw_prod_extracts.ext_policy_update_monthly_premiums epud
     left join (select policy_id, policy_number, reinsurance_treaty, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on epud.policy_id = dp.policy_id
         where date_knowledge = '2020-06-30'
