@@ -1,10 +1,10 @@
 
     select 
         -- epud.policy_id
-        lower(state) as state
-        , lower(carrier) as carrier
+        -- lower(state) as state
+        -- , lower(carrier) as carrier
         -- , lower(product) as product
-        , extract(year from date_calendar_month_accounting_basis) as calendar_year
+        extract(year from date_calendar_month_accounting_basis) as calendar_year
         , date_calendar_month_accounting_basis as date_accounting_start
         , date_sub(date_add(date_calendar_month_accounting_basis, INTERVAL 1 MONTH), INTERVAL 1 DAY) as date_accounting_end
         , reinsurance_treaty_accounting
@@ -20,4 +20,4 @@ from dw_prod_extracts.ext_policy_monthly_premiums epud
         where date_knowledge = '2020-07-31'
         and carrier <> 'Canopius'
         -- and product <> 'HO5'
-group by 1,2,3,4,5,6
+group by 1,2,3,4
