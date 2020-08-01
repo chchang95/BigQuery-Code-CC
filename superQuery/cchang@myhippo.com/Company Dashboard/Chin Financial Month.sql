@@ -19,7 +19,7 @@
         -- ,sum(earned_policy_fee) as earned_policy_fee
 from dw_prod_extracts.ext_policy_update_monthly_premiums epud
     left join (select policy_id, policy_number, reinsurance_treaty, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on epud.policy_id = dp.policy_id
-        where date_knowledge = '2020-06-30'
+        where date_knowledge = '2020-07-31'
         and carrier <> 'Canopius'
         -- and product <> 'HO5'
 group by 1,2,3,4,5,6
