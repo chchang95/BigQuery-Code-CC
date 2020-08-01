@@ -1,10 +1,10 @@
 
     select 
         -- epud.policy_id
-        lower(state) as state
-        , lower(carrier) as carrier
+        -- lower(state) as state
+        -- , lower(carrier) as carrier
         -- , lower(product) as product
-        , extract(year from greatest(date_trunc(date_customer_update_made, MONTH), date_trunc(date_update_effective, MONTH), date_report_period_start)) as calendar_year
+        extract(year from greatest(date_trunc(date_customer_update_made, MONTH), date_trunc(date_update_effective, MONTH), date_report_period_start)) as calendar_year
         , greatest(date_trunc(date_customer_update_made, MONTH), date_trunc(date_update_effective, MONTH), date_report_period_start) as date_accounting_start
         , date_sub(date_add(greatest(date_trunc(date_customer_update_made, MONTH), date_trunc(date_update_effective, MONTH), date_report_period_start), INTERVAL 1 MONTH), INTERVAL 1 DAY) as date_accounting_end
         , case when reinsurance_treaty = 'Spkr19_GAP' and date_report_period_start <= '2019-12-31' then 'Spkr19_GAP'
@@ -22,4 +22,4 @@ from dw_prod_extracts.ext_policy_update_monthly_premiums epud
         where date_knowledge = '2020-07-31'
         and carrier <> 'Canopius'
         -- and product <> 'HO5'
-group by 1,2,3,4,5,6
+group by 1,2,3,4
