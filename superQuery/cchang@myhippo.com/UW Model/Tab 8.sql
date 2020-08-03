@@ -7,7 +7,7 @@ select policy_id
 from dw_prod_extracts.ext_policy_snapshots 
 where date_snapshot = '2020-07-31'
 )
-select cd.*
+, claims as (select cd.*
 ,org_id
 ,renewal_number
 ,uw_action
@@ -25,3 +25,22 @@ left join snapshot eps
     on cd.policy_id = eps.policy_id
   WHERE date_knowledge = '2020-07-31'
   and carrier <> 'Canopius'
+)
+select 
+claim_id
+,policy_id
+,policy_number
+,claim_number
+,date_of_loss
+,date_first_notice_of_loss as report_date
+,peril
+,product
+,carrier
+,date_effective
+,date_expires
+,total_incurred
+from claims
+where EBSL = 'N'
+and CAT = 'N'
+and uw_action = 'referral'
+and claim_closed_no_total_payment = 'false'
