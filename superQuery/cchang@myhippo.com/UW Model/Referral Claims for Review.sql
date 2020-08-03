@@ -44,8 +44,8 @@ claim_id
 from claims
 where EBSL = 'N'
 and CAT = 'N'
-and date_effective >= '2020-05-01'
+-- and date_effective >= '2020-05-01'
 and uw_action = 'referral'
--- and claim_closed_no_total_payment = false
+and claim_closed_no_total_payment = false
 and renewal_number = 0
 order by date_effective desc, date_of_loss desc, total_incurred desc
