@@ -29,9 +29,11 @@ select
 eps.policy_id, eps.policy_number
 , date_trunc(date_policy_effective, MONTH) as policy_inception_month
 ,carrier
+,state
 ,product
 ,org_id as organization_id
-,property_data_address_zip
+,property_data_address_zip as zip
+,property_data_address_county as county
 ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
 , case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
         when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
