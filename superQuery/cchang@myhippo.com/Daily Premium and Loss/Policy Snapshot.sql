@@ -42,14 +42,14 @@ eps.policy_id, eps.policy_number
 ,earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line as earned_prem_x_ebsl
 ,written_exposure
 ,earned_exposure
-,coalesce(total_incurred,0) as total_incurred
-,coalesce(non_cat_incurred,0) as non_cat_incurred
-,coalesce(cat_incurred,0) as cat_incurred
-,coalesce(total_claim_count_x_cnp,0) as total_claim_count_x_cnp
-,coalesce(non_cat_claim_count_x_cnp,0) as non_cat_claim_count_x_cnp
-,coalesce(cat_claim_count_x_cnp,0) as cat_claim_count_x_cnp
-,coalesce(capped_non_cat_incurred,0) as capped_non_cat_incurred
-,coalesce(excess_non_cat_incurred,0) as excess_non_cat_incurred
+,total_incurred
+,non_cat_incurred
+,cat_incurred
+,total_claim_count_x_cnp
+,non_cat_claim_count_x_cnp
+,cat_claim_count_x_cnp
+,capped_non_cat_incurred
+,excess_non_cat_incurred
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
 left join claims c on eps.policy_id = c.policy_id
