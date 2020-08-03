@@ -38,9 +38,12 @@ claim_id
 ,carrier
 ,date_effective
 ,date_expires
+,uw_action
+,renewal_number
 ,total_incurred
 from claims
 where EBSL = 'N'
 and CAT = 'N'
 and uw_action = 'referral'
-and claim_closed_no_total_payment = 'false'
+and claim_closed_no_total_payment = false
+order by total_incurred desc, renewal_number asc
