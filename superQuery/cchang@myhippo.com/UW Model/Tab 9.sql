@@ -30,5 +30,5 @@ select cast(id as string)   as policy_number
           and state is not null
           and initial_quote_date is not null
           and json_extract_scalar(transaction,'$.effective_date') is not null
-          and id = '2785651'
+          and email = 'yvettembone@gmail.com'
         --   LIMIT 50000
