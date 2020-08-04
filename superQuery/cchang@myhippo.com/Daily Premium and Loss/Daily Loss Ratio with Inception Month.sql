@@ -110,7 +110,7 @@ state, product, carrier, accounting_treaty, accident_month, tenure, policy_incep
 -- , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
 where 1=1
-and accident_month >= '2020-05-01'
+and accident_month >= '2020-01-01'
 group by 1,2,3,4,5,6,7,8,9
 order by 1,2,3
 )
