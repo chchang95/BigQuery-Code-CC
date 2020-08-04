@@ -26,7 +26,7 @@ select state
 ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
 ,sum(written_exposure) as written_exposure
 ,sum(earned_exposure) as earned_exposure
-from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
+from dw_prod_extracts.ext_policy_monthly_premiums mon
 left join policy_info dp on mon.policy_id = dp.policy_id
 where date_knowledge = @today_date
 and carrier <> 'Canopius'
