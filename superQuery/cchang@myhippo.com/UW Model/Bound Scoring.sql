@@ -177,7 +177,7 @@ from scoring_begin
 , scoring_final as (
 select 
 policy_id, state, carrier, product, case when renewal_number > 0 then 'Renewal' else 'New' end as tenure
-, calculated_fields_non_cat_risk_class
+-- , calculated_fields_non_cat_risk_class
 , calculated_fields_non_cat_risk_score
 , cov_a
 , written_base
