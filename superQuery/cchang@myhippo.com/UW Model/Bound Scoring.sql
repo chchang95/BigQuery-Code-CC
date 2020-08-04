@@ -1,7 +1,8 @@
 with scoring_begin as (
 select 
--- policy_id, state, carrier, product, calculated_fields_non_cat_risk_score, renewal_number
-*
+policy_id, state, carrier, product, renewal_number, calculated_fields_non_cat_risk_class, calculated_fields_non_cat_risk_score, cov_a, written_base, property_data_number_of_family_units, JSON_EXTRACT_SCALAR(property_data_zillow, '$.zestimate') as zillow_estimate, property_data_rebuilding_cost
+, property_data_swimming_pool
+-- ,*
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
 ,insurance_score  
@@ -196,8 +197,7 @@ from scoring_inter
 )
 select *
 -- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
-from scoring_final
--- where policy_id = 2785651
-where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.000
+from scoring_inter
+where policy_id = 1718997
+-- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.000
 -- 2513405
--- select * from dw_prod_extracts.ext_policy_snapshots where state = 'TX' and calculated_fields_cat_risk_score is not null
