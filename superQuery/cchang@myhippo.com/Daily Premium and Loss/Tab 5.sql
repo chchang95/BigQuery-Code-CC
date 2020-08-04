@@ -13,3 +13,4 @@ and calculated_fields_non_cat_risk_class is null
 and carrier <> 'Canopius'
 and date_policy_effective >= '2020-05-01'
 and product <> 'HO5'
+and renewal_number = 0
