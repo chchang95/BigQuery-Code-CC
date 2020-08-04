@@ -1,7 +1,7 @@
 with scoring_begin as (
 select 
--- policy_id, state, carrier, product, calculated_fields_non_cat_risk_score
-*
+policy_id, state, carrier, product, calculated_fields_non_cat_risk_score
+-- *
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
 ,insurance_score  
@@ -199,5 +199,5 @@ select *
 from scoring_inter
 where policy_id = 2785651
 -- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.000
-
+-- 2513405
 -- select * from dw_prod_extracts.ext_policy_snapshots where state = 'TX' and calculated_fields_cat_risk_score is not null
