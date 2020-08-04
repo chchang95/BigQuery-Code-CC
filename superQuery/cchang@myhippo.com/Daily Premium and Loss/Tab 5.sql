@@ -1,5 +1,7 @@
 select eps.policy_id
 , date_trunc(date_policy_effective, MONTH) as policy_inception_month
+,state
+,product
 , renewal_number
 , org_id
 , property_data_address_zip as zip
