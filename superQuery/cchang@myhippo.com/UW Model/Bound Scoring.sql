@@ -193,7 +193,7 @@ from scoring_begin
 -- -- , exp(lin_comb) as exponent
 -- , round(exp(lin_comb) / (1+ exp(lin_comb)),6) as risk_score
 -- from scoring_inter
-)
+-- )
 select *
 -- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
 from scoring_inter
