@@ -111,7 +111,7 @@ state, product, carrier, accounting_treaty, accident_month, tenure, policy_incep
 from combined
 where 1=1
 and accident_month >= '2019-01-01'
-and state = 'ca'
+and state = 'CA'
 group by 1,2,3,4,5,6,7,8,9
 order by 1,2,3
 )
