@@ -1,7 +1,7 @@
 with scoring_begin as (
 select 
-policy_id, state, carrier, product, calculated_fields_non_cat_risk_score, renewal_number
--- *
+-- policy_id, state, carrier, product, calculated_fields_non_cat_risk_score, renewal_number
+*
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
 ,insurance_score  
@@ -174,30 +174,30 @@ score_intercept
 as lin_comb
 from scoring_begin
 )
--- , scoring_final as (
--- select 
--- policy_id, state, carrier, product, case when renewal_number > 0 then 'Renewal' else 'New' end as tenure
--- , calculated_fields_non_cat_risk_class
--- , calculated_fields_non_cat_risk_score
--- , cov_a
--- , written_base
--- , property_data_number_of_family_units
--- , JSON_EXTRACT_SCALAR(property_data_zillow, '$.zestimate') as zillow_estimate
--- , property_data_rebuilding_cost
--- , property_data_swimming_pool
--- , case when property_data_year_built is null then 'Missing'
---       when cast(property_data_year_built as numeric) >= 2000 then 'Post 2000' 
---       when cast(property_data_year_built as numeric) > 1980 then 'Pre 2000' 
---       else 'Pre 1980' end as year_built
--- -- , lin_comb
--- -- , exp(lin_comb) as exponent
--- , round(exp(lin_comb) / (1+ exp(lin_comb)),6) as risk_score
--- from scoring_inter
--- )
+, scoring_final as (
+select 
+policy_id, state, carrier, product, case when renewal_number > 0 then 'Renewal' else 'New' end as tenure
+, calculated_fields_non_cat_risk_class
+, calculated_fields_non_cat_risk_score
+, cov_a
+, written_base
+, property_data_number_of_family_units
+, JSON_EXTRACT_SCALAR(property_data_zillow, '$.zestimate') as zillow_estimate
+, property_data_rebuilding_cost
+, property_data_swimming_pool
+, case when property_data_year_built is null then 'Missing'
+      when cast(property_data_year_built as numeric) >= 2000 then 'Post 2000' 
+      when cast(property_data_year_built as numeric) > 1980 then 'Pre 2000' 
+      else 'Pre 1980' end as year_built
+-- , lin_comb
+-- , exp(lin_comb) as exponent
+, round(exp(lin_comb) / (1+ exp(lin_comb)),6) as risk_score
+from scoring_inter
+)
 select *
 -- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
-from scoring_inter
-where policy_id = 2785651
--- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.000
+from scoring_final
+-- where policy_id = 2785651
+where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) = 0.000
 -- 2513405
 -- select * from dw_prod_extracts.ext_policy_snapshots where state = 'TX' and calculated_fields_cat_risk_score is not null
