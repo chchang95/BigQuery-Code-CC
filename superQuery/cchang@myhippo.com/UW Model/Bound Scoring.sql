@@ -191,7 +191,7 @@ policy_id, state, carrier, product, case when renewal_number > 0 then 'Renewal' 
       else 'Pre 1980' end as year_built
 -- , lin_comb
 -- , exp(lin_comb) as exponent
-, exp(lin_comb) / (1+ exp(lin_comb)) as risk_score
+, round(exp(lin_comb) / (1+ exp(lin_comb)),6) as risk_score
 from scoring_inter
 )
 select *
