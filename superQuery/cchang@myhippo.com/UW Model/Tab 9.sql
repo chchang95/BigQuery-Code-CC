@@ -12,6 +12,7 @@ select cast(id as string)   as policy_number
                    when coalesce(json_extract_scalar(transaction,'$.property_data.hoa_membership'), 'false') = 'false' then 'No'
                    else 'Yes' end                                                      as Hoa_Membership
              , cast('lead' as string)                                                                  as quote_type
+             , data
         from postgres_public.leads a
                  left join (select lead_id, bound, status
                             from postgres_public.policies
