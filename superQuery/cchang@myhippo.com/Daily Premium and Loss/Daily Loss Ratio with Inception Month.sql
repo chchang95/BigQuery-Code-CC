@@ -3,6 +3,7 @@ select eps.policy_id
 , date_trunc(date_policy_effective, MONTH) as policy_inception_month
 , renewal_number
 , org_id
+, property_data_address_zip as zip
 , case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
         when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
         else calculated_fields_non_cat_risk_class end as uw_action 
@@ -20,6 +21,7 @@ select state
 ,case when dp.renewal_number = 0 then "New" else "Renewal" end as tenure
 ,policy_inception_month
 ,uw_action
+,zip
 ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
 ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
 ,sum(written_exposure) as written_exposure
@@ -28,7 +30,8 @@ from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
 left join policy_info dp on mon.policy_id = dp.policy_id
 where date_knowledge = @today_date
 and carrier <> 'Canopius'
-group by 1,2,3,4,5,6,7,8,9
+and product <> 'HO5'
+group by 1,2,3,4,5,6,7,8,9,10
 )
 , claims_supp as (
 select * 
@@ -53,6 +56,7 @@ state
 ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
 ,policy_inception_month
 ,uw_action
+,zip
 ,sum(total_incurred) as total_incurred
 ,sum(case when CAT = 'N' then total_incurred else 0 end) as non_cat_incurred
 ,sum(case when CAT = 'Y' then total_incurred else 0 end) as cat_incurred
@@ -63,7 +67,7 @@ state
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8,9,10
 ) 
 , combined as (
 select p.*
@@ -86,11 +90,11 @@ and p.organization_id = c.organization_id
 and p.tenure = c.tenure
 and p.policy_inception_month = c.policy_inception_month
 and p.uw_action = c.uw_action
+and p.zip = c.zip
 )
 , summary as (
 select 
-state, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action
--- accounting_treaty
+state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action, zip, organization_id
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(earned_exposure) as earned_exposure
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
@@ -107,8 +111,7 @@ state, accounting_treaty, accident_month, tenure, policy_inception_month, uw_act
 from combined
 where 1=1
 and accident_month >= '2019-09-01'
--- and accounting_treaty = 'Spkr20_Classic'
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7,8,9,10
 order by 1,2,3
 )
 select * from summary
