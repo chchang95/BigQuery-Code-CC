@@ -196,8 +196,8 @@ from scoring_inter
 )
 select *
 -- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
-from scoring_final
--- where tenure = 'New'
-where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.000
+from scoring_inter
+where policy_id = 2785651
+-- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.000
 
 -- select * from dw_prod_extracts.ext_policy_snapshots where state = 'TX' and calculated_fields_cat_risk_score is not null
