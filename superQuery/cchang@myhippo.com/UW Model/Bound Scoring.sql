@@ -1,6 +1,6 @@
 with scoring_begin as (
 select 
-policy_id, state, carrier, product, calculated_fields_non_cat_risk_score
+policy_id, state, carrier, product, calculated_fields_non_cat_risk_score, renewal_number
 -- *
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
