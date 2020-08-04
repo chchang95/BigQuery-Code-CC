@@ -94,7 +94,7 @@ and p.zip = c.zip
 )
 , summary as (
 select 
-state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action, zip, organization_id
+state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action, zip
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(earned_exposure) as earned_exposure
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
@@ -111,7 +111,7 @@ state, product, carrier, accounting_treaty, accident_month, tenure, policy_incep
 from combined
 where 1=1
 and accident_month >= '2020-05-01'
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9
 order by 1,2,3
 )
 select * from summary
