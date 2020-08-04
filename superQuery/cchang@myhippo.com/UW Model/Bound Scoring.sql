@@ -1,6 +1,6 @@
 with scoring_begin as (
 select 
-policy_id, state, carrier, product, renewal_number, calculated_fields_non_cat_risk_class, calculated_fields_non_cat_risk_score, cov_a, written_base, property_data_number_of_family_units, JSON_EXTRACT_SCALAR(property_data_zillow, '$.zestimate') as zillow_estimate, property_data_rebuilding_cost
+policy_id, state, carrier, product, renewal_number, calculated_fields_non_cat_risk_class, calculated_fields_non_cat_risk_score, written_base, property_data_number_of_family_units, JSON_EXTRACT_SCALAR(property_data_zillow, '$.zestimate') as zillow_estimate, property_data_rebuilding_cost
 , property_data_swimming_pool
 -- ,*
 ,coverage_a as cov_a
