@@ -2,6 +2,7 @@ with scoring_begin as (
 select 
 policy_id, state, carrier, product, renewal_number, calculated_fields_non_cat_risk_class, calculated_fields_non_cat_risk_score, written_base, property_data_number_of_family_units, property_data_zillow, property_data_rebuilding_cost
 , property_data_swimming_pool
+, property_data_year_built
 -- ,*
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
