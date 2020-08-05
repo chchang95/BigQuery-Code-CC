@@ -1,6 +1,6 @@
 with x as(
 select
-policy_id_2 as policy_id
+policy_id
 ,state
 ,carrier
 ,product
