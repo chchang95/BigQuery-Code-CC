@@ -103,7 +103,7 @@ and p.calculated_fields_non_cat_risk_score = c.calculated_fields_non_cat_risk_sc
 )
 , summary as (
 select 
-policy_id, state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action, zip, calculated_fields_non_cat_risk_score
+policy_id, state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action, zip, calculated_fields_non_cat_risk_score, organization_id
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(earned_exposure) as earned_exposure
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
@@ -119,9 +119,9 @@ policy_id, state, product, carrier, accounting_treaty, accident_month, tenure, p
 -- , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
 where 1=1
-and accident_month >= '2019-09-01'
+and accident_month >= '2020-01-01'
 and state = 'CA'
-group by 1,2,3,4,5,6,7,8,9,10,11
+group by 1,2,3,4,5,6,7,8,9,10,11,12
 order by 1,2,3
 )
 select * from summary
