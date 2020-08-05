@@ -207,7 +207,7 @@ select eps.policy_id
 , case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
         when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
         else calculated_fields_non_cat_risk_class end as uw_action 
-, case when calculated_fields_non_cat_risk_score is null then risk_score else cast(calculated_fields_non_cat_risk_score as numeric) end as calculated_fields_non_cat_risk_score
+, case when calculated_fields_non_cat_risk_score is null then coalesce(risk_score,-1) else cast(calculated_fields_non_cat_risk_score as numeric) end as calculated_fields_non_cat_risk_score
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
 left join scoring_final sf on sf.policy_id = eps.policy_id
