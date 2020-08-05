@@ -31,6 +31,7 @@ eps.policy_id, eps.policy_number
 ,carrier
 ,state
 ,product
+,status 
 ,org_id as organization_id
 ,property_data_address_zip as zip
 ,property_data_address_county as county
@@ -38,22 +39,23 @@ eps.policy_id, eps.policy_number
 , case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
         when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
         else calculated_fields_non_cat_risk_class end as uw_action 
+, calculated_fields_non_cat_risk_score as non_cat_risk_score
 ,written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line as written_prem_x_ebsl
 ,earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line as earned_prem_x_ebsl
 ,written_exposure
 ,earned_exposure
-,total_incurred
-,non_cat_incurred
-,cat_incurred
-,total_claim_count_x_cnp
-,non_cat_claim_count_x_cnp
-,cat_claim_count_x_cnp
-,capped_non_cat_incurred
-,excess_non_cat_incurred
+,coalesce(total_incurred,0) as total_incurred
+,coalesce(non_cat_incurred,0) as non_cat_incurred
+,coalesce(cat_incurred,0) as cat_incurred
+,coalesce(total_claim_count_x_cnp,0) as total_claim_count_x_cnp
+,coalesce(non_cat_claim_count_x_cnp,0) as non_cat_claim_count_x_cnp
+,coalesce(cat_claim_count_x_cnp,0) as cat_claim_count_x_cnp
+,coalesce(capped_non_cat_incurred,0) as capped_non_cat_incurred
+,coalesce(excess_non_cat_incurred,0) as excess_non_cat_incurred
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
 left join claims c on eps.policy_id = c.policy_id
 where date_snapshot = '2020-07-31'
 and carrier <> 'Canopius'
 and product <> 'HO5'
-and state <> 'CA'
+and state = 'CA'
