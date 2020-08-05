@@ -13,7 +13,7 @@ policy_id_2 as policy_id
 ,zip
 ,calculated_fields_non_cat_risk_score
 ,sum(total_incurred) as total_incurred
-from ext_claims_inception_to_date
+from dw_prod_extracts.ext_claims_inception_to_date
 where 
 1=1
 and state = 'CA'
