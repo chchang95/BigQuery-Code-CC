@@ -97,7 +97,7 @@ select accounting_treaty
 , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
 , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
 , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
-, round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
+, round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total
 from combined
 where 1=1
 and accident_month >= '2020-01-01'
