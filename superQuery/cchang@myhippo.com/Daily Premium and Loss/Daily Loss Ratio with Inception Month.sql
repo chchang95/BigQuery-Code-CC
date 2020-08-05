@@ -19,3 +19,4 @@ where
 and state = 'CA'
 and carrier = 'Topa'
 group by 1,2,3,4,5,6,7,8,9,10,11,12)
+select sum(total_incurred) from x
