@@ -127,4 +127,4 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12
 -- group by 1
 order by 1,2,3
 )
-select sum(total_incurred) from summary
+select * from summary
