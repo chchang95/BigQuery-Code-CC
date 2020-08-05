@@ -7,12 +7,15 @@ select eps.policy_id
 , case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
         when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
         else calculated_fields_non_cat_risk_class end as uw_action 
+, calculated_fields_non_cat_risk_score
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
 where date_snapshot = @date_snapshot
 )
 , premium as (
-select state
+select 
+mon.policy_id
+,state
 ,carrier
 ,product
 ,date_report_period_start as accident_month
@@ -22,6 +25,7 @@ select state
 ,policy_inception_month
 ,uw_action
 ,zip
+,calculated_fields_non_cat_risk_score
 ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
 ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
 ,sum(written_exposure) as written_exposure
@@ -31,10 +35,11 @@ left join policy_info dp on mon.policy_id = dp.policy_id
 where date_knowledge = @today_date
 and carrier <> 'Canopius'
 and product <> 'HO5'
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9,10,11,12
 )
 , claims_supp as (
 select * 
+, dp.policy_id as policy_id_2
 , case when peril = 'equipment_breakdown' or peril = 'service_line' then 'Y'
       else 'N' end as EBSL
 , case when peril = 'wind' or peril = 'hail' then 'Y'
@@ -47,7 +52,8 @@ left join policy_info dp on cd.policy_id = dp.policy_id
 )
 , claims as (
 select
-state
+policy_id_2 as policy_id
+,state
 ,carrier
 ,product
 ,date_trunc(date_of_loss, MONTH) as accident_month
@@ -57,6 +63,7 @@ state
 ,policy_inception_month
 ,uw_action
 ,zip
+,calculated_fields_non_cat_risk_score
 ,sum(total_incurred) as total_incurred
 ,sum(case when CAT = 'N' then total_incurred else 0 end) as non_cat_incurred
 ,sum(case when CAT = 'Y' then total_incurred else 0 end) as cat_incurred
@@ -67,7 +74,7 @@ state
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9,10,11,12
 ) 
 , combined as (
 select p.*
@@ -81,7 +88,8 @@ select p.*
 ,coalesce(excess_non_cat_incurred,0) as excess_non_cat_incurred
 from premium p 
 left join claims c
-on p.state = c.state
+on p.policy_id = c.policy_id
+and p.state = c.state
 and p.carrier = c.carrier
 and p.product = c.product
 and p.accident_month = c.accident_month
@@ -91,10 +99,11 @@ and p.tenure = c.tenure
 and p.policy_inception_month = c.policy_inception_month
 and p.uw_action = c.uw_action
 and p.zip = c.zip
+and p.calculated_fields_non_cat_risk_score = c.calculated_fields_non_cat_risk_score
 )
 , summary as (
 select 
-state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action, zip
+policy_id, state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action, zip, calculated_fields_non_cat_risk_score
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(earned_exposure) as earned_exposure
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
@@ -112,7 +121,7 @@ from combined
 where 1=1
 and accident_month >= '2019-01-01'
 and state = 'CA'
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8,9,10,11
 order by 1,2,3
 )
 select * from summary
