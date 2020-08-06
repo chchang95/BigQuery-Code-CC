@@ -53,7 +53,7 @@ from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
 where date_snapshot = '2020-07-31'
-and carrier = 'Spinnaker'
+and carrier = 'Topa'
 
 
 -- select * from dw_prod_extracts.ext_policy_snapshots where policy_id = 2413416 and date_knowledge = '2020-04-30'
