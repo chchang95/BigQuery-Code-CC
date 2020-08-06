@@ -13,6 +13,8 @@ with premium as (
         ,org_id as organization_id
         ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_inc_policy_fee_ex_EBSL
         ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_inc_policy_fee_ex_EBSL
+        ,sum(earned_inspection_fee) as earned_inspection_fee
+        ,sum(written_inspection_fee) as written_inspection_fee
         ,sum(earned_policy_fee) as earned_policy_fee
         ,sum(written_policy_fee) as written_policy_fee
         ,sum(earned_optionals_equipment_breakdown + earned_optionals_service_line) as earned_EBSL
