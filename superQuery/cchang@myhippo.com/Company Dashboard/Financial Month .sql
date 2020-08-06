@@ -40,6 +40,7 @@ group by 1,2,3,4,5,6,7,8,9
         -- ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
         ,sum(written_prem_inc_policy_fee_ex_EBSL) as written_prem_inc_policy_fee_ex_EBSL
         ,sum(earned_prem_inc_policy_fee_ex_EBSL) as earned_prem_inc_policy_fee_ex_EBSL
+        ,sum(written_inspection_fee) as written_inspection_fee
         ,sum(written_policy_fee) as written_policy_fee
         ,sum(earned_policy_fee) as earned_policy_fee
         ,sum(written_EBSL) as written_EBSL
