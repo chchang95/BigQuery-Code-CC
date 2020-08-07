@@ -21,4 +21,6 @@
 --   where is_ebsl is false
 --   group by 1,2,3,4,5,6,7,8,9
   
- select * from dw_prod_extracts.ext_all_claims_combined
+ select distinct date_report_period_end from dw_prod_extracts.ext_all_claims_combined
+ where tbl_source = 'topa_tpa_claims'
+ group by 1
