@@ -43,7 +43,7 @@ where 1=1
 and carrier <> 'Canopius'
 and date_knowledge = '2020-07-31'
 and date_report_period_end = '2020-07-31'
-and peril <> ''
+and peril not in ('equipment_breakdown', 'service_line')
 group by 1,2
 
 -- Paid loss
