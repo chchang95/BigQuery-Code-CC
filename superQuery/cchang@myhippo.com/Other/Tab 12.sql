@@ -39,6 +39,7 @@ count(distinct claim_number) as total_reported_claim_count
 from dw_prod_extracts.ext_all_claims_combined
 where 1=1
 and carrier <> 'Canopius'
+and date_knowledge = '2020-07-31'
 
 -- Paid loss
 -- Incurred loss
