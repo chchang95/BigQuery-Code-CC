@@ -66,7 +66,8 @@ and carrier = 'Topa'
 -- and date_knowledge = '2020-07-31'
 and extract(MONTH from date_knowledge) in (3,6,9,12)
 -- and peril not in ('equipment_breakdown', 'service_line')
-group by accident_quarter_year asc,1,2
+group by 1,2,3
+order by 3 asc, 1,2
 
 -- Paid loss
 -- Incurred loss
