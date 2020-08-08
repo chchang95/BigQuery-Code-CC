@@ -29,7 +29,7 @@
 -- order by 1
 
 select 
-count(distinct claim_number) as total_reported_claim_count
+carrier,count(distinct claim_number) as total_reported_claim_count
 ,sum(case when claim_status <> 'closed' then 1 else 0 end) as open_claim_count
 ,sum(case when claim_status = 'closed' then 1 else 0 end) as closed_claim_count
 ,sum(loss_paid) as total_paid_loss
