@@ -36,7 +36,21 @@
 -- order by 1
 
 select 
-carrier, tbl_source
+date_knowledge, tbl_source 
+,concat(extract(YEAR from date_of_loss),case
+when extract(MONTH from date_of_loss) = 1 then 'Q1'
+when extract(MONTH from date_of_loss) = 2 then 'Q1'
+when extract(MONTH from date_of_loss) = 3 then 'Q1'
+when extract(MONTH from date_of_loss) = 4 then 'Q2'
+when extract(MONTH from date_of_loss) = 5 then 'Q2'
+when extract(MONTH from date_of_loss) = 6 then 'Q2'
+when extract(MONTH from date_of_loss) = 7 then 'Q3'
+when extract(MONTH from date_of_loss) = 8 then 'Q3'
+when extract(MONTH from date_of_loss) = 9 then 'Q3'
+when extract(MONTH from date_of_loss) = 10 then 'Q4'
+when extract(MONTH from date_of_loss) = 11 then 'Q4'
+when extract(MONTH from date_of_loss) = 12 then 'Q4'
+end) as accident_quarter_year
 ,count(distinct claim_number) as total_reported_claim_count
 ,sum(case when claim_status <> 'closed' then 1 else 0 end) as open_claim_count
 ,sum(case when claim_status = 'closed' then 1 else 0 end) as closed_claim_count
@@ -47,11 +61,12 @@ carrier, tbl_source
 ,sum(loss_paid + loss_net_reserve - recoveries + expense_paid + expense_net_reserve) as total_incurred
 from dw_prod_extracts.ext_all_claims_combined
 where 1=1
-and carrier <> 'Canopius'
+and carrier = 'Topa'
 -- and tbl_source = 'topa_tpa_claims'
-and date_knowledge = '2020-07-31'
-and peril not in ('equipment_breakdown', 'service_line')
-group by 1,2
+-- and date_knowledge = '2020-07-31'
+and extract(MONTH from date_knowledge) in (3,6,9,12)
+-- and peril not in ('equipment_breakdown', 'service_line')
+group by 1,2,3
 
 -- Paid loss
 -- Incurred loss
