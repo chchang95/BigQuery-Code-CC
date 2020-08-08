@@ -44,6 +44,7 @@ carrier, tbl_source
 ,sum(expense_paid) as total_paid_ALAE
 ,sum(loss_incurred) as total_incurred_loss
 ,sum(expense_incurred) as total_incurred_expense
+,sum(recoveries) as recoveries
 ,sum(loss_incurred + expense_incurred) as total_incurred
 from dw_prod_extracts.ext_all_claims_combined
 where 1=1
