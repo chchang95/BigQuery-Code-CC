@@ -37,6 +37,8 @@ count(distinct claim_number) as total_reported_claim_count
 ,sum(loss_incurred) as total_incurred_loss
 ,sum(expense_incurred) as total_incurred_expense
 from dw_prod_extracts.ext_all_claims_combined
+where 1=1
+and carrier <> 'Canopius'
 
 -- Paid loss
 -- Incurred loss
