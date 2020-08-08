@@ -44,14 +44,12 @@ carrier, tbl_source
 ,sum(expense_paid) as total_paid_ALAE
 ,sum(loss_paid + loss_net_reserve - recoveries) as total_incurred_loss
 ,sum(expense_paid + expense_net_reserve) as total_incurred_expense
-,sum(recoveries) as recoveries
 ,sum(loss_paid + loss_net_reserve - recoveries + expense_paid + expense_net_reserve) as total_incurred
-,sum(loss_incurred + expense_incurred - recoveries) as total_incurred_2
 from dw_prod_extracts.ext_all_claims_combined
 where 1=1
 and carrier <> 'Canopius'
-and tbl_source = 'topa_tpa_claims'
-and date_knowledge = '2020-05-31'
+-- and tbl_source = 'topa_tpa_claims'
+and date_knowledge = '2020-07-31'
 -- and peril not in ('equipment_breakdown', 'service_line')
 group by 1,2
 
