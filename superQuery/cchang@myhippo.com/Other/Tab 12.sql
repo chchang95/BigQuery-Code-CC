@@ -41,6 +41,7 @@ carrier, tbl_source
 from dw_prod_extracts.ext_all_claims_combined
 where 1=1
 and carrier <> 'Canopius'
+and tbl_source = 'topa_tpa_claims'
 and date_knowledge = '2020-04-30'
 and peril not in ('equipment_breakdown', 'service_line')
 group by 1,2
