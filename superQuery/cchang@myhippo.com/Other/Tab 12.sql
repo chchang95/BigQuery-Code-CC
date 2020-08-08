@@ -29,7 +29,8 @@
 -- order by 1
 
 select 
-carrier,count(distinct claim_number) as total_reported_claim_count
+carrier
+,count(distinct claim_number) as total_reported_claim_count
 ,sum(case when claim_status <> 'closed' then 1 else 0 end) as open_claim_count
 ,sum(case when claim_status = 'closed' then 1 else 0 end) as closed_claim_count
 ,sum(loss_paid) as total_paid_loss
@@ -40,6 +41,7 @@ from dw_prod_extracts.ext_all_claims_combined
 where 1=1
 and carrier <> 'Canopius'
 and date_knowledge = '2020-07-31'
+group by 1,2
 
 -- Paid loss
 -- Incurred loss
