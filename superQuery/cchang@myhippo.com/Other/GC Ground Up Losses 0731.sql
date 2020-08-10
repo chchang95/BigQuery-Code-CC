@@ -75,6 +75,7 @@ SELECT DISTINCT
   ,CAT as CAT_indicator
   ,'' as placeholder
   ,EBSL
+  , Loss_Incurred
   ,loss_paid
   ,Loss_Net_Reserve
   ,Loss_Deductible_Received
@@ -95,7 +96,7 @@ SELECT DISTINCT
 )
 , summary as (
 select sum(loss_paid) as loss_paid, sum(Loss_Net_Reserve) as Loss_Net_Reserve, sum(Loss_Deductible_Received) as Loss_Deductible_Received, sum(Loss_Deductible_Reserve) as Loss_Deductible_Reserve
-,sum(loss_total_gross_reserve) as loss_total_gross_reserve, sum(Loss_Recoverable_Depreciation) as Loss_Recoverable_Depreciation, sum(Loss_Recovered) as Loss_Recovered
+,sum(loss_total_gross_reserve) as loss_total_gross_reserve, sum(Loss_Recoverable_Depreciation) as Loss_Recoverable_Depreciation, sum(Loss_Recovered) as Loss_Recovered, sum(Loss_Incurred) as Loss_Incurred
 from combined
 )
 select * from summary
