@@ -81,6 +81,7 @@ SELECT DISTINCT
   ,Loss_Deductible_Reserve
   ,loss_total_gross_reserve
   ,Loss_Recoverable_Depreciation
+  , Loss_Recovered
   ,expense_paid
   ,expense_net_reserve
   ,Total_Recovery
@@ -94,7 +95,7 @@ SELECT DISTINCT
 )
 , summary as (
 select sum(loss_paid) as loss_paid, sum(Loss_Net_Reserve) as Loss_Net_Reserve, sum(Loss_Deductible_Received) as Loss_Deductible_Received, sum(Loss_Deductible_Reserve) as Loss_Deductible_Reserve
-,sum(loss_total_gross_reserve) as loss_total_gross_reserve, sum(Loss_Recoverable_Depreciation) as Loss_Recoverable_Depreciation
+,sum(loss_total_gross_reserve) as loss_total_gross_reserve, sum(Loss_Recoverable_Depreciation) as Loss_Recoverable_Depreciation, sum(Loss_Recovered) as Loss_Recovered
 from combined
 )
 select * from summary
