@@ -52,10 +52,10 @@ SELECT DISTINCT
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
   left join (select claim_id, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_id)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  WHERE date_knowledge = @as_of
+  WHERE date_knowledge = '2020-07-31'
   and carrier <> 'Canopius'
   )
-  select 'Hippo' as ClaimsHandler
+  , combined as (select 'Hippo' as ClaimsHandler
   ,lower(Carrier) as carrier
   ,Loss_State as Policy_State
   ,date_trunc(loss_date, MONTH) as accident_month
@@ -91,3 +91,9 @@ SELECT DISTINCT
 --   ,Total_Recoverable_Depreciation
   from x
   where ebsl = 'N'
+)
+, summary as (
+select sum(loss_paid) as loss_paid, sum(Loss_Net_Reserve) as Loss_Net_Reserve, sum(Loss_Deductible_Received) as Loss_Deductible_Received, sum(Loss_Deductible_Reserve) as Loss_Deductible_Reserve
+,sum(loss_total_gross_reserve) as loss_total_gross_reserve, sum(Loss_Recoverable_Depreciation) as Loss_Recoverable_Depreciation
+from combined
+)
