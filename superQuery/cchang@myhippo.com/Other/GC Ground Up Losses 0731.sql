@@ -28,6 +28,7 @@ SELECT DISTINCT
       , loss_total_deductible_reserve as Loss_Deductible_Reserve
       , loss_total_gross_reserve
       , loss_total_recoverable_depreciation AS Loss_Recoverable_Depreciation
+      , loss_total_non_recoverable_depreciation
       , loss_recovery_subr_salv AS Loss_Recovered
       , expense_calculated_incurred AS Expense_Incurred
       , expense_calculated_net_reserve_corrected AS Expense_Net_Reserve
@@ -82,6 +83,7 @@ SELECT DISTINCT
   ,Loss_Deductible_Reserve
   ,loss_total_gross_reserve
   ,Loss_Recoverable_Depreciation
+  ,loss_total_non_recoverable_depreciation
   , Loss_Recovered
   ,expense_paid
   ,expense_net_reserve
@@ -96,7 +98,7 @@ SELECT DISTINCT
 )
 , summary as (
 select sum(loss_paid) as loss_paid, sum(Loss_Net_Reserve) as Loss_Net_Reserve, sum(Loss_Deductible_Received) as Loss_Deductible_Received, sum(Loss_Deductible_Reserve) as Loss_Deductible_Reserve
-,sum(loss_total_gross_reserve) as loss_total_gross_reserve, sum(Loss_Recoverable_Depreciation) as Loss_Recoverable_Depreciation, sum(Loss_Recovered) as Loss_Recovered, sum(Loss_Incurred) as Loss_Incurred
+,sum(loss_total_gross_reserve) as loss_total_gross_reserve, sum(Loss_Recoverable_Depreciation) as Loss_Recoverable_Depreciation, sum(Loss_Recovered) as Loss_Recovered, sum(Loss_Incurred) as Loss_Incurred, sum(loss_total_non_recoverable_depreciation) as loss_total_non_recoverable_depreciation
 from combined
 )
 select * from summary
