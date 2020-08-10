@@ -96,7 +96,7 @@ SELECT DISTINCT
   ,damage_description
 --   ,Total_Recoverable_Depreciation
   from x
-  where ebsl = 'N'
+--   where ebsl = 'N'
 )
 , summary as (
 select sum(loss_paid) as loss_paid, sum(Loss_Net_Reserve) as Loss_Net_Reserve, sum(Loss_Deductible_Received) as Loss_Deductible_Received, sum(Loss_Deductible_Reserve) as Loss_Deductible_Reserve
@@ -105,4 +105,4 @@ select sum(loss_paid) as loss_paid, sum(Loss_Net_Reserve) as Loss_Net_Reserve, s
 , sum(loss_total_recovery_overpayment) as loss_total_recovery_overpayment
 from combined
 )
-select * from summary
+select * from combined
