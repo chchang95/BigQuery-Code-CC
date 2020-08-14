@@ -149,7 +149,7 @@ where 1=1
 and accident_month >= '2020-09-01'
 and (earned_prem_x_ebsl <> 0 or total_incurred <> 0 or total_claim_count <> 0 or written_prem_x_ebsl <> 0)
 -- and state = 'CA'
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8
 -- group by 1
 order by 1,2,3
 )
