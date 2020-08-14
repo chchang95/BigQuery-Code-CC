@@ -52,8 +52,8 @@ SELECT DISTINCT
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join (select policy_id, case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
         when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
-        else calculated_fields_non_cat_risk_class end as uw_action from dw_prod_extracts.ext_policy_snapshots where date_snapshot = @date_snapshot) eps on eps.policy_id = mon.policy_id 
-  WHERE date_knowledge = @date_snapshot
+        else calculated_fields_non_cat_risk_class end as uw_action from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-08-13') eps on eps.policy_id = mon.policy_id 
+  WHERE date_knowledge = '2020-08-13'
   and carrier <> 'Canopius'
   )
   select 'Hippo' as ClaimsHandler
