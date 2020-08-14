@@ -101,7 +101,7 @@ and p.uw_action = c.uw_action
 and p.zip = c.zip
 and p.calculated_fields_non_cat_risk_score = c.calculated_fields_non_cat_risk_score
 )
-, summary as (
+, aggregated as (
 select 
 policy_id, state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action, zip, calculated_fields_non_cat_risk_score, organization_id
 -- accounting_treaty
@@ -124,6 +124,32 @@ and accident_month >= '2020-01-01'
 and (earned_prem_x_ebsl <> 0 or total_incurred <> 0 or total_claim_count <> 0 or written_prem_x_ebsl <> 0)
 and state = 'CA'
 group by 1,2,3,4,5,6,7,8,9,10,11,12
+-- group by 1
+order by 1,2,3
+)
+, summary as (
+select 
+state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action
+-- accounting_treaty
+, sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
+, sum(earned_exposure) as earned_exposure
+, sum(capped_non_cat_incurred) as capped_non_cat_incurred
+, sum(excess_non_cat_incurred) as excess_non_cat_incurred
+, sum(cat_incurred) as cat_incurred
+, sum(total_incurred) as total_incurred
+, sum(non_cat_claim_count) as non_cat_claim_count
+, sum(cat_claim_count) as cat_claim_count
+, sum(total_claim_count) as total_claim_count
+-- , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
+-- , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
+-- , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
+-- , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
+from combined
+where 1=1
+and accident_month >= '2020-09-01'
+and (earned_prem_x_ebsl <> 0 or total_incurred <> 0 or total_claim_count <> 0 or written_prem_x_ebsl <> 0)
+-- and state = 'CA'
+group by 1,2,3,4,5,6,7,8,9
 -- group by 1
 order by 1,2,3
 )
