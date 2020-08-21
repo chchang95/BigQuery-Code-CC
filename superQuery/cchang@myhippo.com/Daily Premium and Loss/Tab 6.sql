@@ -332,7 +332,7 @@ state, product, carrier, accounting_treaty, accident_month, tenure, policy_incep
 -- , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
 from combined
 where 1=1
-and accident_month >= '2019-01-01'
+and accident_month >= '2019-09-01'
 and (earned_prem_x_ebsl <> 0 or total_incurred <> 0 or total_claim_count <> 0 or written_prem_x_ebsl <> 0)
 -- and state = 'CA'
 group by 1,2,3,4,5,6,7,8,9,10
