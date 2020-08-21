@@ -11,7 +11,7 @@ SELECT
     ,reinsurance_treaty
     ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as claim_count_x_cnp
-    ,sum(case when cast(date_close as numeric) = 0 or date_close is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
+    ,sum(case when date_close is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
     ,sum(expense_calculated_incurred_inception_to_date) as ALAE_cumulative
     ,sum(loss_calculated_incurred_inception_to_date) as Indemnity_cumulative
     ,sum(total_incurred_inception_to_date) as total_incurred_cumulative
