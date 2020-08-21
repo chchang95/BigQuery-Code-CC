@@ -4,6 +4,10 @@ select eps.policy_id
 , renewal_number
 , case when org_id is null then -99 else org_id end as org_id
 , property_data_address_zip as zip
+, case when property_data_year_built is null then 'Missing'
+        when cast(property_data_year_built as numeric) >= 2000 then 'Post 2000' 
+        when cast(property_data_year_built as numeric) >= 1980 then 'Pre 2000' 
+        else 'Pre 1980' end as year_built
 , case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
         when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
         else calculated_fields_non_cat_risk_class end as uw_action 
@@ -25,6 +29,7 @@ mon.policy_id
 ,policy_inception_month
 ,uw_action
 ,zip
+,year_built
 ,calculated_fields_non_cat_risk_score
 ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
 ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
@@ -35,7 +40,7 @@ left join policy_info dp on mon.policy_id = dp.policy_id
 where date_knowledge = @today_date
 and carrier <> 'Canopius'
 and product <> 'HO5'
-group by 1,2,3,4,5,6,7,8,9,10,11,12
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 )
 , claims_supp as (
 select * 
@@ -63,6 +68,7 @@ policy_id_2 as policy_id
 ,policy_inception_month
 ,uw_action
 ,zip
+,year_built
 ,calculated_fields_non_cat_risk_score
 ,sum(total_incurred) as total_incurred
 ,sum(case when CAT = 'N' then total_incurred else 0 end) as non_cat_incurred
@@ -74,7 +80,7 @@ policy_id_2 as policy_id
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
-group by 1,2,3,4,5,6,7,8,9,10,11,12
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 ) 
 , combined as (
 select p.*
@@ -100,6 +106,7 @@ and p.policy_inception_month = c.policy_inception_month
 and p.uw_action = c.uw_action
 and p.zip = c.zip
 and p.calculated_fields_non_cat_risk_score = c.calculated_fields_non_cat_risk_score
+and p.year_built = c.year_built
 )
 , aggregated as (
 select 
@@ -107,6 +114,7 @@ select
 state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action
 -- , zip
 , ROUND(cast(calculated_fields_non_cat_risk_score as numeric),4) as rounded_risk_score
+, year_built
 -- , organization_id
 -- accounting_treaty
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
@@ -127,7 +135,7 @@ where 1=1
 and accident_month >= '2019-01-01'
 and (earned_prem_x_ebsl <> 0 or total_incurred <> 0 or total_claim_count <> 0 or written_prem_x_ebsl <> 0)
 -- and state = 'CA'
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8,9,10
 -- group by 1
 order by 1,2,3
 )
