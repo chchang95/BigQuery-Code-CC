@@ -313,7 +313,7 @@ select
 -- policy_id, 
 state, product, carrier, accounting_treaty, accident_month, tenure, policy_inception_month, uw_action
 -- , zip
-, ROUND(cast(calculated_fields_non_cat_risk_score as numeric),4) as rounded_risk_score
+, ROUND(cast(calculated_fields_non_cat_risk_score as numeric),3) as rounded_risk_score
 , year_built
 -- , organization_id
 -- accounting_treaty
