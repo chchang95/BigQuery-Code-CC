@@ -9,6 +9,7 @@ SELECT
       when is_catastrophe is true then 'Y'
       else 'N' end as CAT
     ,reinsurance_treaty
+    ,peril
     ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as claim_count_x_cnp
     ,sum(case when date_close is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
@@ -22,4 +23,4 @@ SELECT
     dw_prod_extracts.ext_claim_monthly mon
     left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = @as_of) USING(claim_number)
   where is_ebsl is false
-  group by 1,2,3,4,5,6,7,8,9
+  group by 1,2,3,4,5,6,7,8,9,10
