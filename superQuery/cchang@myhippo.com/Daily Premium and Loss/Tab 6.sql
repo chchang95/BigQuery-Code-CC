@@ -393,7 +393,7 @@ policy_id_2 as policy_id
 ,sum(case when claim_closed_no_total_payment is false and CAT = 'Y' then 1 else 0 end) as cat_claim_count_x_cnp
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then 100000 else total_incurred end) as capped_non_cat_incurred
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
-,sum(case when peril_group = 'water' then total_incurred else 0 end) as water_total_incurred
+,sum(case when peril_group = 'Water' then total_incurred else 0 end) as water_total_incurred
 ,sum(case when CAT = 'N' and peril_group = 'Water' then total_incurred else 0 end) as water_non_cat_incurred
 ,sum(case when CAT = 'Y' and peril_group = 'Water' then total_incurred else 0 end) as water_cat_incurred
 ,sum(case when claim_closed_no_total_payment is false and peril_group = 'Water' then 1 else 0 end) as water_total_claim_count_x_cnp
