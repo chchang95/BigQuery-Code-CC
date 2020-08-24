@@ -394,13 +394,13 @@ policy_id_2 as policy_id
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then 100000 else total_incurred end) as capped_non_cat_incurred
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 ,sum(case when peril_group = 'water' then total_incurred else 0 end) as water_total_incurred
-,sum(case when CAT = 'N' and peril_group = 'water' then total_incurred else 0 end) as water_non_cat_incurred
-,sum(case when CAT = 'Y' and peril_group = 'water' then total_incurred else 0 end) as water_cat_incurred
-,sum(case when claim_closed_no_total_payment is false and peril_group = 'water' then 1 else 0 end) as water_total_claim_count_x_cnp
-,sum(case when claim_closed_no_total_payment is false and CAT = 'N' and peril_group = 'water' then 1 else 0 end) as water_non_cat_claim_count_x_cnp
-,sum(case when claim_closed_no_total_payment is false and CAT = 'Y'and peril_group = 'water'  then 1 else 0 end) as water_cat_claim_count_x_cnp
-,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 and peril_group = 'water' then 100000 else total_incurred end) as water_capped_non_cat_incurred
-,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 and peril_group = 'water' then total_incurred - 100000 else 0 end) as water_excess_non_cat_incurred
+,sum(case when CAT = 'N' and peril_group = 'Water' then total_incurred else 0 end) as water_non_cat_incurred
+,sum(case when CAT = 'Y' and peril_group = 'Water' then total_incurred else 0 end) as water_cat_incurred
+,sum(case when claim_closed_no_total_payment is false and peril_group = 'Water' then 1 else 0 end) as water_total_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'N' and peril_group = 'Water' then 1 else 0 end) as water_non_cat_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'Y'and peril_group = 'Water'  then 1 else 0 end) as water_cat_claim_count_x_cnp
+,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 and peril_group = 'Water' then 100000 else total_incurred end) as water_capped_non_cat_incurred
+,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 and peril_group = 'Water' then total_incurred - 100000 else 0 end) as water_excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13
