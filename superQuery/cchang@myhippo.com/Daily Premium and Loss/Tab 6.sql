@@ -244,6 +244,121 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 )
 , claims_supp as (
 select * 
+,CASE
+    WHEN peril = 'Hail' then 'Wind_Hail'
+    WHEN peril = 'Wind' then 'Wind_Hail'
+    WHEN peril = 'Water Overflow' then 'Water'
+    WHEN peril = 'Water - Other' then 'Water'
+    WHEN peril = 'Plumbing,Heating,AC,Discharge,Overflowing' then 'Water'
+    WHEN peril = 'Water Other' then 'Water'
+    WHEN peril = 'Roof Leak' then 'Wind_Hail'
+    WHEN peril = 'Water - Plumbing' then 'Water'
+    WHEN peril = 'Theft' then 'Theft'
+    WHEN peril = 'Water Appliance' then 'Water'
+    WHEN peril = 'Windstorm' then 'Wind_Hail'
+    WHEN peril = 'Property Damage, Other' then 'Other'
+    WHEN peril = 'Rain' then 'Water'
+    WHEN peril = 'Water Backup' then 'Water'
+    WHEN peril = 'Foundation' then 'Other'
+    WHEN peril = 'Equipment Failure' then 'EBSL'
+    WHEN peril = 'Fire' then 'Fire_Smoke'
+    WHEN peril = 'Not Otherwise Classified' then 'Other'
+    WHEN peril = 'Vandalism' then 'Other'
+    WHEN peril = 'Liability' then 'Liability'
+    WHEN peril = 'Smoke' then 'Fire_Smoke'
+    WHEN peril = 'Falling Objects' then 'Other'
+    WHEN peril = 'Vehicle' then 'Other'
+    WHEN peril = 'Lightning' then 'Wind_Hail'
+    WHEN peril = 'Flood' then 'Flood'
+    WHEN peril = 'Burglary' then 'Theft'
+    WHEN peril = 'Burglary, Robbery, Theft - Property' then 'Theft'
+    WHEN peril = 'Fire or Explosion' then 'Fire_Smoke'
+    WHEN peril = 'Water - Appliance' then 'Water'
+    WHEN peril = 'Mold' then 'Other'
+    WHEN peril = 'Weather NOC - Property' then 'Wind_Hail'
+    WHEN peril = 'Electrical Current' then 'Other'
+    WHEN peril = 'Fire - Property' then 'Fire_Smoke'
+    WHEN peril = 'Personal Property Replacement Cost' then 'Other'
+    WHEN peril = 'Backup Sewer, Seepage' then 'Water'
+    WHEN peril = 'Human Action, NOC' then 'Other'
+    WHEN peril = 'Falling Object' then 'Other'
+    WHEN peril = 'Collapse' then 'Other'
+    WHEN peril = 'Loss Assessment' then 'Other'
+    WHEN peril = 'Equipment Malfunction' then 'EBSL'
+    WHEN peril = 'Water - Sewer Back-up' then 'Water'
+    WHEN peril = 'Mold/mildew' then 'Other'
+    WHEN peril = 'Electrical Power Failure & Surge' then 'Other'
+    WHEN peril = 'Snow Ice Or Sleet Weight' then 'Water'
+    WHEN peril = 'Animal: All types' then 'Other'
+    WHEN peril = 'Fall - Other' then 'Other'
+    WHEN peril = 'Sprinkler Leakage - Pipe or Head Failure' then 'Other'
+    WHEN peril = 'Water - Excluded' then 'Water'
+    WHEN peril = 'Animal, Insect - Property' then 'Other'
+    WHEN peril = 'Collapse of Structure' then 'Other'
+    WHEN peril = 'Smoke - Property' then 'Fire_Smoke'
+    WHEN peril = 'Vehicle Accident' then 'Other'
+    WHEN peril = 'Glass' then 'Other'
+    WHEN peril = 'Alleged Negligent Act' then 'Other'
+    WHEN peril = 'Freezing of Plumbing, Heating, AC System' then 'Water'
+    WHEN peril = 'Burglary, theft - no forced entry' then 'Theft'
+    WHEN peril = 'Chemical, Some, Fumes' then 'Fire_Smoke'
+    WHEN peril = 'Vandalism and Malicious Mischief - Prop.' then 'Other'
+    WHEN peril = 'Fire - Known Origin' then 'Fire_Smoke'
+    WHEN peril = 'Explosions' then 'Fire_Smoke'
+    WHEN peril = 'Fire - Unknown Origin' then 'Fire_Smoke'
+    WHEN peril = 'Robbery' then 'Theft'
+    WHEN peril = 'Medical Payments' then 'Other'
+    WHEN peril = 'Pipe Freezing' then 'Water'
+    WHEN peril = 'Ice, Snow, Sleet - Property' then 'Water'
+    WHEN peril = 'Mysterious Disappearance' then 'Other'
+    WHEN peril = 'Asbestos' then 'Other'
+    WHEN peril = 'Object - Contact/Fall Over' then 'Other'
+    WHEN peril = 'Furnace (all types)' then 'Other'
+    WHEN peril = 'Ice/water' then 'Water'
+    WHEN peril = 'Explosion' then 'Fire_Smoke'
+    WHEN peril = 'Gases, Non-flammable - Property' then 'Other'
+    WHEN peril = 'Fire - Arson' then 'Fire_Smoke'
+    WHEN peril = 'Fall - Wet/Slippery Surface' then 'Other'
+    WHEN peril = 'Waste, Toxic - Property' then 'Other'
+    WHEN peril = 'Burns - Other' then 'Other'
+    WHEN peril = 'Theft of Others Property' then 'Theft'
+    WHEN peril = 'Negligent Maintenance' then 'Other'
+    WHEN peril = 'Assault & Battery' then 'Other'
+    WHEN peril = 'Non Liability Cases - Premises Medical' then 'Other'
+    WHEN peril = 'Electrical Shock/Failure' then 'Other'
+    WHEN peril = 'Alleged improper maintenance - other' then 'Other'
+    WHEN peril = 'Aircraft or Vehicle Collision' then 'Other'
+    WHEN peril = 'aircraft' then 'Other'
+    WHEN peril = 'electrical_current' then 'Other'
+    WHEN peril = 'explosions' then 'Fire_Smoke'
+    WHEN peril = 'falling_objects' then 'Other'
+    WHEN peril = 'fire' then 'Fire_Smoke'
+    WHEN peril = 'flood' then 'Flood'
+    WHEN peril = 'foundation' then 'Other'
+    WHEN peril = 'hail' then 'Wind_Hail'
+    WHEN peril = 'hurricane' then 'Wind_Hail'
+    WHEN peril = 'liability' then 'Liability'
+    WHEN peril = 'lightning' then 'Wind_Hail'
+    WHEN peril = 'loss_assessment' then 'Other'
+    WHEN peril = 'medical_payments' then 'Other'
+    WHEN peril = 'personal_property_replacement_cost' then 'Other'
+    WHEN peril = 'pipe_freezing' then 'Water'
+    WHEN peril = 'roof_leak' then 'Wind_Hail'
+    WHEN peril = 'smoke' then 'Fire_Smoke'
+    WHEN peril = 'snow_ice_or_sleet_weight' then 'Water'
+    WHEN peril = 'theft' then 'Theft'
+    WHEN peril = 'vandalism' then 'Other'
+    WHEN peril = 'vehicle' then 'Other'
+    WHEN peril = 'water_appliance' then 'Water'
+    WHEN peril = 'water_backup' then 'Water'
+    WHEN peril = 'water_other' then 'Water'
+    WHEN peril = 'water_overflow' then 'Water'
+    WHEN peril = 'wind' then 'Wind_Hail'
+    WHEN peril in ('equipment_breakdown', 'service_line') then 'EBSL'
+    WHEN peril = 'Gases, Flammable - Property' then 'Fire_Smoke'
+    WHEN peril = 'riots_or_civil_disturbances' then 'Other'
+    ELSE 'to be mapped'
+    END AS peril_group
 , dp.policy_id as policy_id_2
 , case when peril = 'equipment_breakdown' or peril = 'service_line' then 'Y'
       else 'N' end as EBSL
@@ -278,6 +393,14 @@ policy_id_2 as policy_id
 ,sum(case when claim_closed_no_total_payment is false and CAT = 'Y' then 1 else 0 end) as cat_claim_count_x_cnp
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then 100000 else total_incurred end) as capped_non_cat_incurred
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
+,sum(case when peril_group = 'water' then total_incurred else 0 end) as water_total_incurred
+,sum(case when CAT = 'N' and peril_group = 'water' then total_incurred else 0 end) as water_non_cat_incurred
+,sum(case when CAT = 'Y' and peril_group = 'water' then total_incurred else 0 end) as water_cat_incurred
+,sum(case when claim_closed_no_total_payment is false and peril_group = 'water' then 1 else 0 end) as water_total_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'N' and peril_group = 'water' then 1 else 0 end) as water_non_cat_claim_count_x_cnp
+,sum(case when claim_closed_no_total_payment is false and CAT = 'Y'and peril_group = 'water'  then 1 else 0 end) as water_cat_claim_count_x_cnp
+,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 and peril_group = 'water' then 100000 else total_incurred end) as water_capped_non_cat_incurred
+,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 and peril_group = 'water' then total_incurred - 100000 else 0 end) as water_excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13
@@ -292,6 +415,14 @@ select p.*
 ,coalesce(cat_claim_count_x_cnp,0) as cat_claim_count
 ,coalesce(capped_non_cat_incurred,0) as capped_non_cat_incurred
 ,coalesce(excess_non_cat_incurred,0) as excess_non_cat_incurred
+,coalesce(water_total_incurred,0) as water_total_incurred
+,coalesce(water_non_cat_incurred,0) as water_non_cat_incurred
+,coalesce(water_cat_incurred,0) as water_cat_incurred
+,coalesce(water_total_claim_count_x_cnp,0) as water_total_claim_count
+,coalesce(water_non_cat_claim_count_x_cnp,0) as water_non_cat_claim_count
+,coalesce(water_cat_claim_count_x_cnp,0) as water_cat_claim_count
+,coalesce(water_capped_non_cat_incurred,0) as water_capped_non_cat_incurred
+,coalesce(water_excess_non_cat_incurred,0) as water_excess_non_cat_incurred
 from premium p 
 left join claims c
 on p.policy_id = c.policy_id
@@ -326,6 +457,13 @@ state, product, carrier, accounting_treaty, accident_month, tenure, policy_incep
 , sum(non_cat_claim_count) as non_cat_claim_count
 , sum(cat_claim_count) as cat_claim_count
 , sum(total_claim_count) as total_claim_count
+, sum(water_capped_non_cat_incurred) as water_capped_non_cat_incurred
+, sum(water_excess_non_cat_incurred) as water_excess_non_cat_incurred
+, sum(water_cat_incurred) as water_cat_incurred
+, sum(water_total_incurred) as water_total_incurred
+, sum(water_non_cat_claim_count) as water_non_cat_claim_count
+, sum(water_cat_claim_count) as water_cat_claim_count
+, sum(water_total_claim_count) as water_total_claim_count
 -- , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
 -- , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
 -- , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
