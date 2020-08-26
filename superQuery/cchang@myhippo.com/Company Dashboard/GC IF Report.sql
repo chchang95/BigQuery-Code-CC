@@ -17,13 +17,14 @@ select eps.policy_id
 -- ,fpu.quote_premium_optionals
 -- ,fpu.quote_optionals_equipment_breakdown
 -- ,fpu.quote_optionals_service_line
-,written_total
+,written_base + written_total_optionals + written_policy_fee as written_total
 ,written_base
-,written_total_fees
+,written_policy_fee
 ,written_total_optionals
 ,written_optionals_equipment_breakdown
 ,written_optionals_service_line
-,earned_total
+,earned_base + earned_total_optionals + earned_policy_fee as earned_total
+,earned_policy_fee
 ,earned_optionals_equipment_breakdown
 ,earned_optionals_service_line
 ,property_data_roof_type as Roof_Type
@@ -53,8 +54,10 @@ from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
 where date_snapshot = '2020-07-31'
+and carrier <> 'Canopius'
+-- and product <> 'HO5'
+-- and status = 'active'
 and carrier = 'Topa'
-and status = 'active'
 
 
 -- select * from dw_prod_extracts.ext_policy_snapshots where policy_id = 2413416 and date_knowledge = '2020-04-30'
