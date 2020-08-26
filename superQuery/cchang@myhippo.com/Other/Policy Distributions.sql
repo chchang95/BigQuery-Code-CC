@@ -3,4 +3,4 @@ where date_snapshot = '2020-07-31'
 -- and state = 'CA'
 and status = 'active'
 -- and product = 'HO3'
--- group by 1
+group by 1
