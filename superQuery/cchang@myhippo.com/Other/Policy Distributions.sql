@@ -8,7 +8,7 @@ select state, ROUND(avg(cast(calculated_fields_coverages_tiv as numeric)),0) fro
 where date_snapshot = '2020-07-31'
 -- and state = 'CA'
 and status = 'active'
--- and product = 'HO3'
+and product <> 'HO5'
 group by 1
 order by 1
 
