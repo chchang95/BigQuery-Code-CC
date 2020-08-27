@@ -72,23 +72,23 @@ SELECT
       else 'Pre 1980' end as year_built
       ,q.zip_code
       ,q.county
-      ,q.roof_type as quote_roof_type
-      ,q.prefilled_roof_type as prefilled_roof_type
-      ,property_data_roof_type as policy_roof_type
-      ,q.construction_type
-      ,q.square_footage
-      ,2020 - q.year_built + 1 as age_of_home
-      ,q.year_built as year_home_built
-      ,q.coverage_a
-      ,q.deductible
-      ,q.wind_deductible
-      ,q.year_roof_built
-      ,q.insurance_score
-      ,q.non_cat_risk_score
-      ,q.cat_risk_score
+    --   ,q.roof_type as quote_roof_type
+    --   ,q.prefilled_roof_type as prefilled_roof_type
+    --   ,property_data_roof_type as policy_roof_type
+    --   ,q.construction_type
+    --   ,q.square_footage
+    --   ,2020 - q.year_built + 1 as age_of_home
+    --   ,q.year_built as year_home_built
+    --   ,q.coverage_a
+    --   ,q.deductible
+    --   ,q.wind_deductible
+    --   ,q.year_roof_built
+    --   ,q.insurance_score
+    --   ,q.non_cat_risk_score
+    --   ,q.cat_risk_score
       ,q.non_cat_risk_class
-      ,q.cat_risk_class
---       ,coalesce(q.non_cat_risk_class, 'not_applicable') as UW_Action
+    --   ,q.cat_risk_class
+    --   ,coalesce(q.non_cat_risk_class, 'not_applicable') as UW_Action
       ,case when q.non_cat_risk_class is null then 'not_applicable'
       when q.state = 'TX' and q.cat_risk_class = 'referral' then 'referral'
       else q.non_cat_risk_class end as UW_Class_with_TX
@@ -114,7 +114,7 @@ SELECT
             LEFT JOIN quotes_supp qs using (quote_id)
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-07-08') ps on q.policy_id = ps.policy_id
-      where q.date_quote_first_seen >= '2020-05-01'
+      where q.date_quote_first_seen >= '2020-03-01'
     --   and q.state = 'TX'
       and q.product <> 'HO5'
       and q.carrier <> 'Canopius'
