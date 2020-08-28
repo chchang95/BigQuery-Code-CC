@@ -3,7 +3,7 @@ select reinsurance_treaty
 ,sum(total_claim_count) as total_CC, sum(Total_Incurred_Loss_and_ALAE) /sum(total_claim_count) as total_SEV 
 ,sum(earned_exposure) as total_EE, sum(total_claim_count) / sum(earned_exposure) as total_FREQ
 ,sum(Claim_Count_CAT) / sum(earned_exposure) as CAT_FREQ
-,(sum(total_claim_count) - sum(Claim_Count_CAT)) / sum(earned_exposure) as NC_Freq
+,sum(total_claim_count) - sum(Claim_Count_CAT) as NC_CC,(sum(total_claim_count) - sum(Claim_Count_CAT)) / sum(earned_exposure) as NC_Freq
 from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_combined
 where date_bordereau = '2020-06-30'
 group by 1
