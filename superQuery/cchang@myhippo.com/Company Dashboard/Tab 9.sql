@@ -1,0 +1,1 @@
+select * from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_combined
