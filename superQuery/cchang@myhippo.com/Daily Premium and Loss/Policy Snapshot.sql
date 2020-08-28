@@ -28,6 +28,8 @@ group by 1,2
 select 
 eps.policy_id, eps.policy_number
 , date_trunc(date_policy_effective, MONTH) as policy_inception_month
+,date_policy_effective
+,date_
 ,carrier
 ,state
 ,product
