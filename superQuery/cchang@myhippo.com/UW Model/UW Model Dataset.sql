@@ -36,7 +36,6 @@ select
 eps.policy_id, eps.policy_number
 , date_trunc(date_policy_effective, MONTH) as policy_inception_month
 ,date_policy_effective
--- ,date_
 ,carrier
 ,state
 ,product
@@ -45,14 +44,94 @@ eps.policy_id, eps.policy_number
 ,property_data_address_zip as zip
 ,property_data_address_county as county
 ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
-, case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
+
+,coverage_a
+,coverage_b
+,coverage_c
+,coverage_d
+,coverage_e
+,coverage_f
+
+,coverage_deductible
+,coverage_wind_deductible
+,coverage_hurricane_deductible
+,coverage_deductible_amount
+,coverage_wind_deductible_amount
+,coverage_hurricane_deductible_amount
+
+,coverage_water_backup
+,coverage_ordinance_or_law
+,coverage_loss_assessment
+,coverage_personal_property_replacement_cost
+,coverage_acv_on_roof
+,coverage_mortgage_payment_protection
+,coverage_extended_rebuilding_cost
+
+,property_data_year_built
+,property_data_square_footage
+,property_data_updated_electric
+,property_data_updated_heating
+,property_data_updated_plumbing
+,property_data_number_of_family_units
+,property_data_occupant_type
+,property_data_residence_type
+,property_data_protection_class
+,property_data_miles_from_fire_department
+,property_data_fire_ext
+,property_data_sprinkler
+,property_data_guard
+,property_data_affinity_discount
+,property_data_deadbolt
+,property_data_swimming_pool
+,property_data_number_of_stories
+,property_data_roof_type
+,property_data_roof_shape
+,property_data_foundation_type
+,property_data_year_roof_built
+,property_data_construction_type
+,property_data_hail_resistant_roof
+,property_data_bathroom
+,property_data_fireline_score
+,property_data_rebuilding_cost
+,property_data_building_quality
+,property_data_fireplaces
+,property_data_garage_size
+,property_data_garage_type
+,property_data_held_in_trust
+,property_data_roof_material
+,property_data_scheduled_personal_property
+,property_data_slope_angle
+,property_data_smoke_alarm
+,case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'referral' 
         when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
-        else calculated_fields_non_cat_risk_class end as uw_action 
-, calculated_fields_non_cat_risk_score as non_cat_risk_score
-,written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line as written_prem_x_ebsl
-,earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line as earned_prem_x_ebsl
+        else calculated_fields_non_cat_risk_class end as rated_uw_action 
+,coalesce(cast(calculated_fields_non_cat_risk_score as numeric),-99) as rated_non_cat_risk_score
+,payment_frequency
+,payment_method
+,auto_renewal
+,insurance_score
+,has_multiple_policies_discount
+,loss_history_claims
+
+,calculated_fields_age_of_home
+,calculated_fields_age_of_roof
+,calculated_fields_early_quote_days
+,calculated_fields_five_years_claims
+,calculated_fields_three_years_claims
+,calculated_fields_property_claims_last_year
+,calculated_fields_age_of_insured
+,calculated_fields_other_structures_increased_limit
+,calculated_fields_personal_property_increased_limit
+,calculated_fields_increased_loss_of_use_liability_limit
+
+,written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line as written_prem_x_ebsl_inc_pol_fee
+,earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line as earned_prem_x_ebsl_inc_pol_fee
+,written_sum_perils
+,earned_sum_perils
 ,written_exposure
 ,earned_exposure
+,quote_premium_base + quote_premium_optionals + quote_policy_fee - quote_optionals_service_line - quote_optionals_equipment_breakdown as quote_prem_x_ebsl_inc_pol_fee
+
 ,coalesce(total_incurred,0) as total_incurred
 ,coalesce(non_cat_incurred,0) as non_cat_incurred
 ,coalesce(capped_non_cat_incurred,0) as capped_non_cat_incurred
@@ -64,6 +143,7 @@ eps.policy_id, eps.policy_number
 ,coalesce(closed_total_claim_count_x_cnp,0) as closed_total_claim_count_x_cnp
 ,coalesce(closed_non_cat_claim_count_x_cnp,0) as closed_non_cat_claim_count_x_cnp
 ,coalesce(closed_cat_claim_count_x_cnp,0) as closed_cat_claim_count_x_cnp
+
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
 left join claims c on eps.policy_id = c.policy_id
