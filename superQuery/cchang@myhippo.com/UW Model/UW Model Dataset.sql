@@ -40,6 +40,8 @@ eps.policy_id, eps.policy_number
 ,state
 ,product
 ,status 
+,quote_rater_version
+,timstamp_quote_created as quote_date
 ,org_id as organization_id
 ,property_data_address_zip as zip
 ,property_data_address_county as county
