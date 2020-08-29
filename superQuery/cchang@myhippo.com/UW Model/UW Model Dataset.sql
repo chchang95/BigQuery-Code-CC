@@ -8,7 +8,7 @@ with claims_supp as (
         ,case when peril = 'wind' or peril = 'hail' then 'Y'
                 when cat_code is not null then 'Y'
                 else 'N' end as CAT
-        FROM dw_staging_extracts.ext_all_claims_combined mon
+        FROM dw_prod_extracts.ext_all_claims_combined mon
             left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
         WHERE 1=1
             and date_report_period_end = '2020-07-31'
