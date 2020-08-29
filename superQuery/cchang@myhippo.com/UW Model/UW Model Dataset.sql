@@ -150,4 +150,4 @@ left join claims c on eps.policy_id = c.policy_id
 where date_snapshot = '2020-07-31'
 and carrier <> 'Canopius'
 and product <> 'HO5'
-and state = 'CA'
+-- and state = 'CA'
