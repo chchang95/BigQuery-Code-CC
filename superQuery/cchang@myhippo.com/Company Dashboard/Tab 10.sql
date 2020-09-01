@@ -27,6 +27,8 @@ where date_snapshot = '2020-07-31'
   AND premium.date_report_period_start = loss.date_accident_month_begin
 )
 select * from combined
+where date_bordereau = '2020-07-31'
+and total_claim_count is not null
 
 -- , enhanced AS (
 --   SELECT combined.*,
