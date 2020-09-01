@@ -1,10 +1,15 @@
 with loss as (
 select * 
-from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_loss
+from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_loss
 )
 , premium as (
 select * 
-from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_premium
+from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_premium
+)
+, policies as (
+select *
+from dw_prod_extracts.ext_policy_snapshots
+where date_snapshot = '2020-07-31'
 )
 , combined AS (
   SELECT COALESCE(premium.policy_id, loss.policy_id) AS policy_id,
