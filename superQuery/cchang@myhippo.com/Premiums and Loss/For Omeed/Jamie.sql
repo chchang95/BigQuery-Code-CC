@@ -1,7 +1,7 @@
 SELECT
-    date_report_period_end,
+    date_report_period_end as evaluation_month,
     mon.carrier,
-    mon.property_data_address_state,
+    mon.property_data_address_state as state,
     mon.product,
     accident_month,
     date_trunc(date_first_notice_of_loss, MONTH) as report_month,
