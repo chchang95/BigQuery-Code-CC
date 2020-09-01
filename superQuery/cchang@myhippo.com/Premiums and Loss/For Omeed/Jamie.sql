@@ -37,3 +37,5 @@ SELECT
   from check
   where date_evaluation = '2020-07-31'
   and carrier <> 'Canopius'
+  group by 1
+  order by 1
