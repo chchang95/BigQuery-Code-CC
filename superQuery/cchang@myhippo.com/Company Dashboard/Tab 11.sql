@@ -129,7 +129,7 @@ claims AS (
         ,claim_status
         ,peril
         ,date_close
-        ,is_cat as CAT_indicator
+        ,case when is_cat is false then 'N' else 'Y' end as CAT_indicator
         ,'' as placeholder
         ,is_ebsl
         ,loss_paid
