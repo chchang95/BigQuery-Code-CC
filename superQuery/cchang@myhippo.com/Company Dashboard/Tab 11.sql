@@ -137,8 +137,9 @@ claims AS (
         ,expense_paid
         ,expense_net_reserve
         ,recoveries
+        ,loss_paid + loss_net_reserve + expense_paid + expense_net_reserve - recoveries as incurred
         ,fixed_attributed_organization_id as organization_id
         ,CAT_code as internal_CAT_code
 from claims
 where is_ebsl is false
-and date_bordereau = '2020-08-31'
+and date_bordereau = '2020-07-31'
