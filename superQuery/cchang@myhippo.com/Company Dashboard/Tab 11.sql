@@ -108,5 +108,36 @@ claims AS (
      ELSE 'renewal' END
      AS tenure,
  FROM new_cats
-) select * 
+) select 
+        case when tbl_source = 'hippo_claims' then 'Hippo' 
+        when tbl_source = 'topa_tpa_claims' then 'TPA'
+        when tbl_source = 'spinnaker_tpa_claims' then 'TPA'
+        else 'ERROR' end as ClaimsHandler
+        ,lower(Carrier) as carrier
+        ,property_data_address_state as Policy_State
+        ,date_trunc(date_of_loss, MONTH) as accident_month
+        ,lower(Product) as Product
+        ,claims_policy_number
+        ,date_effective
+        ,date_expires
+        ,Claim_Number
+        ,date_of_loss
+        ,date_first_notice_of_loss
+        ,property_data_address_city
+        ,property_data_address_state
+        ,property_data_address_zip
+        ,claim_status
+        ,peril
+        ,date_closed
+        ,CAT as CAT_indicator
+        ,'' as placeholder
+        ,is_ebsl
+        ,loss_paid
+        ,Loss_Net_Reserve
+        ,expense_paid
+        ,expense_net_reserve
+        ,recoveries
+        ,org_id as organization_id
+        ,CAT_code as internal_CAT_code
 from claims
+where is_ebsl is false
