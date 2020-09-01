@@ -12,6 +12,7 @@ SELECT
     ,reinsurance_treaty
     ,peril
     ,peril_group
+    ,case when phc.note is null then 'Not_Partner' else phc.note end as Partner_Handling
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as claim_count_x_cnp
     ,sum(case when date_closed is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
     ,sum(expense_incurred) as ALAE_cumulative
@@ -23,6 +24,7 @@ SELECT
     ,sum(case when total_incurred >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_cat is true) then total_incurred - 100000 else 0 end) as excess_NC_total_incurred_cumulative
   FROM
     dw_prod_extracts.ext_all_claims_combined mon
+    left join dw_staging.chin_partner_handled_claims phc on phc.claim_number = mon.claim_number 
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = @as_of) USING(claim_number)
   where is_ebsl is false
-  group by 1,2,3,4,5,6,7,8,9,10,11
+  group by 1,2,3,4,5,6,7,8,9,10,11,12
