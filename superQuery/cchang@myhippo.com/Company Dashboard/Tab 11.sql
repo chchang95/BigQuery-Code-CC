@@ -137,7 +137,7 @@ claims AS (
         ,expense_paid
         ,expense_net_reserve
         ,recoveries
-        ,org_id as organization_id
+        ,fixed_attributed_organization_id as organization_id
         ,CAT_code as internal_CAT_code
 from claims
 where is_ebsl is false
