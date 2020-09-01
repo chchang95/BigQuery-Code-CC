@@ -1,11 +1,11 @@
 WITH spinnaker_claims AS (
  SELECT *
- FROM `datateam-248616`.`dw_staging_extracts`.`ext_all_claims_combined_running_month`
+ FROM `datateam-248616`.`dw_staging_extracts`.`ext_all_claims_combined`
  WHERE carrier = 'Spinnaker'
 ),
 topa_claims AS (
   SELECT *
- FROM `datateam-248616`.`dw_staging_extracts`.`ext_all_claims_combined_running_month`
+ FROM `datateam-248616`.`dw_staging_extracts`.`ext_all_claims_combined`
  WHERE carrier = 'Topa'
 ),
 spin_desired_dates AS (
