@@ -27,5 +27,5 @@ SELECT
     left join dw_staging.chin_partner_handled_claims phc on phc.claim_number = mon.claim_number 
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = @as_of) USING(claim_number)
   where is_ebsl is false
-  and phc.note is note null
+  and phc.note is not null
   group by 1,2,3,4,5,6,7,8,9,10,11,12
