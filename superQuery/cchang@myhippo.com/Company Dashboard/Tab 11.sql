@@ -55,21 +55,21 @@ topa_tpa_data_filled AS (
 , pre_claims AS (
 SELECT *
 FROM spin_tpa_data_filled
-WHERE claim_closed_no_total_payment IS FALSE
+-- WHERE claim_closed_no_total_payment IS FALSE
 UNION ALL
 SELECT *
 FROM topa_tpa_data_filled
-WHERE claim_closed_no_total_payment IS FALSE
+-- WHERE claim_closed_no_total_payment IS FALSE
 UNION ALL
 SELECT *
 FROM spinnaker_claims
 WHERE tbl_source = 'hippo_claims'
-AND claim_closed_no_total_payment IS FALSE
+-- AND claim_closed_no_total_payment IS FALSE
 UNION ALL
 SELECT *
 FROM topa_claims
 WHERE tbl_source = 'hippo_claims'
-AND claim_closed_no_total_payment IS FALSE
+-- AND claim_closed_no_total_payment IS FALSE
 ),
 new_cats as (
 SELECT * EXCEPT(is_cat)
