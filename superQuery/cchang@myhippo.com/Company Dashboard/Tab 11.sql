@@ -129,7 +129,7 @@ claims AS (
         ,claim_status
         ,peril
         ,date_close
-        ,CAT as CAT_indicator
+        ,is_cat as CAT_indicator
         ,'' as placeholder
         ,is_ebsl
         ,loss_paid
