@@ -4,7 +4,7 @@ SELECT
     mon.property_data_address_state,
     mon.product,
     accident_month,
-    date_trunct(date_first_notice_of_loss, MONTH) as report_month,
+    date_trunc(date_first_notice_of_loss, MONTH) as report_month,
     maturity,
     case when mon.peril = 'wind' or mon.peril = 'hail' then 'Y'
       when is_cat is true then 'Y'
