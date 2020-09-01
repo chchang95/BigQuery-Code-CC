@@ -13,7 +13,7 @@ SELECT
     ,reinsurance_treaty
     ,peril
     ,peril_group
-    ,case when phc.note is null then 'Not_Partner' else phc.note end as Partner_Handling
+    -- ,case when phc.note is null then 'Not_Partner' else phc.note end as Partner_Handling
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as claim_count_x_cnp
     ,sum(case when date_closed is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
     ,sum(expense_incurred) as ALAE_cumulative
@@ -29,7 +29,7 @@ SELECT
     -- left join dw_staging.chin_partner_handled_claims phc on phc.claim_number = mon.claim_number 
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = @as_of) USING(claim_number)
   where is_ebsl is false
-  group by 1,2,3,4,5,6,7,8,9,10,11,12
+  group by 1,2,3,4,5,6,7,8,9,10,11
   )
   select accident_month,
   sum(incurred_2) as incurred_2,
