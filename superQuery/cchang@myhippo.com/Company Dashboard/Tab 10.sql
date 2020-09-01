@@ -72,7 +72,7 @@ date_bordereau
 ,organization_id
 ,channel
 ,tenure
--- ,effective_month
+,effective_month
       ,COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS earned,
       COALESCE(CAST(SUM(written) AS FLOAT64),0) AS written,
       COALESCE(CAST(SUM(earned_exposure) AS FLOAT64),0) AS earned_exposure,
@@ -104,7 +104,7 @@ date_bordereau
     --     COALESCE(SUM(Excess_Count_{{ peril_type }}_NonCAT),0) AS Excess_Count_{{ peril_type }}_NonCAT,
     --   {% endfor %}
 FROM enhanced
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
 )
 , aggregated as (
 select date_accident_month_begin, 
@@ -119,3 +119,4 @@ order by 1
 )
 select * from final
 where date_bordereau = '2020-07-31'
+and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
