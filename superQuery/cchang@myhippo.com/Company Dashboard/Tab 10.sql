@@ -26,14 +26,16 @@ where date_snapshot = '2020-07-31'
   AND premium.date_knowledge = loss.date_bordereau
   AND premium.date_report_period_start = loss.date_accident_month_begin
 )
-select date_accident_month_begin, 
-SUM(coalesce(total_incurred_loss_and_alae,0)) as total_incurred,
-sum(coalesce(incurred_loss_cat,0)) as total_cat,
-sum(coalesce(incurred_loss_noncat,0)) as total_noncat
+-- select date_accident_month_begin, 
+-- SUM(coalesce(total_incurred_loss_and_alae,0)) as total_incurred,
+-- sum(coalesce(incurred_loss_cat,0)) as total_cat,
+-- sum(coalesce(incurred_loss_noncat,0)) as total_noncat
+-- from combined
+-- where date_bordereau = '2020-07-31'
+-- group by 1
+-- order by 1
+select distinct reinsurance_treaty
 from combined
-where date_bordereau = '2020-07-31'
-group by 1
-order by 1
 
 -- , enhanced AS (
 --   SELECT combined.*,
