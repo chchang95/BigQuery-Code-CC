@@ -159,11 +159,12 @@ SUM(coalesce(total_incurred_loss_and_alae,0)) as total_incurred,
 sum(coalesce(Incurred_Loss_CAT,0)) as total_cat,
 sum(coalesce(Incurred_Loss_NonCAT,0)) as total_noncat
 from final
-where date_bordereau = '2020-07-31'
+where date_bordereau = '2020-08-31'
 and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
 group by 1
 order by 1
 )
-select * from final
-where date_bordereau = '2020-08-31'
-and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
+-- select * from final
+-- where date_bordereau = '2020-08-31'
+-- and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
+select * from aggregated
