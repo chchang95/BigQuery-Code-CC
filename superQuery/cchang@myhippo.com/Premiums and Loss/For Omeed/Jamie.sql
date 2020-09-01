@@ -18,8 +18,9 @@ SELECT
     ,sum(expense_incurred) as ALAE_cumulative
     ,sum(loss_incurred) as Indemnity_cumulative
     ,sum(recoveries) as Recoveries_cumulative
+    ,sum(loss_paid +Loss_Net_Reserve + expense_paid + expense_net_reserve - recoveries) as incurred_2
     ,sum(total_incurred) as total_incurred_cumulative
-    ,sum(recoverable_depreciation) as recoverable_depreciation_cumulative
+    ,sum(coalesce(recoverable_depreciation,0)) as recoverable_depreciation_cumulative
     ,sum(case when total_incurred >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_cat is true) then 100000 else total_incurred end) as capped_NC_total_incurred_cumulative
     ,sum(case when total_incurred >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_cat is true) then total_incurred - 100000 else 0 end) as excess_NC_total_incurred_cumulative
   FROM
