@@ -87,11 +87,11 @@ SELECT reinsurance_treaty,
       COALESCE(SUM(Total_Incurred_Loss_and_ALAE),0) AS Total_Incurred_Loss_and_ALAE,
       COALESCE(SUM(Claim_Count_CAT),0) AS Claim_Count_CAT,
     --   COALESCE(SUM(total_cat_incurred_loss_and_alae),0) AS total_cat_incurred_loss_and_alae,
-      COALESCE(SUM(Incurred_Loss_CAT),0) AS Total_Incurred_Loss_CAT,
+      COALESCE(SUM(Incurred_Loss_CAT),0) AS Incurred_Loss_CAT,
       COALESCE(SUM(Claim_Count_NonCAT),0) AS Claim_Count_NonCAT,
       COALESCE(SUM(Capped_NonCAT_loss_and_ALAE),0) AS Capped_NonCAT_loss_and_ALAE,
       COALESCE(SUM(Excess_Loss_NonCAT),0) AS Excess_Loss_NonCAT,
-      COALESCE(SUM(Incurred_Loss_NonCAT), 0) AS Total_Incurred_Loss_NonCAT,
+      COALESCE(SUM(Incurred_Loss_NonCAT), 0) AS Incurred_Loss_NonCAT,
       COALESCE(SUM(Excess_Count_NonCAT),0) AS Excess_Count_NonCAT,
     --   {% for peril_type in peril_type_list %}
     --     COALESCE(SUM(Claim_Count_{{ peril_type }}_CAT),0) AS Claim_Count_{{ peril_type }}_CAT,
@@ -105,4 +105,12 @@ SELECT reinsurance_treaty,
 FROM enhanced
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
 )
-select * from final
+select date_accident_month_begin, 
+SUM(coalesce(total_incurred_loss_and_alae,0)) as total_incurred,
+sum(coalesce(Incurred_Loss_CAT,0)) as total_cat,
+sum(coalesce(Incurred_Loss_NonCAT,0)) as total_noncat
+from final
+where date_bordereau = '2020-07-31'
+and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
+group by 1
+order by 1
