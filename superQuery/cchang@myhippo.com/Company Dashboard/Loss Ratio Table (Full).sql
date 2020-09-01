@@ -62,7 +62,7 @@ where date_snapshot = '2020-07-31'
 , final as (
 SELECT 
 date_bordereau
-state
+,state
 ,carrier
 ,product
 ,accident_year
@@ -151,7 +151,7 @@ state
         COALESCE(SUM(Incurred_Loss_Flood_NonCAT),0) AS Incurred_Loss_Flood_NonCAT,
         COALESCE(SUM(Excess_Count_Flood_NonCAT),0) AS Excess_Count_Flood_NonCAT,
 FROM enhanced
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12
 )
 , aggregated as (
 select date_accident_month_begin, 
