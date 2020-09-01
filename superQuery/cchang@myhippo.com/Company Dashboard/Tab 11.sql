@@ -142,4 +142,4 @@ claims AS (
         ,CAT_code as internal_CAT_code
 from claims
 where is_ebsl is false
-and date_bordereau = '2020-07-31'
+and date_bordereau = '2020-08-31'
