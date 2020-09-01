@@ -1,15 +1,15 @@
 with claims_supp as (
 SELECT DISTINCT
     *
-      , case when peril = 'equipment_breakdown' or peril = 'service_line' then 'Y'
-      else 'N' end as EBSL
+--       , is_ebsl
       , case when peril = 'wind' or peril = 'hail' then 'Y'
       when cat_code is not null then 'Y'
+      when is_CAT is true then 'Y'
       else 'N' end as CAT
     --   ,dp.org_id as organization_id
   FROM dw_prod_extracts.ext_all_claims_combined mon
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  WHERE date_report_period_end = @as_of
+  WHERE date_report_period_end = '2020-08-31'
   and carrier <> 'Canopius'
   )
     select 
@@ -35,7 +35,7 @@ SELECT DISTINCT
         ,date_closed
         ,CAT as CAT_indicator
         ,'' as placeholder
-        ,EBSL
+        ,is_ebsl
         ,loss_paid
         ,Loss_Net_Reserve
         ,expense_paid
@@ -45,7 +45,7 @@ SELECT DISTINCT
         ,CAT_code as internal_CAT_code
     --   ,Total_Recoverable_Depreciation    
   from claims_supp
-  where ebsl = 'N'
+  where is_ebsl is false
   order by 1
   
 --   select * from dw_prod_extracts.ext_claims_inception_to_date mon
