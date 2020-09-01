@@ -41,7 +41,7 @@ SELECT DISTINCT
         ,expense_paid
         ,expense_net_reserve
         ,recoveries
-        ,organization_id
+        ,org_id as organization_id
         ,CAT_code as internal_CAT_code
     --   ,Total_Recoverable_Depreciation    
   from claims_supp
