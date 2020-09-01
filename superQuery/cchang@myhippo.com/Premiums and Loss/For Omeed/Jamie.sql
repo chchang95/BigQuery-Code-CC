@@ -4,12 +4,14 @@ SELECT
     mon.property_data_address_state,
     mon.product,
     accident_month,
+    date_trunct(date_first_notice_of_loss, MONTH) as report_month,
     maturity,
     case when mon.peril = 'wind' or mon.peril = 'hail' then 'Y'
       when is_cat is true then 'Y'
       else 'N' end as CAT
     ,reinsurance_treaty
     ,peril
+    ,peril_group
     ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as claim_count_x_cnp
     ,sum(case when date_closed is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
@@ -24,4 +26,4 @@ SELECT
     dw_prod_extracts.ext_all_claims_combined mon
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = @as_of) USING(claim_number)
   where is_ebsl is false
-  group by 1,2,3,4,5,6,7,8,9,10
+  group by 1,2,3,4,5,6,7,8,9,10,11,12
