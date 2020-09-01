@@ -35,7 +35,7 @@ SELECT
   sum(incurred_2) as incurred_2,
   sum(total_incurred_cumulative) as total_incurred
   from check
-  where date_evaluation = '2020-07-31'
+  where evaluation_month = '2020-07-31'
   and carrier <> 'Canopius'
   group by 1
   order by 1
