@@ -128,7 +128,7 @@ claims AS (
         ,property_data_address_zip
         ,claim_status
         ,peril
-        ,date_close
+        ,date_closed
         ,case when is_cat is false then 'N' else 'Y' end as CAT_indicator
         ,'' as placeholder
         ,is_ebsl
