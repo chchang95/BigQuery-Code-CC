@@ -25,4 +25,4 @@ SELECT
     dw_prod_extracts.ext_all_claims_combined mon
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = @as_of) USING(claim_number)
   where is_ebsl is false
-  group by 1,2,3,4,5,6,7,8,9,10,11,12
+  group by 1,2,3,4,5,6,7,8,9,10,11
