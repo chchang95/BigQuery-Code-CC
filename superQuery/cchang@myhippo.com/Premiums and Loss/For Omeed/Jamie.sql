@@ -1,4 +1,4 @@
-with check as (
+
 SELECT
     date_report_period_end as evaluation_month,
     mon.carrier,
@@ -30,12 +30,3 @@ SELECT
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = @as_of) USING(claim_number)
   where is_ebsl is false
   group by 1,2,3,4,5,6,7,8,9,10,11,12
-  )
-  select accident_month,
-  sum(incurred_2) as incurred_2,
-  sum(total_incurred_cumulative) as total_incurred
-  from check
-  where evaluation_month = '2020-07-31'
-  and carrier <> 'Canopius'
-  group by 1
-  order by 1
