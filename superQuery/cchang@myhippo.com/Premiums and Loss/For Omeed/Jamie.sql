@@ -12,7 +12,6 @@ SELECT
     ,reinsurance_treaty
     ,peril
     ,peril_group
-    ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as claim_count_x_cnp
     ,sum(case when date_closed is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
     ,sum(expense_incurred) as ALAE_cumulative
