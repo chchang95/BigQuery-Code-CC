@@ -60,18 +60,19 @@ where date_snapshot = '2020-07-31'
   USING(policy_id)
 )
 , final as (
-SELECT reinsurance_treaty,
-      state,
-      carrier,
-      product,
-      date_bordereau,
-      accident_year,
-      date_accident_month_begin,
-      date_accident_month_end,
-      organization_id,
-      channel,
-      tenure,
-      effective_month,
+SELECT 
+date_bordereau
+,state
+,carrier
+,product
+,accident_year
+,date_accident_month_begin
+,date_accident_month_end
+,reinsurance_treaty
+,organization_id
+,channel
+,tenure
+,effective_month,
       COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS earned,
       COALESCE(CAST(SUM(written) AS FLOAT64),0) AS written,
       COALESCE(CAST(SUM(earned_exposure) AS FLOAT64),0) AS earned_exposure,
@@ -117,3 +118,4 @@ group by 1
 order by 1
 )
 select * from final
+where date_bordereau = '2020-07-31'
