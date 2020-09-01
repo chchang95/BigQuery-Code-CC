@@ -151,7 +151,7 @@ state
         COALESCE(SUM(Incurred_Loss_Flood_NonCAT),0) AS Incurred_Loss_Flood_NonCAT,
         COALESCE(SUM(Excess_Count_Flood_NonCAT),0) AS Excess_Count_Flood_NonCAT,
 FROM enhanced
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11
 )
 , aggregated as (
 select date_accident_month_begin, 
