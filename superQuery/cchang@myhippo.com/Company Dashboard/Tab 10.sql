@@ -72,8 +72,8 @@ date_bordereau
 ,organization_id
 ,channel
 ,tenure
-,effective_month,
-      COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS earned,
+-- ,effective_month
+      ,COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS earned,
       COALESCE(CAST(SUM(written) AS FLOAT64),0) AS written,
       COALESCE(CAST(SUM(earned_exposure) AS FLOAT64),0) AS earned_exposure,
       COALESCE(CAST(SUM(earned_tiv) AS FLOAT64),0) AS earned_tiv,
@@ -104,7 +104,7 @@ date_bordereau
     --     COALESCE(SUM(Excess_Count_{{ peril_type }}_NonCAT),0) AS Excess_Count_{{ peril_type }}_NonCAT,
     --   {% endfor %}
 FROM enhanced
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 )
 , aggregated as (
 select date_accident_month_begin, 
