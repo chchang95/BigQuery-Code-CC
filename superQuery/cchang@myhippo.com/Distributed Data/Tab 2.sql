@@ -137,7 +137,7 @@ claims AS (
         ,expense_paid
         ,expense_net_reserve
         ,recoveries
-        ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0 - coalesce(recoveries,0) as incurred
+        ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as incurred
         ,fixed_attributed_organization_id as organization_id
         ,CAT_code as internal_CAT_code
 from claims
