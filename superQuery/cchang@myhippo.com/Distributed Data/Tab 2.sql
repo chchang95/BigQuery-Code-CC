@@ -137,13 +137,13 @@ claims AS (
         ,expense_paid
         ,expense_net_reserve
         ,recoveries
-        ,loss_paid + loss_net_reserve + expense_paid + expense_net_reserve - recoveries as incurred
+        ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0 - coalesce(recoveries,0) as incurred
         ,fixed_attributed_organization_id as organization_id
         ,CAT_code as internal_CAT_code
 from claims
 where is_ebsl is false
 and date_bordereau = '2020-08-31')
-select Policy_State, sum(incurred)
+select Policy_State, sum(incurred) as total_incurred
 from final
 group by 1
 order by 1
