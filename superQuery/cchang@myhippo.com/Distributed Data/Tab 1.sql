@@ -15,5 +15,5 @@
 
 
 select * from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_loss
-where policy_id = 109830
+where policy_id = 236923
 and date_bordereau = '2020-08-31'
