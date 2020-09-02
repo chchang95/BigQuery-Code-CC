@@ -47,8 +47,8 @@ SELECT DISTINCT
   from claims_supp
   where 1=1
 --   and is_ebsl is false
-  and carrier = 'Topa'
-  and tbl_source = 'hippo_claims'
+--   and carrier = 'Topa'
+--   and tbl_source = 'hippo_claims'
 --   and tbl_source <> 'hippo_claims'
   order by 1
   
