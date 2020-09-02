@@ -1,4 +1,4 @@
-select state, sum(written)
+select sum(written)
 from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_premium
 where date_bordereau = '2020-08-31'
 and carrier <> 'Canopius'
