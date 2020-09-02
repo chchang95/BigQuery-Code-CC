@@ -4,6 +4,7 @@ left join dw_prod.dim_policies using(policy_id)
 where date_knowledge = '2020-08-31'
 -- and reinsurance_treaty = 'Topa'
 and carrier <> 'Canopius'
+group by 1
 
 
 -- select sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
