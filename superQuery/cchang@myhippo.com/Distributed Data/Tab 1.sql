@@ -14,6 +14,6 @@
 -- and reinsurance_treaty_accounting = 'Topa'
 
 
-select * from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_loss
+select * from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_loss
 where policy_id = 345091
 -- and date_bordereau = '2020-08-31'
