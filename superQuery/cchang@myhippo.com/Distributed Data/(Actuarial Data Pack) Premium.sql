@@ -58,7 +58,6 @@ state
 ,accident_year
 ,date_accident_month_begin
 ,date_accident_month_end
-,carrier
 -- ,reinsurance_treaty
 -- ,organization_id
 -- ,channel
