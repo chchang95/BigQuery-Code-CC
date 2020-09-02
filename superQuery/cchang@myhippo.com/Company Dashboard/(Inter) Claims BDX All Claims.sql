@@ -108,7 +108,7 @@ claims AS (
      ELSE 'renewal' END
      AS tenure,
  FROM new_cats
-) select 
+) , final as (select 
         case when tbl_source = 'hippo_claims' then 'Hippo' 
         when tbl_source = 'topa_tpa_claims' then 'TPA'
         when tbl_source = 'spinnaker_tpa_claims' then 'TPA'
@@ -142,4 +142,8 @@ claims AS (
         ,CAT_code as internal_CAT_code
 from claims
 where is_ebsl is false
-and date_bordereau = '2020-08-31'
+and date_bordereau = '2020-08-31')
+select state, sum(incurred)
+from final
+group by 1
+order by 1
