@@ -87,17 +87,17 @@ state
 FROM enhanced
 where date_bordereau = '2020-08-31'
 and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
-and carrier <> 'Canopius'
+-- and carrier <> 'Canopius'
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8
 )
 , aggregated as (
-select state, 
+select state, reinsurance_treaty,
 sum(Written_Premium_x_ebsl_inc_pol_fee)
 -- SUM(coalesce(total_incurred_loss_and_alae,0)) as total_incurred,
 -- sum(coalesce(Incurred_Loss_CAT,0)) as total_cat,
 -- sum(coalesce(Incurred_Loss_NonCAT,0)) as total_noncat
 from final
-group by 1
+group by 1,2
 order by 1
 )
 -- select * from final
