@@ -97,8 +97,7 @@ sum(Written_Premium_x_ebsl_inc_pol_fee)
 -- sum(coalesce(Incurred_Loss_CAT,0)) as total_cat,
 -- sum(coalesce(Incurred_Loss_NonCAT,0)) as total_noncat
 from final
-group by 1,2
+group by 1
 order by 1
 )
--- select * from final
 select * from final
