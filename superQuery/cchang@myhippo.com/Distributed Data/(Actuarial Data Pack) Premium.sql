@@ -63,8 +63,11 @@ state
 -- ,channel
 ,tenure
 -- ,effective_month
-      ,COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS Earned_Premium_x_ebsl_inc_pol_fee,
-      COALESCE(CAST(SUM(written) AS FLOAT64),0) AS Written_Premium_x_ebsl_inc_pol_fee,
+      ,COALESCE(CAST(SUM(written) AS FLOAT64),0) AS Written_Premium_Including_Policy_Fee,
+      COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS Earned_Premium_Including_Policy_Fee,
+      COALESCE(CAST(SUM(written_policy_fee) AS FLOAT64),0) AS Written_Policy_Fee,
+      COALESCE(CAST(SUM(earned_policy_fee) AS FLOAT64),0) AS Earned_Policy_Fee,
+      COALESCE(CAST(SUM(written_exposure) AS FLOAT64),0) AS Written_Exposure,
       COALESCE(CAST(SUM(earned_exposure) AS FLOAT64),0) AS Earned_Exposure,
     --   COALESCE(CAST(SUM(earned_tiv) AS FLOAT64),0) AS earned_tiv,
       COALESCE(SUM(total_Claim_Count),0) AS Total_Reported_Claim_Count,
@@ -92,7 +95,8 @@ GROUP BY 1, 2, 3, 4, 5, 6, 7
 )
 , aggregated as (
 select state,
-sum(Written_Premium_x_ebsl_inc_pol_fee),
+sum(Written_Premium_Including_Policy_Fee),
+sum(Written_Policy_Fee),
 SUM(coalesce(Total_Incurred_Loss_and_ALAE,0)) as total_incurred,
 -- sum(coalesce(Incurred_Loss_CAT,0)) as total_cat,
 -- sum(coalesce(Incurred_Loss_NonCAT,0)) as total_noncat
