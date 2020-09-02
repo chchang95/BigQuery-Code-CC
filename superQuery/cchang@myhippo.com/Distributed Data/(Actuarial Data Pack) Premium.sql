@@ -88,7 +88,7 @@ FROM enhanced
 where date_bordereau = '2020-08-31'
 and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius','Canopius_EBSL')
 -- and carrier <> 'Canopius'
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8
+GROUP BY 1, 2, 3, 4, 5, 6, 7
 )
 , aggregated as (
 select state, reinsurance_treaty,
