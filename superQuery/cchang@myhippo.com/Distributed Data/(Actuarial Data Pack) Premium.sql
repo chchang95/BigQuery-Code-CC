@@ -94,14 +94,14 @@ and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','S
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9
 )
 , aggregated as (
-select state,
+select state, reinsurance_treaty,
 sum(Written_Premium_Including_Policy_Fee),
 sum(Written_Policy_Fee),
 SUM(coalesce(Total_Incurred_Loss_and_ALAE,0)) as total_incurred,
 -- sum(coalesce(Incurred_Loss_CAT,0)) as total_cat,
 -- sum(coalesce(Incurred_Loss_NonCAT,0)) as total_noncat
 from final
-group by 1
-order by 1
+group by 1,2
+order by 1,2
 )
 select * from aggregated
