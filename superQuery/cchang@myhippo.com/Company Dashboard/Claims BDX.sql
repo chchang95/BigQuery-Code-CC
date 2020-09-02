@@ -44,7 +44,7 @@ SELECT DISTINCT
       , case when peril = 'wind' or peril = 'hail' then 'Y'
       when cat_code is not null then 'Y'
       else 'N' end as CAT
-      ,fc.*
+    --   ,fc.*
       ,dp.org_id as organization_id
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
 --   left join (select claim_id, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_id)
