@@ -85,7 +85,7 @@ SELECT DISTINCT
   from x
   where 1=1
   and ebsl = 'N'
-  and carrier = 'Topa'
+  and carrier = 'topa'
   
 --   select * from dw_prod_extracts.ext_claims_inception_to_date mon
 --   where claim_number = 'HCA-1029622-00-01'
