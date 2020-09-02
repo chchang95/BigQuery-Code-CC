@@ -106,3 +106,4 @@ group by 1
 order by 1
 )
 select * from aggregated
+where policy_number = 'HMO-0345091-00'
