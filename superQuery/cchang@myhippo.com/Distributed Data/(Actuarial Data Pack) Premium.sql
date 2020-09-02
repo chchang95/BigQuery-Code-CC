@@ -13,11 +13,11 @@ select distinct eps.policy_id, eps.policy_number
 , product
 , date_trunc(date_policy_effective, MONTH) as effective_month
 , case when renewal_number > 0 then 'Renewal' else 'New' end as tenure 
--- , channel
--- , org_id as organization_id
+, channel
+, org_id as organization_id
 from dw_prod_extracts.ext_policy_snapshots eps
-    -- left join (select policy_id, policy_number, channel, attributed_organization_id
-    -- , case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
+    left join (select policy_id, policy_number, channel, attributed_organization_id
+    , case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
 where date_snapshot = '2020-08-31'
 )
 , combined AS (
@@ -39,8 +39,8 @@ where date_snapshot = '2020-08-31'
   SELECT combined.*,
          EXTRACT(year FROM date_accident_month_begin) AS accident_year,
          policies.carrier,
-        --  policies.organization_id,
-        --  policies.channel,
+         policies.organization_id,
+         policies.channel,
          policies.state,
          policies.product,
          policies.tenure,
@@ -58,7 +58,7 @@ state
 ,accident_year
 ,date_accident_month_begin
 ,date_accident_month_end
--- ,reinsurance_treaty
+,reinsurance_treaty
 -- ,organization_id
 -- ,channel
 ,tenure
@@ -87,7 +87,7 @@ state
 FROM enhanced
 where date_bordereau = '2020-08-31'
 and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
-GROUP BY 1, 2, 3, 4, 5, 6, 7
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8
 )
 , aggregated as (
 select state, 
