@@ -49,7 +49,7 @@ SELECT DISTINCT
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
   left join (select claim_id, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_id)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  WHERE date_knowledge = @as_of
+  WHERE date_knowledge = '2020-08-31'
   and carrier <> 'Canopius'
   )
   select 'Hippo' as ClaimsHandler
@@ -83,7 +83,9 @@ SELECT DISTINCT
   ,damage_description
 --   ,Total_Recoverable_Depreciation
   from x
-  where ebsl = 'N'
+  where 1=1
+  and ebsl = 'N'
+  and carrier = 'Topa'
   
 --   select * from dw_prod_extracts.ext_claims_inception_to_date mon
 --   where claim_number = 'HCA-1029622-00-01'
