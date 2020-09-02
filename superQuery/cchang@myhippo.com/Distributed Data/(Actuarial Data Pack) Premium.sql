@@ -7,7 +7,7 @@ select *
 from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_premium
 )
 , policies as (
-select eps.policy_id, eps.policy_number
+select distinct eps.policy_id, eps.policy_number
 , carrier
 , state
 , product
