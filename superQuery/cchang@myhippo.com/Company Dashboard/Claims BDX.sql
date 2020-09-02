@@ -84,6 +84,7 @@ SELECT DISTINCT
 --   ,Total_Recoverable_Depreciation
   from x
   where 1=1
+  and policy_number = 'HMO-0345091-00'
 --   and ebsl = 'N'
 --   and carrier = 'Topa'
   
