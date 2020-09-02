@@ -47,6 +47,7 @@ SELECT DISTINCT
   from claims_supp
   where 1=1
   and is_ebsl is false
+  and claim_policy_number = 'HMO-0345091-00'
 --   and carrier = 'Topa'
 --   and tbl_source = 'hippo_claims'
 --   and tbl_source <> 'hippo_claims'
