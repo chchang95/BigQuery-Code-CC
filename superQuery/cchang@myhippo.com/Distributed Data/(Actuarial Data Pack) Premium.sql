@@ -51,41 +51,43 @@ where date_snapshot = '2020-08-31'
 )
 , final as (
 SELECT 
-date_bordereau
-,state
+-- date_bordereau
+state
 ,carrier
 ,product
 ,accident_year
 ,date_accident_month_begin
 ,date_accident_month_end
-,reinsurance_treaty
-,organization_id
-,channel
+,carrier
+-- ,reinsurance_treaty
+-- ,organization_id
+-- ,channel
 ,tenure
-,effective_month
-      ,COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS earned,
-      COALESCE(CAST(SUM(written) AS FLOAT64),0) AS written,
-      COALESCE(CAST(SUM(earned_exposure) AS FLOAT64),0) AS earned_exposure,
-      COALESCE(CAST(SUM(earned_tiv) AS FLOAT64),0) AS earned_tiv,
-      COALESCE(SUM(total_Claim_Count),0) AS total_Claim_Count,
+-- ,effective_month
+      ,COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS Earned_Premium_x_ebsl_inc_pol_fee,
+      COALESCE(CAST(SUM(written) AS FLOAT64),0) AS Written_Premium_x_ebsl_inc_pol_fee,
+      COALESCE(CAST(SUM(earned_exposure) AS FLOAT64),0) AS Earned_Exposure,
+    --   COALESCE(CAST(SUM(earned_tiv) AS FLOAT64),0) AS earned_tiv,
+      COALESCE(SUM(total_Claim_Count),0) AS Total_Reported_Claim_Count,
       COALESCE(SUM(Total_Paid_Indemnity),0) AS Total_Paid_Indemnity,
       COALESCE(SUM(Total_Case_Reserve_Indemnity),0) AS Total_Case_Reserve_Indemnity,
       COALESCE(SUM(Total_Paid_ALAE),0) AS Total_Paid_ALAE,
       COALESCE(SUM(Total_Case_Reserve_ALAE),0) AS Total_Case_Reserve_ALAE,
-      COALESCE(SUM(Salvage_Subro),0) AS Salvage_Subro,
+      COALESCE(SUM(Salvage_Subro),0) AS Salvage_Subro_Recoveries,
       COALESCE(SUM(Total_incurred_Indemnity),0) AS Total_Incurred_Indemnity,
       COALESCE(SUM(Total_Incurred_ALAE),0) AS Total_Incurred_ALAE,
       COALESCE(SUM(Total_Incurred_Loss_and_ALAE),0) AS Total_Incurred_Loss_and_ALAE,
-      COALESCE(SUM(Claim_Count_CAT),0) AS Claim_Count_CAT,
+      COALESCE(SUM(Claim_Count_CAT),0) AS CAT_Reported_Claim_Count,
     --   COALESCE(SUM(total_cat_incurred_loss_and_alae),0) AS total_cat_incurred_loss_and_alae,
-      COALESCE(SUM(Incurred_Loss_CAT),0) AS Incurred_Loss_CAT,
-      COALESCE(SUM(Claim_Count_NonCAT),0) AS Claim_Count_NonCAT,
-      COALESCE(SUM(Capped_NonCAT_loss_and_ALAE),0) AS Capped_NonCAT_loss_and_ALAE,
-      COALESCE(SUM(Excess_Loss_NonCAT),0) AS Excess_Loss_NonCAT,
-      COALESCE(SUM(Incurred_Loss_NonCAT), 0) AS Incurred_Loss_NonCAT,
-      COALESCE(SUM(Excess_Count_NonCAT),0) AS Excess_Count_NonCAT,
+      COALESCE(SUM(Incurred_Loss_CAT),0) AS CAT_Incurred_Loss_and_ALAE,
+      COALESCE(SUM(Claim_Count_NonCAT),0) AS NonCat_Reported_Claim_Count,
+      COALESCE(SUM(Capped_NonCAT_loss_and_ALAE),0) AS NonCat_Incurred_Loss_and_ALAE_Capped_100k,
+      COALESCE(SUM(Excess_Loss_NonCAT),0) AS NonCat_Incurred_Loss_and_ALAE_Excess_100k,
+      COALESCE(SUM(Incurred_Loss_NonCAT), 0) AS NonCat_Incurred_Loss_and_ALAE,
+      COALESCE(SUM(Excess_Count_NonCAT),0) AS NonCat_Claim_Count_Above_100k,
 FROM enhanced
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12
+where date_bordereau = '2020-08-31'
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8
 )
 , aggregated as (
 select date_accident_month_begin, 
