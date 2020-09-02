@@ -58,7 +58,7 @@ state
 ,accident_year
 ,date_accident_month_begin
 ,date_accident_month_end
-,reinsurance_treaty
+-- ,reinsurance_treaty
 -- ,organization_id
 -- ,channel
 ,tenure
@@ -86,7 +86,7 @@ state
       COALESCE(SUM(Excess_Count_NonCAT),0) AS NonCat_Claim_Count_Above_100k,
 FROM enhanced
 where date_bordereau = '2020-08-31'
-and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
+and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius','Canopius_EBSL')
 -- and carrier <> 'Canopius'
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8
 )
@@ -101,4 +101,4 @@ group by 1,2
 order by 1
 )
 -- select * from final
-select * from aggregated
+select * from final
