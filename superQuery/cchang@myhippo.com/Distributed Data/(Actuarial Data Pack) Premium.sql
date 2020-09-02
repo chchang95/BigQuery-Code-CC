@@ -58,7 +58,7 @@ state
 ,accident_year
 ,date_accident_month_begin
 ,date_accident_month_end
--- ,reinsurance_treaty
+,reinsurance_treaty
 -- ,organization_id
 -- ,channel
 ,tenure
@@ -88,10 +88,10 @@ FROM enhanced
 where date_bordereau = '2020-08-31'
 and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius','Canopius_EBSL')
 -- and carrier <> 'Canopius'
-GROUP BY 1, 2, 3, 4, 5, 6, 7
+GROUP BY 1, 2, 3, 4, 5, 6, 7,8
 )
 , aggregated as (
-select state,
+select reinsurance_treaty,
 sum(Written_Premium_x_ebsl_inc_pol_fee)
 -- SUM(coalesce(total_incurred_loss_and_alae,0)) as total_incurred,
 -- sum(coalesce(Incurred_Loss_CAT,0)) as total_cat,
