@@ -1,7 +1,7 @@
 select sum(written), sum(earned)
 from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_premium
 where date_knowledge = '2020-08-31'
-and reinsurance_treaty ='topa'
+and reinsurance_treaty ='Topa'
 -- and state = 'CA'
 -- written = 
 
