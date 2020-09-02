@@ -101,6 +101,6 @@ group by 1
 order by 1
 )
 select * from final
-where date_bordereau = '2020-08-31'
+where 1=1
 and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
 -- select * from aggregated
