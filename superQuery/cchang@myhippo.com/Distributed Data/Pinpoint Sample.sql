@@ -8,7 +8,7 @@ select distinct policy_id
 , property_data_address_city as city
 , property_data_address_zip as zip
 , property_data_address_state as state
-, 'c' as type
+-- , 'c' as type
 from dw_prod_extracts.ext_policy_snapshots
 left join (select policy_id from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_loss where date_bordereau = '2020-08-31') claims using(policy_id)
 where date_snapshot = '2020-08-31'
@@ -25,7 +25,7 @@ select policy_id
 , property_data_address_city as city
 , property_data_address_zip as zip
 , property_data_address_state as state
-, 'r' as type
+-- , 'r' as type
 from dw_prod_extracts.ext_policy_snapshots
 where date_snapshot = '2020-08-31'
 and carrier <> 'Canopius'
