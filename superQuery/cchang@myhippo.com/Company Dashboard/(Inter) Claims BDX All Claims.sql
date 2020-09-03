@@ -143,7 +143,6 @@ claims AS (
 from claims
 where is_ebsl is false
 and date_bordereau = '2020-08-31')
-select Policy_State, sum(incurred)
+-- select Policy_State, sum(incurred)
+select * 
 from final
-group by 1
-order by 1
