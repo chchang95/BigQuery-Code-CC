@@ -1,5 +1,6 @@
 with policy_claims as (
 select distinct policy_id 
+, date_policy_effective
 , personal_information_first_name as first_name
 , personal_information_last_name as last_name
 , personal_information_email as email
@@ -17,6 +18,7 @@ and carrier <> 'Canopius'
 and product <> 'HO5'
 ), active_policies as (
 select policy_id
+, date_policy_effective
 , personal_information_first_name as first_name
 , personal_information_last_name as last_name
 , personal_information_email as email
@@ -35,6 +37,7 @@ and earned_exposure > 0
 -- and date_policy_effective >= '2020-01-01'
 ), since_2019_policies as (
 select policy_id
+, date_policy_effective
 , personal_information_first_name as first_name
 , personal_information_last_name as last_name
 , personal_information_email as email
@@ -53,6 +56,7 @@ and earned_exposure > 0
 and date_policy_effective >= '2019-01-01'
 ), since_2018_policies as (
 select policy_id
+, date_policy_effective
 , personal_information_first_name as first_name
 , personal_information_last_name as last_name
 , personal_information_email as email
@@ -77,5 +81,7 @@ union all
 select * from active_policies
 union all
 select * from since_2019_policies
+union all
+select * from since_2018_policies
 )
 select distinct * from combined
