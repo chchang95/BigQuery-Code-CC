@@ -105,5 +105,5 @@ left join dw_prod.dim_policies using(policy_id)
 group by 1
 order by 1
 )
-select * from aggregated
+select * from final
 -- where policy_number = 'HMO-0345091-00'
