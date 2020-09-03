@@ -31,6 +31,7 @@ where date_snapshot = '2020-08-31'
 and carrier <> 'Canopius'
 and product <> 'HO5'
 and status = 'active'
+and earned_exposure > 0
 -- and date_policy_effective >= '2020-01-01'
 ), since_2019_policies as (
 select policy_id
@@ -47,6 +48,7 @@ from dw_prod_extracts.ext_policy_snapshots
 where date_snapshot = '2020-08-31'
 and carrier <> 'Canopius'
 and product <> 'HO5'
+and earned_exposure > 0
 -- and status = 'active'
 and date_policy_effective >= '2019-01-01'
 )
