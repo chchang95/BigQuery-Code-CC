@@ -8,7 +8,7 @@ select eps.policy_id
         when cast(property_data_year_built as numeric) >= 2000 then 'Post 2000' 
         when cast(property_data_year_built as numeric) >= 1980 then 'Pre 2000' 
         else 'Pre 1980' end as year_built
-, case when state = 'tx' and calculated_fields_cat_risk_score = 'referral' then 'cat_referral' 
+, case when state = 'TX' and calculated_fields_cat_risk_class = 'referral' then 'cat_referral' 
         when calculated_fields_non_cat_risk_class is null then 'not_applicable' 
         else calculated_fields_non_cat_risk_class end as uw_action 
 , case when calculated_fields_non_cat_risk_score is null then '-1' else calculated_fields_non_cat_risk_score end as calculated_fields_non_cat_risk_score
