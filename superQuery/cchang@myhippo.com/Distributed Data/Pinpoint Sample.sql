@@ -73,7 +73,7 @@ and product <> 'HO5'
 and earned_exposure > 0.01
 -- and status = 'active'
 and date_policy_effective < '2019-01-01'
-and date_policy_effective > '2017-10-01'
+and date_policy_effective > '2017-05-01'
 )
 , combined as (
 select * from policy_claims
