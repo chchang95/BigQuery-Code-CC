@@ -88,7 +88,7 @@ policy_id
       COALESCE(SUM(Incurred_Loss_NonCAT), 0) AS NonCat_Incurred_Loss_and_ALAE,
       COALESCE(SUM(Excess_Count_NonCAT),0) AS NonCat_Claim_Count_Above_100k,
 FROM enhanced
-where date_bordereau = '2020-07-31'
+where date_bordereau = '2020-08-31'
 and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius','Canopius_EBSL', 'Topa20_PostAugust_EBSL')
 -- and carrier <> 'Canopius'
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9
