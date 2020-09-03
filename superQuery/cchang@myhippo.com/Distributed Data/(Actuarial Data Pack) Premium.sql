@@ -94,7 +94,7 @@ and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','S
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9
 )
 , aggregated as (
-select policy_number,
+select state,
 sum(Written_Premium_Including_Policy_Fee),
 sum(Written_Policy_Fee),
 SUM(coalesce(Total_Incurred_Loss_and_ALAE,0)) as total_incurred,
@@ -106,4 +106,4 @@ group by 1
 order by 1
 )
 select * from aggregated
-where policy_number = 'HMO-0345091-00'
+-- where policy_number = 'HMO-0345091-00'
