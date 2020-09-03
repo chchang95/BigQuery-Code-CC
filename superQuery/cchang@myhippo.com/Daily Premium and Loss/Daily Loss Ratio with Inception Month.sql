@@ -165,4 +165,4 @@ group by 1,2,3,4,5,6,7,8
 -- group by 1
 order by 1,2,3
 )
-select * from aggregated
+select * from summary
