@@ -101,7 +101,7 @@ SUM(coalesce(Total_Incurred_Loss_and_ALAE,0)) as total_incurred,
 -- sum(coalesce(Incurred_Loss_CAT,0)) as total_cat,
 -- sum(coalesce(Incurred_Loss_NonCAT,0)) as total_noncat
 from final 
-left join dw_prod.dim_policies using(policy_id)
+-- left join dw_prod.dim_policies using(policy_id)
 group by 1
 order by 1
 )
