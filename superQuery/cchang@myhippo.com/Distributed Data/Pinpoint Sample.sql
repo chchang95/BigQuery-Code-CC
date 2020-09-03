@@ -1,5 +1,4 @@
 with policy_claims as (
-# 13338
 select distinct policy_id 
 , personal_information_first_name as first_name
 , personal_information_last_name as last_name
@@ -31,7 +30,7 @@ from dw_prod_extracts.ext_policy_snapshots
 where date_snapshot = '2020-08-31'
 and carrier <> 'Canopius'
 and product <> 'HO5'
-and date_policy_effective >= '2020-03-31'
+and date_policy_effective >= '2020-01-01'
 )
 , combined as (
 select * from policy_claims
