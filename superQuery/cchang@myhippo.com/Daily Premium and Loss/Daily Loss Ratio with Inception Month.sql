@@ -14,7 +14,7 @@ select eps.policy_id
 , case when calculated_fields_non_cat_risk_score is null then '-1' else calculated_fields_non_cat_risk_score end as calculated_fields_non_cat_risk_score
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
-where date_snapshot = @date_snapshot
+where date_snapshot = '2020-08-31'
 )
 , premium as (
 select 
@@ -37,7 +37,7 @@ mon.policy_id
 ,sum(earned_exposure) as earned_exposure
 from dw_prod_extracts.ext_policy_monthly_premiums mon
 left join policy_info dp on mon.policy_id = dp.policy_id
-where date_knowledge = @today_date
+where date_knowledge = '2020-08-31'
 and carrier <> 'Canopius'
 and product <> 'HO5'
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13
@@ -52,7 +52,7 @@ select *
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date cd
 left join policy_info dp on cd.policy_id = dp.policy_id
-  WHERE date_knowledge = @date_snapshot
+  WHERE date_knowledge = '2020-08-31'
   and carrier <> 'Canopius'
 )
 , claims as (
