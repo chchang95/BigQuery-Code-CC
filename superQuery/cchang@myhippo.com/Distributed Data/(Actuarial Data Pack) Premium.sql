@@ -63,7 +63,7 @@ policy_id
 -- -- ,channel
 -- ,tenure
 -- ,effective_month
---       ,COALESCE(CAST(SUM(written) AS FLOAT64),0) AS Written_Premium_Including_Policy_Fee,
+      ,COALESCE(CAST(SUM(written) AS FLOAT64),0) AS Written_Premium_Including_Policy_Fee,
       COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS Earned_Premium_Including_Policy_Fee,
       COALESCE(CAST(SUM(written_policy_fee) AS FLOAT64),0) AS Written_Policy_Fee,
       COALESCE(CAST(SUM(earned_policy_fee) AS FLOAT64),0) AS Earned_Policy_Fee,
