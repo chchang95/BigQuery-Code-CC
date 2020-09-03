@@ -114,7 +114,7 @@ SELECT
             LEFT JOIN quotes_supp qs using (quote_id)
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-07-08') ps on q.policy_id = ps.policy_id
-      where q.date_quote_first_seen >= '2020-01-01'
+      where q.date_quote_first_seen >= '2020-05-01'
     --   and q.state = 'TX'
       and q.product <> 'HO5'
       and q.carrier <> 'Canopius'
