@@ -52,7 +52,7 @@ where date_snapshot = '2020-08-31'
 , final as (
 SELECT 
 -- date_bordereau
-state
+policy_id
 ,carrier
 ,product
 ,accident_year
