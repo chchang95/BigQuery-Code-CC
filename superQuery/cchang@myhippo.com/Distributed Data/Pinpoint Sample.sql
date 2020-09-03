@@ -70,10 +70,10 @@ from dw_prod_extracts.ext_policy_snapshots
 where date_snapshot = '2020-08-31'
 and carrier <> 'Canopius'
 and product <> 'HO5'
-and earned_exposure > 0
+and earned_exposure > 0.2
 -- and status = 'active'
 and date_policy_effective < '2019-01-01'
-and date_policy_effective > '2018-03-01'
+and date_policy_effective > '2018-01-01'
 )
 , combined as (
 select * from policy_claims
