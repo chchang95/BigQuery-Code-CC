@@ -1,6 +1,6 @@
 with loss as (
 select * 
-from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_loss
+from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_loss
 )
 , premium as (
 select * 
