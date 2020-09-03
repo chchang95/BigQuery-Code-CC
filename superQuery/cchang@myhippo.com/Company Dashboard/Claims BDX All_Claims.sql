@@ -9,7 +9,7 @@ SELECT DISTINCT
     --   ,dp.org_id as organization_id
   FROM dw_prod_extracts.ext_all_claims_combined mon
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  WHERE date_report_period_end = '2020-08-31'
+  WHERE date_report_period_end = '2020-07-31'
   and carrier <> 'Canopius'
   )
     select 
