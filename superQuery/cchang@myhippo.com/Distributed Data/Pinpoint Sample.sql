@@ -15,6 +15,6 @@ from dw_prod_extracts.ext_policy_snapshots eps
     where bound = true ) pd on pd.id = eps.policy_id
 where date_snapshot = '2020-08-31'
 and claims.policy_id is not null
-and pd.purchase_date = 'next_3_months'
+and (pd.purchase_date = 'next_3_months' or pd.purchase_date = 'last_12_months')
 and carrier <> 'Canopius'
 and product <> 'HO5'
