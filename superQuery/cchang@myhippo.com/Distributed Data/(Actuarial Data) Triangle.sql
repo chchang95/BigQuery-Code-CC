@@ -6,12 +6,12 @@ select *,     case when mon.peril = 'wind' or mon.peril = 'hail' then 'Y'
     dw_prod_extracts.ext_claim_monthly mon
 )
 SELECT
-    mon.month_knowledge,
+    mon.month_knowledge as evaluation_date,
     mon.carrier,
     mon.state,
     mon.product,
-    month_of_loss,
-    maturity,
+    month_of_loss as accident_month,
+    maturity as maturity_age,
     CAT
     ,reinsurance_treaty
     -- ,peril
