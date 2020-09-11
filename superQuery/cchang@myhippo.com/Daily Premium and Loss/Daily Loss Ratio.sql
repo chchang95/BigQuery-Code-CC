@@ -102,7 +102,7 @@ select accounting_treaty
 , round(sum(total_claim_count) / sum(earned_exposure),3) as total_frequency
 from combined
 where 1=1
-and accident_month = '2020-08-01'
+and accident_month = '2020-09-01'
 group by 1
 )
 select * from summary
