@@ -246,4 +246,6 @@ from scoring_inter
 select *
 , CAST(calculated_fields_cat_risk_score as numeric) - risk_score
 from scoring_final
-where tenure = 'New'
+where tenure = 'New' 
+and state = 'TX'
+and CAST(calculated_fields_cat_risk_score as numeric) - risk_score > 0.01
