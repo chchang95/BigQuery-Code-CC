@@ -12,6 +12,8 @@ with pg_quotes_supp as (
              , json_extract_scalar(transaction,'$.property_data.number_of_stories')                as Number_Of_Stories
              , json_extract_scalar(transaction,'$.property_data.hoa_membership') as Hoa_Membership
              , JSON_EXTRACT(data,'$.promotional_score.report.insurance_score') as pg_insurance_score
+                          , json_extract_scalar(transaction,'$.property_data.number_of_family_units')           as number_of_family_units
+
             --  case
             --       when coalesce(json_extract_scalar(transaction,'$.property_data.hoa_membership'), 'false') = 'false' then 'No'
             --       else 'Yes' end                                                      as Hoa_Membership
@@ -23,9 +25,18 @@ with pg_quotes_supp as (
                               and bound = true) b
                            on cast(a.id as string) = cast(b.lead_id as string)
         where 1 = 1
+--       and bound = 'true'
+--       and status not in ('pending_active', 'pending_bind')
+--       and effective_date::date <= '2020-04-31'::date
           and cast(initial_quote_date as date) >= '2019-10-20'
+--       and state = 'tx'
           and carrier <> 'canopius'
           and product not in ('ho5')
+          and json_extract_scalar(transaction,'$.quote.premium.total') is not null
+          and state is not null
+          and initial_quote_date is not null
+          and json_extract_scalar(transaction,'$.effective_date') is not null
+        --   LIMIT 50000
     )
        , quotes as (
 select cast(id as string)   as policy_number
@@ -40,15 +51,25 @@ select cast(id as string)   as policy_number
              , json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.number_of_stories')                as Number_Of_Stories
              , json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.hoa_membership') as hoa_membership
              , '0'                                         as pg_insurance_score
+                          , json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.number_of_family_units')           as number_of_family_units
             --  case
             --       when coalesce(json_extract_scalar(coalesce(policy_info,transaction),'$.property_data.hoa_membership'), 'false') = 'false' then 'No'
             --       else 'Yes' end                                                      as Hoa_Membership
              , cast('quote' as string)                                                                  as quote_type
         from postgres_public.policies a
         where 1 = 1
+--       and bound = 'true'
+--       and status not in ('pending_active', 'pending_bind')
+--       and effective_date::date <= '2020-04-31'::date
           and cast(initial_quote_date as date) >= '2019-10-20'
+--       and state = 'tx'
           and carrier <> 'canopius'
           and product not in ('ho5')
+          and json_extract_scalar(coalesce(policy_info,transaction),'$.quote.premium.total') is not null
+          and state is not null
+          and initial_quote_date is not null
+          and effective_date is not null
+        --   LIMIT 100000
     )
        , combined as (
         select *
@@ -79,6 +100,7 @@ select quote_id, policy_id, lead_id, product, carrier, state
 ,cast(water_backup as string) as coverage_water_backup
 ,coverage_e
 ,round(cast(q.non_cat_risk_score as numeric),5) as non_cat_risk_score
+,number_of_family_units
 from dw_prod.dim_quotes q
 left join pg_quotes_supp qs on coalesce(q.lead_id,cast(q.policy_id as string)) = qs.policy_number
       where q.date_quote_first_seen >= '2020-01-01'
@@ -86,7 +108,7 @@ left join pg_quotes_supp qs on coalesce(q.lead_id,cast(q.policy_id as string)) =
 )
 , scoring_begin as (
 select 
-quote_id, state, carrier, product, non_cat_risk_score
+quote_id, state, carrier, product, non_cat_risk_score, number_of_family_units
 -- *
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
@@ -232,6 +254,7 @@ from quotes
 where 1=1
 and product <> 'HO5'
 and carrier <> 'Canopius'
+-- and non_cat_risk_score is not null
 )
 ,scoring_inter as (
 select *
@@ -258,6 +281,7 @@ from scoring_begin
 , scoring_final as (
 select 
 quote_id as id
+,number_of_family_units
 -- , lin_comb
 -- , exp(lin_comb) as exponent
 , ROUND(exp(lin_comb) / (1+ exp(lin_comb)),5) as risk_score
@@ -338,7 +362,7 @@ SELECT
     --   ,q.county
 --       ,q.roof_type
 --       ,q.construction_type
---       ,2020 - q.year_built + 1 as age_of_home
+      ,2020 - q.year_built + 1 as age_of_home
     --   ,q.coverage_a
     --   ,q.deductible
     --   ,q.insurance_score
@@ -346,11 +370,11 @@ SELECT
 --       ,q.cat_risk_score
       ,q.non_cat_risk_class
 --       ,q.cat_risk_class
-      ,coalesce(q.non_cat_risk_class, 'not_applicable') as UW_Action
+    --   ,coalesce(q.non_cat_risk_class, 'not_applicable') as UW_Action
+      ,case when q.non_cat_risk_class is null then 'not_applicable'
+      when q.state = 'TX' and q.cat_risk_class = 'referral' then 'referral'
+      else q.non_cat_risk_class end as UW_Class_with_TX
       ,risk_score as calculated_risk_score
---       ,case when q.non_cat_risk_class is null then 'not_applicable'
---       when q.state = 'TX' and q.cat_risk_class = 'referral' then 'referral'
---       else q.non_cat_risk_class end as UW_Class_with_TX
       ,case when coalesce(q.date_bound, cast(q.date_quote_first_seen as date)) <= '2020-04-29' then 'not_applicable'
       when q.non_cat_risk_class = 'exterior_inspection_required' or q.non_cat_risk_class = 'interior_inspection_required' or q.non_cat_risk_class = 'referral' then 'rocky'
       when q.non_cat_risk_class = 'no_action' then 'happy'
@@ -365,6 +389,7 @@ SELECT
             WHEN agents is not null then 'Agent'
             ELSE 'Online'
             end as channel
+        ,number_of_family_units
       ,SUM(CASE WHEN ddp.is_bound IS TRUE THEN 1 ELSE 0 END) AS bound_count
       ,COUNT(*) as quote_count
       ,sum(q.quote_premium_total) as total_quote_premium
@@ -374,6 +399,6 @@ SELECT
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
       where q.date_quote_first_seen >= '2020-01-01'
 --       and q.state = 'CA'
-      and q.product <> 'HO5'
+      and q.product = 'HO6'
 --       and q.carrier = 'Topa'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
