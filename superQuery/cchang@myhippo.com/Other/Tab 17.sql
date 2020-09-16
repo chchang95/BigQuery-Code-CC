@@ -6,7 +6,7 @@ where status = 'active'
 and date_snapshot = '2020-08-31'
 and date_policy_effective >= '2020-07-31'
 and eps.product <> 'HO5'
-and eps.renewal_number = 0
+and eps.renewal_number > 0
 -- and product = 'HO5'
 group by 1,2
 order by 1
