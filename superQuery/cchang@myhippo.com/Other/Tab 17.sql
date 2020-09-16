@@ -1,4 +1,4 @@
-select state, channel, 
+select eps.state, channel, 
 sum(written_base + written_total_optionals)/ sum(written_exposure)
 from dw_prod_extracts.ext_policy_snapshots eps
 left join dw_prod.dim_policies using(policy_id)
