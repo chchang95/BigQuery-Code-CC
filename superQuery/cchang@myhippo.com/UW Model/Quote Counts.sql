@@ -99,7 +99,7 @@ SELECT
 --       ,q.date_bound
       ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
       ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
-      ,channel
+      ,q.channel
       ,SUM(CASE WHEN ddp.is_bound IS TRUE THEN 1 ELSE 0 END) AS bound_count
       ,COUNT(*) as quote_count
       ,sum(q.quote_premium_total) as total_quote_premium
