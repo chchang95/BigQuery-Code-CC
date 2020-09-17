@@ -1,5 +1,5 @@
 select 
--- eps.state
+eps.state
 case when eps.renewal_number = 0 then 'new' else 'renewal' end as tenure,
 -- channel, 
 sum(written_base + written_total_optionals)/ sum(written_exposure)
