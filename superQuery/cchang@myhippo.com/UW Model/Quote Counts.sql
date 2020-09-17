@@ -99,13 +99,7 @@ SELECT
 --       ,q.date_bound
       ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
       ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
-      ,CASE 
-            WHEN partners is not null then 'Partner' 
-            WHEN builders is not null then 'Builder'
-            WHEN producers is not null then 'Producer' 
-            WHEN agents is not null then 'Agent'
-            ELSE 'Online'
-            end as channel
+      ,channel
       ,SUM(CASE WHEN ddp.is_bound IS TRUE THEN 1 ELSE 0 END) AS bound_count
       ,COUNT(*) as quote_count
       ,sum(q.quote_premium_total) as total_quote_premium
