@@ -3,7 +3,7 @@ select state
 ,carrier
 ,product
 ,date_report_period_start as accident_month
-,reinsurance_treaty_accounting as accounting_treaty
+,reinsurance_treaty_property_accounting as accounting_treaty
 ,org_id as organization_id
 ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
 ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
