@@ -45,8 +45,8 @@ SELECT
     --   when cast(q.year_built as numeric) >= 2000 then 'Post 2000' 
     --   when cast(q.year_built as numeric) > 1980 then 'Pre 2000' 
     --   else 'Pre 1980' end as year_built
-    --   ,q.zip_code
-    --   ,q.county
+      ,q.zip_code
+      ,q.county
     --   ,q.roof_type as quote_roof_type
     --   ,q.prefilled_roof_type as prefilled_roof_type
     --   ,property_data_roof_type as policy_roof_type
@@ -54,7 +54,7 @@ SELECT
     --   ,q.square_footage
     --   ,2020 - q.year_built + 1 as age_of_home
     --   ,q.year_built as year_home_built
-    --   ,q.coverage_a
+      ,q.coverage_a
     --   ,q.deductible
     --   ,q.wind_deductible
     --   ,q.year_roof_built
@@ -87,4 +87,4 @@ SELECT
       and q.state = 'ca'
       and q.product = 'ho3'
       and q.carrier = 'canopius'
-      group by 1,2,3,4,5,6
+      group by 1,2,3,4,5,6,7,8,9
