@@ -1,9 +1,10 @@
 select 
 -- eps.state,
-date_snapshot,
+date_snapshot
 -- case when eps.renewal_number = 0 then 'new' else 'renewal' end as tenure,
 -- channel, 
-sum(written_base + written_total_optionals)/ sum(written_exposure)
+,sum(written_base + written_total_optionals)/ sum(written_exposure)
+,count(*)
 from dw_prod_extracts.ext_policy_snapshots eps
 left join dw_prod.dim_policies using(policy_id)
 where status = 'active'
