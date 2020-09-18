@@ -54,7 +54,8 @@ SELECT
     --   ,q.square_footage
     --   ,2020 - q.year_built + 1 as age_of_home
     --   ,q.year_built as year_home_built
-      ,q.coverage_a
+      ,coalesce(q.coverage_a,0) + coalesce(q.coverage_b,0) + coalesce(q.coverage_c,0) + coalesce(q.coverage_d,0) as TIV
+      ,coalesce(q.coverage_a,0) as coverage_a
     --   ,q.deductible
     --   ,q.wind_deductible
     --   ,q.year_roof_built
@@ -87,4 +88,4 @@ SELECT
       and q.state = 'ca'
       and q.product = 'ho3'
       and q.carrier = 'canopius'
-      group by 1,2,3,4,5,6,7,8,9
+      group by 1,2,3,4,5,6,7,8,9,10
