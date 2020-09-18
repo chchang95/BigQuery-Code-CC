@@ -113,4 +113,4 @@ and accident_month = '2020-08-01'
 and accounting_treaty = 'topa20_post_august'
 group by 1,2
 )
-select * from summary
+select * from combined
