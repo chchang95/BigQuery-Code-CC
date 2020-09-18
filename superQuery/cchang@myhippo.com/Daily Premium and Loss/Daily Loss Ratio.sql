@@ -74,7 +74,7 @@ and p.policy_effective_month = c.policy_effective_month
 and p.tenure = c.tenure
 )
 , aggregated as (
-select state, accounting_treaty, accident_month, tenure
+select state, accounting_treaty, accident_month, tenure, policy_effective_month
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(earned_exposure) as earned_exposure
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
@@ -90,12 +90,13 @@ select state, accounting_treaty, accident_month, tenure
 from combined
 where 1=1
 and accident_month >= '2019-09-01'
-and accounting_treaty = 'Spkr20_Classic'
-group by 1,2,3,4
+-- and accounting_treaty = 'Spkr20_Classic'
+and carrier = 'topa'
+group by 1,2,3,4,5
 -- order by 1,2
 )
 , summary as (
-select accounting_treaty,policy_effective_month
+select accounting_treaty, policy_effective_month
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
