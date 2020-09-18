@@ -96,7 +96,7 @@ group by 1,2,3,4,5
 -- order by 1,2
 )
 , summary as (
-select accounting_treaty, policy_effective_month
+select accounting_treaty
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
@@ -110,8 +110,8 @@ select accounting_treaty, policy_effective_month
 , round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
 from combined
 where 1=1
-and accident_month = '2020-09-01'
+and accident_month = '2020-08-01'
 and accounting_treaty = 'topa20_post_august'
-group by 1,2
+group by 1
 )
-select * from aggregated
+select * from summary
