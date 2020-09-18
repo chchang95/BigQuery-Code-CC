@@ -5,6 +5,7 @@ select state
 ,date_report_period_start as accident_month
 ,reinsurance_treaty_property_accounting as accounting_treaty
 ,org_id as organization_id
+,date_trunc(date_effective, MONTH) as policy_effective_month
 ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
 ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
 ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
@@ -14,7 +15,7 @@ from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
 where date_knowledge = '2020-09-17'
 and carrier <> 'Canopius'
-group by 1,2,3,4,5,6,7
+group by 1,2,3,4,5,6,7,8
 )
 , claims_supp as (
 select * 
@@ -37,6 +38,7 @@ state
 ,date_trunc(date_of_loss, MONTH) as accident_month
 ,reinsurance_treaty
 ,org_id as organization_id
+,date_trunc(date_effective, MONTH) as policy_effective_month
 ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
 ,sum(total_incurred) as total_incurred
 ,sum(case when CAT = 'N' then total_incurred else 0 end) as non_cat_incurred
@@ -48,7 +50,7 @@ state
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
 where ebsl = 'N'
-group by 1,2,3,4,5,6,7
+group by 1,2,3,4,5,6,7,8
 ) 
 , combined as (
 select p.*
@@ -68,6 +70,7 @@ and p.product = c.product
 and p.accident_month = c.accident_month
 and p.accounting_treaty = c.reinsurance_treaty
 and p.organization_id = c.organization_id
+and p.policy_effective_month = c.policy_effective_month
 and p.tenure = c.tenure
 )
 , aggregated as (
@@ -92,7 +95,7 @@ group by 1,2,3,4
 -- order by 1,2
 )
 , summary as (
-select accounting_treaty
+select accounting_treaty,policy_effective_month
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
@@ -106,7 +109,8 @@ select accounting_treaty
 , round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
 from combined
 where 1=1
-and accident_month = '2020-09-01'
+and accident_month = '2020-08-01'
+and accounting_treaty = 'topa20_post_august'
 group by 1
 )
 select * from summary
