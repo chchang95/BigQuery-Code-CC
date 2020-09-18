@@ -80,13 +80,13 @@ select state, accounting_treaty, accident_month, tenure, policy_effective_month
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
 , sum(cat_incurred) as cat_incurred
-, round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
-, round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
-, round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
-, round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
-, round(sum(total_claim_count) / sum(earned_exposure)) as total_frequency
-, round(sum(non_cat_claim_count) / sum(earned_exposure)) as noncat_frequency
-, round(sum(cat_claim_count) / sum(earned_exposure)) as cat_frequency
+-- , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
+-- , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
+-- , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
+-- , round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
+-- , round(sum(total_claim_count) / sum(earned_exposure)) as total_frequency
+-- , round(sum(non_cat_claim_count) / sum(earned_exposure)) as noncat_frequency
+-- , round(sum(cat_claim_count) / sum(earned_exposure)) as cat_frequency
 from combined
 where 1=1
 and accident_month >= '2019-09-01'
