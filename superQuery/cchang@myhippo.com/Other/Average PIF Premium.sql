@@ -12,7 +12,7 @@ and date_policy_effective >= '2020-07-31'
 -- and eps.product <> 'HO5'
 -- and eps.renewal_number > 0
 -- and channel
-and eps.product = 'HO3'
-and eps.carrier = 'Canopius'
+-- and eps.product = 'HO3'
+and eps.carrier = 'canopius'
 group by 1
 order by 1
