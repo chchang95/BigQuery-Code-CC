@@ -92,7 +92,7 @@ group by 1,2,3,4
 -- order by 1,2
 )
 , summary as (
-select carrier
+select accounting_treaty
 , sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
@@ -106,7 +106,7 @@ select carrier
 , round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
 from combined
 where 1=1
-and accident_month = '2020-09-01'
+and accident_month = '2020-08-01'
 group by 1
 )
 select * from summary
