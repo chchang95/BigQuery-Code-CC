@@ -61,12 +61,12 @@ SELECT
     --   ,q.insurance_score
     --   ,q.non_cat_risk_score
     --   ,q.cat_risk_score
-      ,q.non_cat_risk_class
+    --   ,q.non_cat_risk_class
     --   ,q.cat_risk_class
     --   ,coalesce(q.non_cat_risk_class, 'not_applicable') as UW_Action
-      ,case when q.non_cat_risk_class is null then 'not_applicable'
-      when q.state = 'TX' and q.cat_risk_class = 'referral' then 'referral'
-      else q.non_cat_risk_class end as UW_Class_with_TX
+    --   ,case when q.non_cat_risk_class is null then 'not_applicable'
+    --   when q.state = 'TX' and q.cat_risk_class = 'referral' then 'referral'
+    --   else q.non_cat_risk_class end as UW_Class_with_TX
     --   ,case when coalesce(q.date_bound, cast(q.date_quote_first_seen as date)) <= '2020-04-29' then 'not_applicable'
     --   when q.non_cat_risk_class = 'exterior_inspection_required' or q.non_cat_risk_class = 'interior_inspection_required' or q.non_cat_risk_class = 'referral' then 'rocky'
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
@@ -87,4 +87,4 @@ SELECT
       and q.state = 'ca'
       and q.product = 'ho3'
       and q.carrier = 'canopius'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+      group by 1,2,3,4,5,6
