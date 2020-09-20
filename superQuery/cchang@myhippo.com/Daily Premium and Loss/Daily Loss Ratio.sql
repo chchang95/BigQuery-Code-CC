@@ -7,8 +7,8 @@ select state
 ,org_id as organization_id
 ,date_trunc(date_effective, MONTH) as policy_effective_month
 ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
-,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
-,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
+,sum(written_base + written_total_optionals  - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl_x_pol_fee
+,sum(earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl_x_pol_fee
 ,sum(written_exposure) as written_exposure
 ,sum(earned_exposure) as earned_exposure
 from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
@@ -97,14 +97,14 @@ group by 1,2,3,4,5
 )
 , summary as (
 select accounting_treaty
-, sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
+, sum(written_prem_x_ebsl_x_pol_fee) as written_prem_x_ebsl_pol_fee, sum(earned_prem_x_ebsl_x_pol_fee) as earned_prem_x_ebsl_x_pol_fee
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
 , sum(cat_incurred) as cat_incurred
-, round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
-, round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
-, round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
-, round(sum(total_incurred) / sum(earned_prem_x_ebsl),3) as total_incurred
+, round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as capped_NC
+, round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as excess_NC
+, round(sum(cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as cat
+, round(sum(total_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as total_incurred
 , round(sum(total_claim_count) / sum(earned_exposure),3) as total_frequency
 , round(sum(non_cat_claim_count) / sum(earned_exposure),3) as noncat_frequency
 , round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
