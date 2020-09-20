@@ -75,7 +75,7 @@ and p.tenure = c.tenure
 )
 , aggregated as (
 select state, accounting_treaty, accident_month, tenure, policy_effective_month
-, sum(written_prem_x_ebsl) as written_prem, sum(earned_prem_x_ebsl) as earned_prem
+, sum(written_prem_x_ebsl_x_pol_fee) as written_prem_x_ebsl_pol_fee, sum(earned_prem_x_ebsl_x_pol_fee) as earned_prem_x_ebsl_x_pol_fee
 , sum(earned_exposure) as earned_exposure
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
