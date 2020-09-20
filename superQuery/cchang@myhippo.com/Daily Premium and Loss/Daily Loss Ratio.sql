@@ -110,8 +110,8 @@ select policy_effective_month
 , round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
 from combined
 where 1=1
--- and accident_month = '2020-09-01'
-and accounting_treaty = 'topa20_post_august'
+and accident_month >= '2020-08-01'
+-- and accounting_treaty = 'topa20_post_august'
 group by 1
 )
 select * from summary
