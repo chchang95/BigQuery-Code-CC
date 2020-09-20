@@ -17,7 +17,7 @@ and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 -- and eps.renewal_number > 0
 -- and channel
 -- and eps.product = 'HO3'
-and eps.carrier = 'canopius'
+and eps.carrier = 'topa'
 and eps.state = 'ca'
 group by 1
 order by 1
