@@ -100,7 +100,7 @@ select
 -- ,property_data_foundation_type
 -- ,property_data_year_roof_built
 ,property_data_construction_type
--- ,property_data_hail_resistant_roof
+,property_data_hail_resistant_roof
 ,property_data_bathroom
 -- ,property_data_fireline_score
 -- ,property_data_rebuilding_cost
@@ -122,12 +122,12 @@ select
 -- ,auto_renewal
 -- ,insurance_score
 -- ,has_multiple_policies_discount
-,loss_history_claims
+-- ,loss_history_claims
 
 ,calculated_fields_age_of_home
 ,calculated_fields_age_of_roof
 -- ,calculated_fields_early_quote_days
--- ,calculated_fields_five_years_claims
+,calculated_fields_five_years_claims
 -- ,calculated_fields_three_years_claims
 -- ,calculated_fields_property_claims_last_year
 ,calculated_fields_age_of_insured
@@ -135,8 +135,8 @@ select
 -- ,calculated_fields_personal_property_increased_limit
 -- ,calculated_fields_increased_loss_of_use_liability_limit
 
-,(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) / 2 as written_prem
-,(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) / 2 as earned_prem
+,(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) / 2 as written_premium
+,(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) / 2 as earned_premium
 -- ,written_base
 -- ,earned_base
 ,written_exposure/2
@@ -149,12 +149,12 @@ select
 ,coalesce(capped_non_cat_incurred,0)/2 as capped_at_100k_non_cat_incurred
 ,coalesce(excess_non_cat_incurred,0)/2 as excess_of_100k_non_cat_incurred
 ,coalesce(cat_incurred,0)/2 as cat_incurred
-,coalesce(reported_total_claim_count_x_cnp,0)/2 as reported_total_claim_count_x_cnp
-,coalesce(reported_non_cat_claim_count_x_cnp,0)/2 as reported_non_cat_claim_count_x_cnp
-,coalesce(reported_cat_claim_count_x_cnp,0)/2 as reported_cat_claim_count_x_cnp
-,coalesce(closed_total_claim_count_x_cnp,0)/2 as closed_total_claim_count_x_cnp
-,coalesce(closed_non_cat_claim_count_x_cnp,0)/2 as closed_non_cat_claim_count_x_cnp
-,coalesce(closed_cat_claim_count_x_cnp,0)/2 as closed_cat_claim_count_x_cnp
+,coalesce(reported_total_claim_count_x_cnp,0)/2 as reported_total_claim_count
+,coalesce(reported_non_cat_claim_count_x_cnp,0)/2 as reported_non_cat_claim_count
+,coalesce(reported_cat_claim_count_x_cnp,0)/2 as reported_cat_claim_count
+-- ,coalesce(closed_total_claim_count_x_cnp,0)/2 as closed_total_claim_count
+-- ,coalesce(closed_non_cat_claim_count_x_cnp,0)/2 as closed_non_cat_claim_count
+-- ,coalesce(closed_cat_claim_count_x_cnp,0)/2 as closed_cat_claim_count
 
 -- ,coalesce(non_cat_incurred_water,0) as non_cat_incurred_water
 
