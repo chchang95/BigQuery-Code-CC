@@ -139,8 +139,8 @@ select
 ,(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) / 2 as earned_premium
 -- ,written_base
 -- ,earned_base
-,written_exposure/2
-,earned_exposure/2
+,written_exposure/2 as written_exposure
+,earned_exposure/2 as earned_exposure
 -- ,quote_premium_base + quote_premium_optionals + quote_policy_fee - quote_optionals_service_line - quote_optionals_equipment_breakdown as quote_prem_x_ebsl_inc_pol_fee
 -- ,quote_premium_base as quote_base
 
