@@ -40,7 +40,7 @@ with claims_supp as (
     group by 1,2
     ) 
 select 
-(cast(eps.policy_id as numeric) / 2) + 5 as identifier
+(cast(eps.policy_id as numeric) * 2) + 18 as identifier
 -- , eps.policy_number
 -- ,date_trunc(date_policy_effective, MONTH) as policy_inception_month
 -- ,date_policy_effective
