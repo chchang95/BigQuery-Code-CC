@@ -79,7 +79,7 @@ select
 ,coverage_extended_rebuilding_cost
 
 -- ,property_data_year_built
-,property_data_square_footage
+-- ,property_data_square_footage
 -- ,property_data_updated_electric
 -- ,property_data_updated_heating
 -- ,property_data_updated_plumbing
