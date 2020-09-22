@@ -31,4 +31,5 @@ SELECT
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
   where is_ebsl is false
   and cat_indicator = false
+  and month_of_loss >= '2019-09-01'
   group by 1,2,3,4,5
