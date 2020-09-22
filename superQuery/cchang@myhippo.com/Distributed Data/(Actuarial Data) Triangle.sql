@@ -27,7 +27,7 @@ SELECT
     ,sum(case when total_incurred_inception_to_date >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_catastrophe is true) then 100000 else total_incurred_inception_to_date end) as capped_NC_total_incurred_cumulative
     ,sum(case when total_incurred_inception_to_date >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_catastrophe is true) then total_incurred_inception_to_date - 100000 else 0 end) as excess_NC_total_incurred_cumulative
   FROM
-    claims_supp
+    claims_supp mon
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
   where is_ebsl is false
   and cat_indicator = false
