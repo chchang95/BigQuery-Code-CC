@@ -1,4 +1,8 @@
 with claims_supp as (
+select *, cc.cat_ind as cat_indicator
+from dw_prod_extracts.ext_claim_monthly mon
+left join dw_staging_extracts.cc_cat_claim_coding_2020831 cc on mon.claim_number = cc.claim_number
+)
 SELECT
     mon.month_knowledge,
     mon.carrier,
@@ -26,6 +30,5 @@ SELECT
     dw_prod_extracts.ext_claim_monthly mon
     left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
   where is_ebsl is false
+  and cat_indicator = false
   group by 1,2,3,4,5,6
-  )
-  select * from claims_supp where CAT = 'N'
