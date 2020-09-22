@@ -9,10 +9,10 @@ SELECT
     mon.state,
     -- mon.product,
     month_of_loss,
-    maturity,
-    case when mon.peril = 'wind' or mon.peril = 'hail' then 'Y'
-      when is_catastrophe is true then 'Y'
-      else 'N' end as CAT
+    maturity
+    -- case when mon.peril = 'wind' or mon.peril = 'hail' then 'Y'
+    --   when is_catastrophe is true then 'Y'
+    --   else 'N' end as CAT
     -- ,reinsurance_treaty
     -- ,peril
     -- ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
@@ -31,4 +31,4 @@ SELECT
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
   where is_ebsl is false
   and cat_indicator = false
-  group by 1,2,3,4,5,6
+  group by 1,2,3,4,5
