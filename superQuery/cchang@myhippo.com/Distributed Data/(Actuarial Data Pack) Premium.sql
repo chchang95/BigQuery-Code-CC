@@ -110,5 +110,5 @@ from final
 -- group by 1
 -- order by 1
 )
-select * from aggregated
+select distinct reinsurance_treaty from enhanced
 -- where policy_number = 'HMO-0345091-00'
