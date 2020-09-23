@@ -62,7 +62,7 @@ carrier
 ,date_accident_month_begin
 ,date_accident_month_end
 ,reinsurance_treaty
-,organization_id
+-- ,organization_id
 ,channel
 ,tenure
 ,effective_month
@@ -105,7 +105,7 @@ and reinsurance_treaty not in
 )
 -- and carrier <> 'Canopius'
 GROUP BY 1
-, 2, 3, 4, 5, 6, 7, 8, 9,10,11
+, 2, 3, 4, 5, 6, 7, 8, 9,10
 )
 , aggregated as (
 select 
