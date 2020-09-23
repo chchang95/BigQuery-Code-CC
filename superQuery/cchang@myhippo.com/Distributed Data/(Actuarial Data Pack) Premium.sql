@@ -55,17 +55,18 @@ where date_snapshot = '2020-08-31'
 , final as (
 SELECT 
 -- date_bordereau
-policy_id
--- ,carrier
--- ,product
--- ,accident_year
--- ,date_accident_month_begin
--- ,date_accident_month_end
--- ,reinsurance_treaty
--- -- ,organization_id
--- -- ,channel
--- ,tenure
--- ,effective_month
+-- policy_id
+carrier
+,product
+,accident_year
+,date_accident_month_begin
+,date_accident_month_end
+,reinsurance_treaty
+,organization_id
+,channel
+,tenure
+,effective_month
+,original_effective_month
       ,COALESCE(CAST(SUM(written) AS FLOAT64),0) AS Written_Premium_Including_Policy_Fee,
       COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS Earned_Premium_Including_Policy_Fee,
       COALESCE(CAST(SUM(written_policy_fee) AS FLOAT64),0) AS Written_Policy_Fee,
@@ -104,7 +105,7 @@ and reinsurance_treaty not in
 )
 -- and carrier <> 'Canopius'
 GROUP BY 1
---, 2, 3, 4, 5, 6, 7, 8, 9
+, 2, 3, 4, 5, 6, 7, 8, 9,10,11
 )
 , aggregated as (
 select 
