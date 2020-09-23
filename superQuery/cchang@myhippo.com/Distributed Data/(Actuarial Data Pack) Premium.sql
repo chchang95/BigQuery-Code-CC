@@ -92,7 +92,16 @@ policy_id
       COALESCE(SUM(Excess_Count_NonCAT),0) AS NonCat_Claim_Count_Above_100k,
 FROM enhanced
 where date_bordereau = '2020-08-31'
-and reinsurance_treaty not in ('spkr17_mrdp_ebsl','topa_ebsl','spkr19_hsbold','spkr19_hsbnew','canopius','canopius_ebsl', 'topa20_postaugust_ebsl')
+and reinsurance_treaty not in 
+('spkr17_mrdp_EBSL',
+'spkr19_hsb_old',
+'topa_EBSL',
+'Spkr19_HSBNew_EBSL',
+'canopius',
+'Spkr19_HSBNew',
+'canopius_EBSL',
+'topa20_post_august_EBSL'
+)
 -- and carrier <> 'Canopius'
 GROUP BY 1
 --, 2, 3, 4, 5, 6, 7, 8, 9
