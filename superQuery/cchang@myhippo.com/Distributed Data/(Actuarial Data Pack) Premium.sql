@@ -1,10 +1,10 @@
 with loss as (
 select * 
-from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_loss
+from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_loss
 )
 , premium as (
 select * 
-from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_premium
+from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_premium
 )
 , policies as (
 select distinct eps.policy_id, eps.policy_number
