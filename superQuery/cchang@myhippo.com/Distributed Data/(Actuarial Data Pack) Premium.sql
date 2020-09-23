@@ -62,7 +62,7 @@ carrier
 ,date_accident_month_begin
 ,date_accident_month_end
 ,reinsurance_treaty
--- ,organization_id
+,organization_id
 ,channel
 ,tenure
 ,effective_month
