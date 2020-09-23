@@ -15,7 +15,9 @@ select distinct eps.policy_id, eps.policy_number
 , case when renewal_number > 0 then 'Renewal' else 'New' end as tenure 
 , channel
 , org_id as organization_id
+, date_trunc(ph.date_first_effective, MONTH) as original_effective_month
 from dw_prod_extracts.ext_policy_snapshots eps
+left join dw_prod.dim_policy_histories ph on substr(policy_number,0,length(policy_number)-3) = ph.policy_history_number
     left join (select policy_id, policy_number, channel, attributed_organization_id
     , case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
 where date_snapshot = '2020-08-31'
@@ -44,7 +46,8 @@ where date_snapshot = '2020-08-31'
          policies.state,
          policies.product,
          policies.tenure,
-         policies.effective_month
+         policies.effective_month,
+         policies.original_effective_month
   FROM combined
   INNER JOIN policies
   USING(policy_id)
@@ -107,5 +110,5 @@ from final
 -- group by 1
 -- order by 1
 )
-select * from final
+select * from aggregated
 -- where policy_number = 'HMO-0345091-00'
