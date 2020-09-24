@@ -108,13 +108,13 @@ select original_effective_month
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
 , sum(cat_incurred) as cat_incurred
-, round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as capped_NC
-, round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as excess_NC
-, round(sum(cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as cat
-, round(sum(total_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as total_incurred
-, round(sum(total_claim_count) / sum(earned_exposure),3) as total_frequency
-, round(sum(non_cat_claim_count) / sum(earned_exposure),3) as noncat_frequency
-, round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
+-- , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as capped_NC
+-- , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as excess_NC
+-- , round(sum(cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as cat
+-- , round(sum(total_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as total_incurred
+-- , round(sum(total_claim_count) / sum(earned_exposure),3) as total_frequency
+-- , round(sum(non_cat_claim_count) / sum(earned_exposure),3) as noncat_frequency
+-- , round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
 from combined
 where 1=1
 and accident_month = '2020-09-01'
