@@ -109,6 +109,7 @@ select original_effective_month
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
 , sum(cat_incurred) as cat_incurred
+,round(sum(non_cat_claim_count)) as noncat_claim_count
 -- , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as capped_NC
 -- , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as excess_NC
 -- , round(sum(cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as cat
