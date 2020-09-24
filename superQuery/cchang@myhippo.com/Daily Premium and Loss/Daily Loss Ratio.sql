@@ -123,5 +123,6 @@ and original_effective_month <= '2020-09-01'
 -- and accounting_treaty = 'topa20_post_august'
 -- and policy_effective_month = '2020-09-01'
 group by 1
+order by 1
 )
 select * from summary
