@@ -1,4 +1,3 @@
-
 with quotes_supp as (
       select *
             ,o.*
