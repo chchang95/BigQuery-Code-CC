@@ -60,7 +60,7 @@ and status = 'active'
 and carrier = 'spinnaker'
 and state = 'tx'
 and calculated_fields_wind_exclusion <> 'true'
-and effective_date <= '2020-05-31'
+and date_policy_effective <= '2020-05-31'
 
 -- select * from dw_prod_extracts.ext_policy_snapshots where policy_id = 2413416 and date_knowledge = '2020-04-30'
 
