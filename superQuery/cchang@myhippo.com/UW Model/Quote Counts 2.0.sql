@@ -34,7 +34,7 @@ SELECT
     --   q.policy_number,
     --   q.policy_id,
       cast(q.date_quote_first_seen as DATE) as quote_date
-      date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
+      ,date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
       ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
     --   ,qs.org_name as organization_name
     --   ,q.organization_id
@@ -88,4 +88,4 @@ SELECT
     --   and q.state = 'TX'
       and q.product <> 'ho5'
       and q.carrier <> 'canopius'
-      group by 1,2,3,4,5,6,7,8
+      group by 1,2,3,4,5,6,7
