@@ -59,7 +59,7 @@ where date_snapshot = '2020-05-31'
 and status = 'active'
 and carrier = 'spinnaker'
 and state = 'tx'
-and calculated_fields_wind_exclusion is not true
+and calculated_fields_wind_exclusion <> 'true'
 
 -- select * from dw_prod_extracts.ext_policy_snapshots where policy_id = 2413416 and date_knowledge = '2020-04-30'
 
