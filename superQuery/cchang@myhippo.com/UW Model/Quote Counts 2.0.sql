@@ -33,14 +33,14 @@ with quotes_supp as (
 SELECT
     --   q.policy_number,
     --   q.policy_id,
-    --   cast(q.date_quote_first_seen as DATE) as quote_date
+      cast(q.date_quote_first_seen as DATE) as quote_date
       date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
       ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
     --   ,qs.org_name as organization_name
     --   ,q.organization_id
       ,q.state
-      ,q.product
-      ,q.carrier
+    --   ,q.product
+    --   ,q.carrier
 --       ,q.is_bulk_quoted
     --   ,case when q.year_built is null then 'Missing'
     --   when cast(q.year_built as numeric) >= 2000 then 'Post 2000' 
