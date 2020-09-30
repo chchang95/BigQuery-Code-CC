@@ -29,7 +29,7 @@ select *
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date cd
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on cd.policy_id = dp.policy_id
-left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-09-28') eps on eps.policy_id = cd.policy_id
+left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-09-29') eps on eps.policy_id = cd.policy_id
 left join (select policy_id, policy_number, policy_group_number from dw_prod.dim_policies) dep on dep.policy_id = cd.policy_id
 left join dw_prod.dim_policy_histories ph on dep.policy_group_number = ph.policy_history_number
   WHERE date_knowledge = '2020-09-29'
