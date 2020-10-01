@@ -1,10 +1,10 @@
 with loss as (
 select * 
-from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_loss
+from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_loss
 )
 , premium as (
 select * 
-from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_premium
+from dw_prod_extracts.ext_actuarial_monthly_loss_ratios_premium
 )
 , policies as (
 select eps.policy_id, eps.policy_number
@@ -18,7 +18,7 @@ select eps.policy_id, eps.policy_number
 from dw_prod_extracts.ext_policy_snapshots eps
     left join (select policy_id, policy_number, channel, attributed_organization_id
     , case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
-where date_snapshot = '2020-07-31'
+where date_snapshot = '2020-08-31'
 )
 , combined AS (
   SELECT COALESCE(premium.policy_id, loss.policy_id) AS policy_id,
@@ -73,27 +73,34 @@ date_bordereau
 ,channel
 ,tenure
 ,effective_month
-      ,COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS earned,
-      COALESCE(CAST(SUM(written) AS FLOAT64),0) AS written,
-      COALESCE(CAST(SUM(earned_exposure) AS FLOAT64),0) AS earned_exposure,
+,COALESCE(CAST(SUM(written) AS FLOAT64),0) AS Written_Premium_Including_Policy_Fee,
+      COALESCE(CAST(SUM(earned) AS FLOAT64),0) AS Earned_Premium_Including_Policy_Fee,
+      COALESCE(CAST(SUM(written_policy_fee) AS FLOAT64),0) AS Written_Policy_Fee,
+      COALESCE(CAST(SUM(earned_policy_fee) AS FLOAT64),0) AS Earned_Policy_Fee,
+      COALESCE(CAST(SUM(written_exposure) AS FLOAT64),0) AS Written_Exposure,
+      COALESCE(CAST(SUM(earned_exposure) AS FLOAT64),0) AS Earned_Exposure,
       COALESCE(CAST(SUM(earned_tiv) AS FLOAT64),0) AS earned_tiv,
-      COALESCE(SUM(total_Claim_Count),0) AS total_Claim_Count,
+
+      
+            COALESCE(SUM(total_Claim_Count),0) AS Total_Reported_Claim_Count,
       COALESCE(SUM(Total_Paid_Indemnity),0) AS Total_Paid_Indemnity,
       COALESCE(SUM(Total_Case_Reserve_Indemnity),0) AS Total_Case_Reserve_Indemnity,
       COALESCE(SUM(Total_Paid_ALAE),0) AS Total_Paid_ALAE,
       COALESCE(SUM(Total_Case_Reserve_ALAE),0) AS Total_Case_Reserve_ALAE,
-      COALESCE(SUM(Salvage_Subro),0) AS Salvage_Subro,
-      COALESCE(SUM(Total_incurred_Indemnity),0) AS Total_Incurred_Indemnity,
-      COALESCE(SUM(Total_Incurred_ALAE),0) AS Total_Incurred_ALAE,
+      COALESCE(SUM(Salvage_Subro),0) AS Salvage_Subro_Recoveries,
+      COALESCE(SUM(Total_Paid_Indemnity),0) + COALESCE(SUM(Total_Case_Reserve_Indemnity),0) AS Total_Incurred_Indemnity,
+      COALESCE(SUM(Total_Paid_ALAE),0) + COALESCE(SUM(Total_Case_Reserve_ALAE),0) AS Total_Incurred_ALAE,
       COALESCE(SUM(Total_Incurred_Loss_and_ALAE),0) AS Total_Incurred_Loss_and_ALAE,
-      COALESCE(SUM(Claim_Count_CAT),0) AS Claim_Count_CAT,
+      COALESCE(SUM(Claim_Count_CAT),0) AS CAT_Reported_Claim_Count,
     --   COALESCE(SUM(total_cat_incurred_loss_and_alae),0) AS total_cat_incurred_loss_and_alae,
-      COALESCE(SUM(Incurred_Loss_CAT),0) AS Incurred_Loss_CAT,
-      COALESCE(SUM(Claim_Count_NonCAT),0) AS Claim_Count_NonCAT,
-      COALESCE(SUM(Capped_NonCAT_loss_and_ALAE),0) AS Capped_NonCAT_loss_and_ALAE,
-      COALESCE(SUM(Excess_Loss_NonCAT),0) AS Excess_Loss_NonCAT,
-      COALESCE(SUM(Incurred_Loss_NonCAT), 0) AS Incurred_Loss_NonCAT,
-      COALESCE(SUM(Excess_Count_NonCAT),0) AS Excess_Count_NonCAT,
+      COALESCE(SUM(Incurred_Loss_CAT),0) AS CAT_Incurred_Loss_and_ALAE,
+      COALESCE(SUM(Claim_Count_NonCAT),0) AS NonCat_Reported_Claim_Count,
+      COALESCE(SUM(Capped_NonCAT_loss_and_ALAE),0) AS NonCat_Incurred_Loss_and_ALAE_Capped_100k,
+      COALESCE(SUM(Excess_Loss_NonCAT),0) AS NonCat_Incurred_Loss_and_ALAE_Excess_100k,
+      COALESCE(SUM(Incurred_Loss_NonCAT), 0) AS NonCat_Incurred_Loss_and_ALAE,
+      COALESCE(SUM(Excess_Count_NonCAT),0) AS NonCat_Claim_Count_Above_100k,
+      
+      
     COALESCE(SUM(Claim_Count_Theft_CAT),0) AS Claim_Count_Theft_CAT,
         COALESCE(SUM(Incurred_Loss_Theft_CAT),0) AS Incurred_Loss_Theft_CAT,
         COALESCE(SUM(Claim_Count_Theft_NonCAT),0) AS Claim_Count_Theft_NonCAT,
@@ -154,17 +161,26 @@ FROM enhanced
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12
 )
 , aggregated as (
-select date_accident_month_begin, 
-SUM(coalesce(total_incurred_loss_and_alae,0)) as total_incurred,
-sum(coalesce(Incurred_Loss_CAT,0)) as total_cat,
-sum(coalesce(Incurred_Loss_NonCAT,0)) as total_noncat
+select 
+-- date_accident_month_begin, 
+COALESCE(CAST(SUM(Written_Premium_Including_Policy_Fee) AS FLOAT64),0) AS Written_Premium_Including_Policy_Fee,
+COALESCE(CAST(SUM(Earned_Premium_Including_Policy_Fee) AS FLOAT64),0) AS Earned_Premium_Including_Policy_Fee,
+SUM(coalesce(Total_Incurred_Loss_and_ALAE,0)) as total_incurred,
+sum(coalesce(CAT_Incurred_Loss_and_ALAE,0)) as total_cat,
+sum(coalesce(NonCat_Incurred_Loss_and_ALAE,0)) as total_noncat
 from final
 where date_bordereau = '2020-08-31'
-and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
-group by 1
-order by 1
+and reinsurance_treaty not in 
+('spkr17_mrdp_EBSL',
+'spkr19_hsb_old',
+'topa_EBSL',
+'Spkr19_HSBNew_EBSL',
+'canopius',
+'Spkr19_HSBNew',
+'canopius_EBSL',
+'topa20_post_august_EBSL'
 )
--- select * from final
--- where date_bordereau = '2020-08-31'
--- and reinsurance_treaty not in ('Spkr17_MRDP_EBSL','Topa_EBSL','Spkr19_HSBOld','Spkr19_HSBNew','Canopius')
+-- group by 1
+-- order by 1
+)
 select * from aggregated
