@@ -1,16 +1,16 @@
 with claims_supp as (
 SELECT DISTINCT
-    *
+    mon.*
 --       , is_ebsl
       , case when peril = 'wind' or peril = 'hail' then 'Y'
       when cat_code is not null then 'Y'
       when is_CAT is true then 'Y'
       else 'N' end as CAT
-    --   ,dp.org_id as organization_id
+      ,dp.org_id
   FROM dw_prod_extracts.ext_all_claims_combined mon
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  WHERE date_report_period_end = '2020-07-31'
-  and carrier <> 'Canopius'
+  WHERE date_knowledge = '2020-07-31'
+  and carrier <> 'canopius'
   )
     select 
         case when tbl_source = 'hippo_claims' then 'Hippo' 
@@ -43,11 +43,13 @@ SELECT DISTINCT
         ,recoveries
         ,org_id as organization_id
         ,CAT_code as internal_CAT_code
+        ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred
+        ,policy_id
     --   ,Total_Recoverable_Depreciation    
   from claims_supp
   where 1=1
   and is_ebsl is false
-  and claims_policy_number = 'HMO-0345091-00'
+--   and claims_policy_number = 'HMO-0345091-00'
 --   and carrier = 'Topa'
 --   and tbl_source = 'hippo_claims'
 --   and tbl_source <> 'hippo_claims'
