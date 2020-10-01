@@ -28,6 +28,7 @@ from dw_prod_extracts.ext_policy_monthly_premiums epud
         -- and product <> 'HO5'
 group by 1,2,3,4,5,6,7,8,9,10,11,12
 )
+, aggregated as (
     select 
         state
         ,carrier
@@ -52,3 +53,21 @@ from premium p
 left join (select policy_id, date_snapshot, coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0) as TIV
       from dw_prod_extracts.ext_policy_snapshots) eps on p.policy_id = eps.policy_id and p.date_accounting_end = eps.date_snapshot
 group by 1,2,3,4,5,6,7,8,9,10,11
+)
+, summary as (
+    select 
+        -- state
+        sum(written_prem_x_ebsl) as written_prem_x_ebsl
+        ,sum(earned_prem_x_ebsl) as earned_prem_x_ebsl_inc_policy_fees
+        ,sum(written_exposure) as written_exposure
+        ,sum(earned_exposure) as earned_exposure
+        ,sum(written_exposure * TIV) as written_TIV
+        ,sum(earned_exposure * TIV) as earned_TIV
+        ,sum(written_policy_fee) as written_policy_fee
+        ,sum(earned_policy_fee) as earned_policy_fee
+from premium p
+left join (select policy_id, date_snapshot, coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0) as TIV
+      from dw_prod_extracts.ext_policy_snapshots) eps on p.policy_id = eps.policy_id and p.date_accounting_end = eps.date_snapshot
+-- group by 1
+)
+select * from summary
