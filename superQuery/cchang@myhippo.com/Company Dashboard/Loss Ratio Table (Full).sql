@@ -162,7 +162,7 @@ GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12
 )
 , aggregated as (
 select 
--- date_accident_month_begin, 
+reinsurance_treaty,
 COALESCE(CAST(SUM(Written_Premium_Including_Policy_Fee) AS FLOAT64),0) AS Written_Premium_Including_Policy_Fee,
 COALESCE(CAST(SUM(Earned_Premium_Including_Policy_Fee) AS FLOAT64),0) AS Earned_Premium_Including_Policy_Fee,
 SUM(coalesce(Total_Incurred_Loss_and_ALAE,0)) as total_incurred,
@@ -180,7 +180,7 @@ and reinsurance_treaty not in
 'canopius_EBSL',
 'topa20_post_august_EBSL'
 )
--- group by 1
--- order by 1
+group by 1
+order by 1
 )
 select * from aggregated
