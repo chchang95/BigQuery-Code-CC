@@ -4,6 +4,7 @@ from dw_prod_extracts.ext_claim_monthly mon
 left join dw_staging_extracts.cc_cat_claim_coding_2020831 cc on mon.claim_number = cc.claim_number
 where carrier <> 'canopius'
 )
+, aggregated as (
 SELECT
     mon.month_knowledge,
     mon.carrier,
@@ -35,3 +36,7 @@ SELECT
   and month_of_loss >= '2019-09-01'
   and mon.month_knowledge <= '2020-08-31'
   group by 1,2,3,4,5,6
+  )
+ select CAT, sum(Incurred_Loss_Cumulative)
+ from aggregated
+ group by 1
