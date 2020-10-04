@@ -2,6 +2,7 @@ with claims_supp as (
 select *, cc.cat_ind as cat_indicator
 from dw_prod_extracts.ext_claim_monthly mon
 left join dw_staging_extracts.cc_cat_claim_coding_2020831 cc on mon.claim_number = cc.claim_number
+where carrier <> 'canopius'
 )
 SELECT
     mon.month_knowledge,
