@@ -11,7 +11,8 @@ SELECT
     month_of_loss,
     maturity,
     case when cat_indicator is true then 'Y'
-      else 'N' end as CAT
+    when cat_indicator is false then 'N'
+    else 'Error' end as CAT
     -- ,reinsurance_treaty
     -- ,peril
     -- ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
