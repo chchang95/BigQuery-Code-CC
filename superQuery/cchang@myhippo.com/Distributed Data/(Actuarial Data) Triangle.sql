@@ -27,8 +27,8 @@ mon.claim_number,
     -- ,sum(total_incurred_delta_this_month) as total_incurred_incremental
     -- ,sum(case when total_incurred_inception_to_date >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_catastrophe is true) then 0 else total_incurred_inception_to_date end) as small_NC_total_incurred_cumulative
     -- ,sum(case when total_incurred_inception_to_date >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_catastrophe is true) then total_incurred_inception_to_date else 0 end) as large_NC_total_incurred_cumulative
-    ,sum(case when total_incurred_inception_to_date >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_catastrophe is true) then 100000 else total_incurred_inception_to_date end) as Incurred_Loss_Capped_At_100k_NonCat_Only_Cumulative
-    ,sum(case when total_incurred_inception_to_date >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_catastrophe is true) then total_incurred_inception_to_date - 100000 else 0 end) as Incurred_Loss_Excess_of_100k_NonCat_Only_Cumulative
+    ,sum(case when cat_indicator is false then 100000 else total_incurred_inception_to_date end) as Incurred_Loss_Capped_At_100k_NonCat_Only_Cumulative
+    ,sum(case when cat_indicator is false then total_incurred_inception_to_date - 100000 else 0 end) as Incurred_Loss_Excess_of_100k_NonCat_Only_Cumulative
   FROM
     claims_supp mon
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
@@ -38,7 +38,7 @@ mon.claim_number,
   and mon.month_knowledge <= '2020-08-31'
   group by 1,2,3,4,5,6,7
   )
- select claim_number, sum(Incurred_Loss_Cumulative)
+ select CAT, sum(Incurred_Loss_Cumulative)
  from aggregated
- where CAT = 'Error'
+ where month_knowledge = '2020-08-01'
  group by 1
