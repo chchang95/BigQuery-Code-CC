@@ -32,4 +32,5 @@ SELECT
   where is_ebsl is false
   and cat_indicator = false
   and month_of_loss >= '2019-09-01'
+  and mon.month_knowledge <= '2020-08-31'
   group by 1,2,3,4,5
