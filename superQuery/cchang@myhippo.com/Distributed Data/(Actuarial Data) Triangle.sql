@@ -6,6 +6,7 @@ where carrier <> 'canopius'
 )
 , aggregated as (
 SELECT
+claim_id,
     mon.month_knowledge,
     mon.carrier,
     mon.state,
@@ -35,9 +36,9 @@ SELECT
 --   and cat_indicator = false
   and month_of_loss >= '2019-09-01'
   and mon.month_knowledge <= '2020-08-31'
-  group by 1,2,3,4,5,6
+  group by 1,2,3,4,5,6,7
   )
- select CAT, sum(Incurred_Loss_Cumulative)
+ select claim_id, sum(Incurred_Loss_Cumulative)
  from aggregated
- where month_knowledge = '2020-08-01'
+ where CAT = 'Error'
  group by 1
