@@ -39,4 +39,5 @@ SELECT
   )
  select CAT, sum(Incurred_Loss_Cumulative)
  from aggregated
+ where mon.month_knowledge = '2020-08-01'
  group by 1
