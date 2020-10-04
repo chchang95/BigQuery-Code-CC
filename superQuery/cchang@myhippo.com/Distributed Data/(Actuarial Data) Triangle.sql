@@ -1,12 +1,12 @@
 with claims_supp as (
-select *, cc.cat_ind as cat_indicator
+select mon.*, cc.cat_ind as cat_indicator
 from dw_prod_extracts.ext_claim_monthly mon
 left join dw_staging_extracts.cc_cat_claim_coding_2020831 cc on mon.claim_number = cc.claim_number
 where carrier <> 'canopius'
 )
 , aggregated as (
 SELECT
-mon.policy_number,
+mon.claim_number,
     mon.month_knowledge,
     mon.carrier,
     mon.state,
@@ -38,7 +38,7 @@ mon.policy_number,
   and mon.month_knowledge <= '2020-08-31'
   group by 1,2,3,4,5,6,7
   )
- select policy_number, sum(Incurred_Loss_Cumulative)
+ select claim_number, sum(Incurred_Loss_Cumulative)
  from aggregated
  where CAT = 'Error'
  group by 1
