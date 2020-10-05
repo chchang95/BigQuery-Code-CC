@@ -37,10 +37,10 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12
         ,date_accounting_start
         ,date_accounting_end
         ,reinsurance_treaty_property_accounting
-        ,organization_id
+        -- ,organization_id
         ,tenure
-        , term_effective_month
-        -- , rated_uw_action
+        ,term_effective_month
+        ,rated_uw_action
         ,sum(written_prem_x_ebsl) as written_prem_x_ebsl
         ,sum(earned_prem_x_ebsl) as earned_prem_x_ebsl_inc_policy_fees
         ,sum(written_exposure) as written_exposure
