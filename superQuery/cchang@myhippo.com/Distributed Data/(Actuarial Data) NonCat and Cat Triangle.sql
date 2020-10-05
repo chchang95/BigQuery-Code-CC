@@ -38,6 +38,6 @@ SELECT
   and mon.month_knowledge <= '2020-08-31'
   group by 1,2,3,4,5,6
   )
- select CAT, sum(Incurred_Loss_Cumulative), sum(Incurred_Loss_Capped_At_100k_NonCat_Only_Cumulative), sum(Incurred_Loss_Excess_of_100k_NonCat_Only_Cumulative) 
+ select CAT, sum(Incurred_Loss_Cumulative), sum(Incurred_Loss_Capped_At_100k_NonCat_Only_Cumulative) + sum(Incurred_Loss_Excess_of_100k_NonCat_Only_Cumulative) 
  from aggregated
  group by 1
