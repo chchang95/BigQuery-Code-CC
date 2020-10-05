@@ -70,4 +70,4 @@ left join (select policy_id, date_snapshot, coalesce(coverage_a,0) + coalesce(co
       from dw_prod_extracts.ext_policy_snapshots) eps on p.policy_id = eps.policy_id and p.date_accounting_end = eps.date_snapshot
 group by 1
 )
-select * from aggregated
+select * from summary
