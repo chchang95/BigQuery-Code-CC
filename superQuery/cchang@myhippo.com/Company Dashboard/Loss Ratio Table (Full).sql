@@ -178,7 +178,9 @@ and reinsurance_treaty not in
 'canopius',
 'Spkr19_HSBNew',
 'canopius_EBSL',
-'topa20_post_august_EBSL'
+'topa20_post_august_EBSL',
+'spkr19_hsb_new',
+'spkr20_mbre'
 )
 group by 1
 order by 1
