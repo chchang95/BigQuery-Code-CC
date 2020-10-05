@@ -18,7 +18,7 @@ select eps.policy_id, eps.policy_number
 from dw_prod_extracts.ext_policy_snapshots eps
     left join (select policy_id, policy_number, channel, attributed_organization_id
     , case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
-where date_snapshot = '2020-08-31'
+where date_snapshot = '2020-09-30'
 )
 , combined AS (
   SELECT COALESCE(premium.policy_id, loss.policy_id) AS policy_id,
@@ -169,7 +169,7 @@ SUM(coalesce(Total_Incurred_Loss_and_ALAE,0)) as total_incurred,
 sum(coalesce(CAT_Incurred_Loss_and_ALAE,0)) as total_cat,
 sum(coalesce(NonCat_Incurred_Loss_and_ALAE,0)) as total_noncat
 from final
-where date_bordereau = '2020-08-31'
+where date_bordereau = '2020-09-30'
 and reinsurance_treaty not in 
 ('spkr17_mrdp_EBSL',
 'spkr19_hsb_old',
