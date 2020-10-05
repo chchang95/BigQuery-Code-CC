@@ -31,7 +31,7 @@ select eps.policy_id
 ,property_data_roof_shape as Roof_Shape
 ,property_data_year_built as Year_Built
 -- ,property_data_residence_type as Residence_Type
-,property_data_square_footage as Square_Footage
+-- ,property_data_square_footage as Square_Footage
 ,property_data_foundation_type as Foundation_Type
 ,property_data_year_roof_built as Year_Roof_Built
 ,property_data_protection_class as Protection_Class
