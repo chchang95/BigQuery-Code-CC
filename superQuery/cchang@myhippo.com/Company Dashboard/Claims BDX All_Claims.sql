@@ -7,9 +7,10 @@ SELECT DISTINCT
       when is_CAT is true then 'Y'
       else 'N' end as CAT
       ,dp.org_id
+      ,dp.channel
   FROM dw_prod_extracts.ext_all_claims_combined mon
-  left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  WHERE date_knowledge = '2020-07-31'
+  left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id, channel from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
+  WHERE date_knowledge = '2020-09-30'
   and carrier <> 'canopius'
   )
     select 
@@ -45,6 +46,7 @@ SELECT DISTINCT
         ,CAT_code as internal_CAT_code
         ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred
         ,policy_id
+        ,channel
     --   ,Total_Recoverable_Depreciation    
   from claims_supp
   where 1=1
