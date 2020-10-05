@@ -9,6 +9,7 @@ with premium as (
         , date_sub(date_add(date_calendar_month_accounting_basis, INTERVAL 1 MONTH), INTERVAL 1 DAY) as date_accounting_end
         , reinsurance_treaty_property_accounting
         , org_id as organization_id
+        , channel
         , case when renewal_number = 0 then "New" else "Renewal" end as tenure
         , date_trunc(date_effective, MONTH) as term_effective_month
         , case when state = 'tx' and calculated_fields_cat_risk_class = 'referral' then 'cat referral' 
@@ -21,12 +22,12 @@ with premium as (
         ,sum(written_policy_fee) as written_policy_fee
         ,sum(earned_policy_fee) as earned_policy_fee
 from dw_prod_extracts.ext_policy_monthly_premiums epud
-    left join (select policy_id, policy_number, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on epud.policy_id = dp.policy_id
+    left join (select policy_id, policy_number, case when organization_id is null then 0 else organization_id end as org_id, channel from dw_prod.dim_policies) dp on epud.policy_id = dp.policy_id
     left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-08-31') eps on eps.policy_id = epud.policy_id
         where date_knowledge = '2020-09-30'
         and carrier <> 'canopius'
         -- and product <> 'HO5'
-group by 1,2,3,4,5,6,7,8,9,10,11,12
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 )
 , aggregated as (
     select 
@@ -38,6 +39,7 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12
         ,date_accounting_end
         ,reinsurance_treaty_property_accounting
         -- ,organization_id
+        ,channel
         ,tenure
         ,term_effective_month
         ,rated_uw_action
@@ -52,7 +54,7 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12
 from premium p
 left join (select policy_id, date_snapshot, coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0) as TIV
       from dw_prod_extracts.ext_policy_snapshots) eps on p.policy_id = eps.policy_id and p.date_accounting_end = eps.date_snapshot
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9,10,11
 )
 , summary as (
     select 
