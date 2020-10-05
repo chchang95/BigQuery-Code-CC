@@ -6,12 +6,12 @@ where carrier <> 'canopius'
 )
 , aggregated as (
 SELECT
-mon.claim_number,
-    mon.month_knowledge,
+-- mon.claim_number,
+    mon.month_knowledge as as_of_month,
     mon.carrier,
     mon.state,
     -- mon.product,
-    month_of_loss,
+    month_of_loss as accident_month,
     maturity,
     case when cat_indicator is true then 'Y'
     when cat_indicator is false then 'N'
@@ -36,9 +36,6 @@ mon.claim_number,
 --   and cat_indicator = false
   and month_of_loss >= '2019-09-01'
   and mon.month_knowledge <= '2020-08-31'
-  group by 1,2,3,4,5,6,7
+  group by 1,2,3,4,5,6
   )
- select CAT, sum(Incurred_Loss_Cumulative)
- from aggregated
- where month_knowledge = '2020-08-01'
- group by 1
+ select * from aggregated
