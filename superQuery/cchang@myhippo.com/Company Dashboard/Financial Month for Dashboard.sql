@@ -23,7 +23,7 @@ with premium as (
 from dw_prod_extracts.ext_policy_monthly_premiums epud
     left join (select policy_id, policy_number, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on epud.policy_id = dp.policy_id
     left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-08-31') eps on eps.policy_id = epud.policy_id
-        where date_knowledge = '2020-08-31'
+        where date_knowledge = '2020-09-30'
         and carrier <> 'canopius'
         -- and product <> 'HO5'
 group by 1,2,3,4,5,6,7,8,9,10,11,12
@@ -70,4 +70,4 @@ left join (select policy_id, date_snapshot, coalesce(coverage_a,0) + coalesce(co
       from dw_prod_extracts.ext_policy_snapshots) eps on p.policy_id = eps.policy_id and p.date_accounting_end = eps.date_snapshot
 group by 1
 )
-select * from summary
+select * from aggregated
