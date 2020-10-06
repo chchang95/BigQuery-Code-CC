@@ -48,14 +48,15 @@ SELECT DISTINCT
         ,expense_paid
         ,expense_net_reserve
         ,recoveries
-        ,org_id as organization_id
         ,CAT_code as internal_CAT_code
         ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred
-        ,policy_id
+        ,org_id as organization_id
+        ,reinsurance_treaty
         ,channel
         ,tenure
         ,term_effective_month
         ,rated_uw_action
+        ,policy_id
     --   ,Total_Recoverable_Depreciation    
   from claims_supp
   where 1=1
