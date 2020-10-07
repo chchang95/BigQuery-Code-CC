@@ -16,8 +16,8 @@ SELECT
     case when cat_indicator is true then 'Y'
     when cat_indicator is false then 'N'
     else 'Error' end as CAT
-    -- ,reinsurance_treaty
-    -- ,peril
+    -- ,reinsurance_treaty_property
+    ,peril
     -- ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as Reported_Claim_Count_Excl_Closed_No_Pay
     -- ,sum(case when date_close is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
@@ -36,7 +36,7 @@ SELECT
 --   and cat_indicator = false
   and month_of_loss >= '2019-09-01'
   and mon.month_knowledge <= '2020-09-30'
-  group by 1,2,3,4,5,6
+  group by 1,2,3,4,5,6,7
   )
  select *
  from aggregated
