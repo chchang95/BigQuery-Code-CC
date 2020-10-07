@@ -1,7 +1,7 @@
 with claims_supp as (
 select mon.*, cc.cat_ind as cat_indicator
 from dw_prod_extracts.ext_claim_monthly mon
-left join dw_staging_extracts.cc_cat_claim_coding_2020831 cc on mon.claim_number = cc.claim_number
+left join dw_staging_extracts.cc_cat_claim_coding_2020930 cc on mon.claim_number = cc.claim_number
 where carrier <> 'canopius'
 )
 , aggregated as (
@@ -35,7 +35,7 @@ SELECT
   where is_ebsl is false
 --   and cat_indicator = false
   and month_of_loss >= '2019-09-01'
-  and mon.month_knowledge <= '2020-08-31'
+  and mon.month_knowledge <= '2020-09-30'
   group by 1,2,3,4,5,6
   )
  select *
