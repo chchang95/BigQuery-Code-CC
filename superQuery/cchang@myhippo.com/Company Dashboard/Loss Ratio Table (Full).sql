@@ -185,4 +185,40 @@ and reinsurance_treaty not in
 group by 1
 order by 1
 )
-select * from aggregated
+, org_table as (
+select 
+state,
+carrier
+,product
+,accident_year
+,date_accident_month_begin
+,reinsurance_treaty
+,f.organization_id
+,channel
+,organization_name
+,root_organization_name,
+COALESCE(CAST(SUM(Written_Premium_Including_Policy_Fee) AS FLOAT64),0) AS Written_Premium_Including_Policy_Fee,
+COALESCE(CAST(SUM(Earned_Premium_Including_Policy_Fee) AS FLOAT64),0) AS Earned_Premium_Including_Policy_Fee,
+COALESCE(SUM(Total_Reported_Claim_Count),0) AS Total_Reported_Claim_Count,
+SUM(coalesce(Total_Incurred_Loss_and_ALAE,0)) as total_incurred,
+sum(coalesce(CAT_Incurred_Loss_and_ALAE,0)) as total_cat,
+sum(coalesce(NonCat_Incurred_Loss_and_ALAE,0)) as total_noncat
+from final f
+left join (select organization_id, organization_name, root_organization_name, from dw_prod.dim_organization_mappings) org_table on f.organization_id = org_table.organization_id
+where date_bordereau = '2020-09-30'
+and reinsurance_treaty not in 
+('spkr17_mrdp_EBSL',
+'spkr19_hsb_old',
+'topa_EBSL',
+'Spkr19_HSBNew_EBSL',
+'canopius',
+'Spkr19_HSBNew',
+'canopius_EBSL',
+'topa20_post_august_EBSL',
+'spkr19_hsb_new',
+'spkr20_mbre'
+)
+group by 1,2,3,4,5,6,7,8,9,10
+order by 1
+)
+select * from org_table
