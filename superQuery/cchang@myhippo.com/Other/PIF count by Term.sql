@@ -1,6 +1,6 @@
-select state, carrier, date_snapshot,
-sum(case when renewal_number > 0 then 1 else 0 end) as renewal_count,
-sum(case when renewal_number = 0 then 1 else 0 end) as new_business_count,
+select state, carrier, date_snapshot, org_id, organization_name, root_organization_name,
+-- sum(case when renewal_number > 0 then 1 else 0 end) as renewal_count,
+-- sum(case when renewal_number = 0 then 1 else 0 end) as new_business_count,
 count(eps.policy_id) as total_PIF_count,
 sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) as total_TIV
 from dw_prod_extracts.ext_policy_snapshots eps
@@ -14,5 +14,5 @@ and ud.date is not null
 and carrier <> 'Canopius'
 and product <> 'HO5'
 and status = 'active'
-group by 1,2,3
+group by 1,2,3,4,5,6
 order by 3,1,2
