@@ -11,8 +11,8 @@ left join (select date, last_day_of_month from dw_prod.utils_dates where date = 
 where 1=1
 and date_snapshot > '2019-09-01'
 and ud.date is not null
-and carrier <> 'Canopius'
-and product <> 'HO5'
+and carrier <> 'canopius'
+and product <> 'ho5'
 and status = 'active'
 group by 1,2,3,4,5,6
 order by 3,1,2
