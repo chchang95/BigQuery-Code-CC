@@ -169,7 +169,7 @@ SUM(coalesce(Total_Incurred_Loss_and_ALAE,0)) as total_incurred,
 sum(coalesce(CAT_Incurred_Loss_and_ALAE,0)) as total_cat,
 sum(coalesce(NonCat_Incurred_Loss_and_ALAE,0)) as total_noncat
 from final
-where date_bordereau = '2020-08-31'
+where date_bordereau = '2020-09-30'
 and reinsurance_treaty not in 
 ('spkr17_mrdp_EBSL',
 'spkr19_hsb_old',
