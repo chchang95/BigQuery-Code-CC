@@ -69,5 +69,5 @@ SELECT DISTINCT
   order by 1
   )
   select CAT_indicator, sum(total_incurred) from aggregated
-  where property_data_address_state = 'tx'
+  where property_data_address_state = 'tx' and accident_month = '2020-06-30'
   group by 1
