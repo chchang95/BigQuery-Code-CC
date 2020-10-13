@@ -68,6 +68,6 @@ SELECT DISTINCT
 --   and tbl_source <> 'hippo_claims'
   order by 1
   )
-  select CAT, sum(total_incurred) from aggregated
+  select CAT_indicator, sum(total_incurred) from aggregated
   where property_data_address_state = 'tx'
   group by 1
