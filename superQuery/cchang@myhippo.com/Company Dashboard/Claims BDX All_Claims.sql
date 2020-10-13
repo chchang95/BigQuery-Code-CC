@@ -16,9 +16,10 @@ SELECT DISTINCT
   FROM dw_prod_extracts.ext_all_claims_combined mon
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id, channel from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-09-30') eps on eps.policy_id = mon.policy_id
-  WHERE date_knowledge = '2020-09-30'
+  WHERE date_knowledge = '2020-06-30'
   and carrier <> 'canopius'
   )
+  , aggregate as (
     select 
         case when tbl_source = 'hippo_claims' then 'Hippo' 
         when tbl_source = 'topa_tpa_claims' then 'TPA'
@@ -66,6 +67,7 @@ SELECT DISTINCT
 --   and tbl_source = 'hippo_claims'
 --   and tbl_source <> 'hippo_claims'
   order by 1
-  
---   select * from dw_prod_extracts.ext_claims_inception_to_date mon
---   where claim_number = 'HCA-1029622-00-01'
+  )
+  select CAT, sum(total_incurred) from aggregated
+  where property_data_address_state = 'tx'
+  group by 1
