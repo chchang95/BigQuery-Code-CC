@@ -19,7 +19,7 @@ SELECT DISTINCT
   WHERE date_knowledge = '2020-06-30'
   and carrier <> 'canopius'
   )
-  , aggregate as (
+  , aggregated as (
     select 
         case when tbl_source = 'hippo_claims' then 'Hippo' 
         when tbl_source = 'topa_tpa_claims' then 'TPA'
