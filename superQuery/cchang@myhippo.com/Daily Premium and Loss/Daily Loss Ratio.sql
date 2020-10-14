@@ -116,12 +116,12 @@ accounting_treaty
 , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as excess_NC
 , round(sum(cat_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as cat
 , round(sum(total_incurred) / sum(earned_prem_x_ebsl_x_pol_fee),3) as total_incurred
-, round(sum(total_claim_count) / sum(earned_exposure),3) as total_frequency
-, round(sum(non_cat_claim_count) / sum(earned_exposure),3) as noncat_frequency
-, round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
+-- , round(sum(total_claim_count) / sum(earned_exposure),3) as total_frequency
+-- , round(sum(non_cat_claim_count) / sum(earned_exposure),3) as noncat_frequency
+-- , round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
 from combined
 where 1=1
-and accident_month = '2020-09-01'
+and accident_month = '2020-10-01'
 -- and original_effective_month <= '2020-09-01'
 -- and accounting_treaty = 'topa20_post_august'
 -- and policy_effective_month = '2020-09-01'
