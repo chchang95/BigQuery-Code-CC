@@ -59,5 +59,6 @@ left join (select policy_id, case when organization_id is null then 0 else organ
 left join claims c on eps.policy_id = c.policy_id
 where date_snapshot = '2020-09-30'
 and carrier <> 'canopius'
+and status = 'active'
 -- and product <> 'HO5'
 -- and state = 'CA'
