@@ -6,7 +6,7 @@ select *
         when cat_code is not null then 'Y'
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date cd
-  WHERE date_knowledge = '2020-07-31'
+  WHERE date_knowledge = '2020-09-30'
   and carrier <> 'Canopius'
 )
 , claims as (
@@ -57,7 +57,7 @@ eps.policy_id, eps.policy_number
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
 left join claims c on eps.policy_id = c.policy_id
-where date_snapshot = '2020-07-31'
-and carrier <> 'Canopius'
-and product <> 'HO5'
-and state = 'CA'
+where date_snapshot = '2020-09-30'
+and carrier <> 'canopius'
+-- and product <> 'HO5'
+-- and state = 'CA'
