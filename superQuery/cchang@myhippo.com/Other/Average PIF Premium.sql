@@ -19,5 +19,5 @@ and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 -- and eps.product = 'ho3'
 and eps.carrier = 'topa'
 -- and eps.state = 'ca'
-group by 1,2
-order by 2,1
+group by 1,2,3
+order by 1,2
