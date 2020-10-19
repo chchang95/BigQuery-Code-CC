@@ -4,7 +4,7 @@ date_snapshot,
 date_trunc(date_policy_effective, MONTH) as eff_month
 -- case when eps.renewal_number = 0 then 'new' else 'renewal' end as tenure,
 -- channel, 
-,sum(written_base + written_total_optionals) as total WP
+,sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as total_WP
 ,sum(written_exposure) as total_WE
 ,count(*) as active_count
 from dw_prod_extracts.ext_policy_snapshots eps
