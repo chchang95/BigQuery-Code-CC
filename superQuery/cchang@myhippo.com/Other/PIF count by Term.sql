@@ -16,5 +16,5 @@ and ud.date is not null
 and carrier = 'spinnaker'
 and product <> 'ho5'
 and status = 'active'
-group by 1,2,3,4,5,6
+group by 1
 order by 3,1,2
