@@ -18,6 +18,6 @@ and product = 'ho3'
 and carrier = 'topa'
 and state = 'ca'
 and status = 'active'
-and property_data_fireline_score > 1
+and property_data_fireline_score*1 > 1
 group by 1,2,3
 order by 1,2
