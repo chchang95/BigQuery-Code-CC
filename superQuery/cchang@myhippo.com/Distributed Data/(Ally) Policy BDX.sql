@@ -56,7 +56,7 @@ left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.p
 where date_snapshot = '2020-08-31'
 -- and carrier <> 'Canopius'
 and product <> 'ho5'
-and carrier = 'spinnaker'
+and carrier = 'topa'
 and date_policy_effective <= '2020-08-31'
 
 -- select * from dw_prod_extracts.ext_policy_snapshots where policy_id = 2413416 and date_knowledge = '2020-04-30'
