@@ -9,7 +9,7 @@
 -- group by 1,2
 -- order by 1,2
 
-select policy_id, property_data_address_county, property_data_fireline_score,
+select policy_number, property_data_address_county, property_data_fireline_score,
 sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) as TIV
 FROM dw_prod_extracts.ext_policy_snapshots
 where date_snapshot = '2020-08-31'
