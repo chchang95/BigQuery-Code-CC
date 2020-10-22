@@ -123,6 +123,7 @@ from combined
 where 1=1
 and accident_month = '2020-08-01'
 and earned_exposure <> 0
+and tenure = 'new'
 -- and original_effective_month <= '2020-09-01'
 -- and accounting_treaty = 'topa20_post_august'
 -- and policy_effective_month = '2020-09-01'
