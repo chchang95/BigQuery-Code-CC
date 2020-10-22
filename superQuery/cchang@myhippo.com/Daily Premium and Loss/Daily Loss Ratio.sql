@@ -11,10 +11,10 @@ select state
 ,sum(earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl_x_pol_fee
 ,sum(written_exposure) as written_exposure
 ,sum(earned_exposure) as earned_exposure
-from dw_staging_extracts.ext_today_knowledge_policy_monthly_premiums mon
+from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
 left join (select policy_id, policy_number, policy_group_number from dw_prod.dim_policies) dep on dep.policy_id = mon.policy_id
 left join dw_prod.dim_policy_groups ph on dep.policy_group_number = ph.policy_group_number
 left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-where date_knowledge = '2020-10-22'
+where date_knowledge = '2020-10-21'
 and carrier <> 'canopius'
 group by 1,2,3,4,5,6,7,8,9
