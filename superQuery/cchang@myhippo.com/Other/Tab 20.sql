@@ -19,4 +19,4 @@ and carrier = 'spinnaker'
 and product <> 'ho5'
 and status = 'active'
 group by 1
-order by 3,1,2
+order by 1
