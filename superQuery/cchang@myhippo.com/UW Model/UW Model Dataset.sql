@@ -11,13 +11,13 @@ with claims_supp as (
         FROM dw_prod_extracts.ext_all_claims_combined mon
             left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
         WHERE 1=1
-            and date_report_period_end = '2020-07-31'
+            and date_knowledge = '2020-07-31'
             and carrier <> 'Canopius'
     )
 , claims as (
     select
         policy_id
-        ,date_trunc(date_of_loss, MONTH) as accident_month
+        -- ,date_trunc(date_of_loss, MONTH) as accident_month
         
         ,sum(total_incurred) as total_incurred
         ,sum(case when CAT = 'N' then total_incurred else 0 end) as non_cat_incurred
@@ -32,10 +32,12 @@ with claims_supp as (
         ,sum(case when claim_closed_no_total_payment is false and date_closed is not null then 1 else 0 end) as closed_total_claim_count_x_cnp
         ,sum(case when claim_closed_no_total_payment is false and date_closed is not null and CAT = 'N' then 1 else 0 end) as closed_non_cat_claim_count_x_cnp
         ,sum(case when claim_closed_no_total_payment is false and date_closed is not null and CAT = 'Y' then 1 else 0 end) as closed_cat_claim_count_x_cnp
+        
+        ,sum(case when CAT = 'N' and peril_group = 'Water' then total_incurred else 0 end) as non_cat_incurred_water
     from claims_supp
     where 1=1
         and ebsl = 'N'
-    group by 1,2
+    group by 1
     ) 
 select 
 eps.policy_id, eps.policy_number
@@ -48,6 +50,7 @@ eps.policy_id, eps.policy_number
 ,quote_rater_version
 ,timstamp_quote_created as quote_date
 ,org_id as organization_id
+,property_data_address_city as city
 ,property_data_address_zip as zip
 ,property_data_address_county as county
 ,case when renewal_number = 0 then "New" else "Renewal" end as tenure
@@ -133,11 +136,12 @@ eps.policy_id, eps.policy_number
 
 ,written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line as written_prem_x_ebsl_inc_pol_fee
 ,earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line as earned_prem_x_ebsl_inc_pol_fee
-,written_sum_perils
-,earned_sum_perils
+,written_base
+,earned_base
 ,written_exposure
 ,earned_exposure
 ,quote_premium_base + quote_premium_optionals + quote_policy_fee - quote_optionals_service_line - quote_optionals_equipment_breakdown as quote_prem_x_ebsl_inc_pol_fee
+,quote_premium_base as quote_base
 
 ,coalesce(total_incurred,0) as total_incurred
 ,coalesce(non_cat_incurred,0) as non_cat_incurred
@@ -150,6 +154,8 @@ eps.policy_id, eps.policy_number
 ,coalesce(closed_total_claim_count_x_cnp,0) as closed_total_claim_count_x_cnp
 ,coalesce(closed_non_cat_claim_count_x_cnp,0) as closed_non_cat_claim_count_x_cnp
 ,coalesce(closed_cat_claim_count_x_cnp,0) as closed_cat_claim_count_x_cnp
+
+,coalesce(non_cat_incurred_water,0) as non_cat_incurred_water
 
 from dw_prod_extracts.ext_policy_snapshots eps
     left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on eps.policy_id = dp.policy_id
