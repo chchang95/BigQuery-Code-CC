@@ -40,7 +40,7 @@ SELECT DISTINCT
         ,property_data_address_zip
         ,claim_status
         ,peril
-        ,date_closed
+        ,date_close
         ,CAT as CAT_indicator
         ,'' as placeholder
         ,is_ebsl
