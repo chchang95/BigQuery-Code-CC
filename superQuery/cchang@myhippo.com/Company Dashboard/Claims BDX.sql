@@ -51,6 +51,7 @@ SELECT DISTINCT
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   WHERE date_knowledge = '2020-10-22'
   and carrier <> 'canopius'
+  and is_ebsl is false
   )
   select 'Hippo' as ClaimsHandler
   ,lower(Carrier) as carrier
