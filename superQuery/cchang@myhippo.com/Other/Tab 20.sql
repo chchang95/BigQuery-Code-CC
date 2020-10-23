@@ -1,5 +1,6 @@
 select
 -- , carrier,
+state,
 date_snapshot,
 -- , org_id, organization_name, root_organization_name,
 -- sum(case when renewal_number > 0 then 1 else 0 end) as renewal_count,
@@ -18,5 +19,5 @@ and date_snapshot >= '2019-01-01'
 and carrier = 'spinnaker'
 and product <> 'ho5'
 and status = 'active'
-group by 1
-order by 1
+group by 1,2
+order by 1,2
