@@ -8,19 +8,19 @@ json_extract(first_renewal, '$.oldRaterVersionQuote.premium.base') as first_rene
 json_extract(first_renewal, '$.oldRaterVersionQuote.premium.optionals') as first_renewal_old_prem_optionals,
 json_extract(first_renewal, '$.oldRaterVersionQuote.premium.fees') as first_renewal_old_prem_fees,
 json_extract(first_renewal, '$.oldRaterVersionQuote.premium.total') as first_renewal_old_prem_total,
-json_extract(first_renewal, '$.oldRaterVersionQuote.premium.base') as first_renewal_new_prem_base,  
-json_extract(first_renewal, '$.oldRaterVersionQuote.premium.optionals') as first_renewal_new_prem_optionals,
-json_extract(first_renewal, '$.oldRaterVersionQuote.premium.fees') as first_renewal_new_prem_fees,
-json_extract(first_renewal, '$.oldRaterVersionQuote.premium.total') as first_renewal_new_prem_total,
+json_extract(first_renewal, '$.newRaterVersionQuote.premium.base') as first_renewal_new_prem_base,  
+json_extract(first_renewal, '$.newRaterVersionQuote.premium.optionals') as first_renewal_new_prem_optionals,
+json_extract(first_renewal, '$.newRaterVersionQuote.premium.fees') as first_renewal_new_prem_fees,
+json_extract(first_renewal, '$.newRaterVersionQuote.premium.total') as first_renewal_new_prem_total,
 
 json_extract(second_renewal, '$.oldRaterVersionQuote.premium.base') as second_renewal_old_prem_base,  
 json_extract(second_renewal, '$.oldRaterVersionQuote.premium.optionals') as second_renewal_old_prem_optionals,
 json_extract(second_renewal, '$.oldRaterVersionQuote.premium.fees') as second_renewal_old_prem_fees,
 json_extract(second_renewal, '$.oldRaterVersionQuote.premium.total') as second_renewal_old_prem_total,
-json_extract(second_renewal, '$.oldRaterVersionQuote.premium.base') as second_renewal_new_prem_base,  
-json_extract(second_renewal, '$.oldRaterVersionQuote.premium.optionals') as second_renewal_new_prem_optionals,
-json_extract(second_renewal, '$.oldRaterVersionQuote.premium.fees') as second_renewal_new_prem_fees,
-json_extract(second_renewal, '$.oldRaterVersionQuote.premium.total') as second_renewal_new_prem_total,
+json_extract(second_renewal, '$.newRaterVersionQuote.premium.base') as second_renewal_new_prem_base,  
+json_extract(second_renewal, '$.newRaterVersionQuote.premium.optionals') as second_renewal_new_prem_optionals,
+json_extract(second_renewal, '$.newRaterVersionQuote.premium.fees') as second_renewal_new_prem_fees,
+json_extract(second_renewal, '$.newRaterVersionQuote.premium.total') as second_renewal_new_prem_total,
 
 
 from x
