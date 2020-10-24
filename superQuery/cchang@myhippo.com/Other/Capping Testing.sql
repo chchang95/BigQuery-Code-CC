@@ -3,7 +3,7 @@ select target_policy_number,JSON_EXTRACT(renewals,'$[0]') as first_renewal, JSON
 from s3.az_nv_policy_rate_capping_data
 where renewals is not null
 )
-select target_policy_number, substring(target_policy_number,1,2),
+select target_policy_number, substring(target_policy_number,1,2) as state,
 
 json_extract(existing_rate_cap_amount, '$.current_term') as current_term_cap,
 json_extract(existing_rate_cap_amount, '$.next_term') as next_term_cap,
@@ -31,3 +31,4 @@ json_extract(second_renewal, '$.newRaterVersionQuote.premium.fees') as second_re
 json_extract(second_renewal, '$.newRaterVersionQuote.premium.total') as second_renewal_new_prem_total,
 from x
 where first_renewal is not null
+order by 2 desc
