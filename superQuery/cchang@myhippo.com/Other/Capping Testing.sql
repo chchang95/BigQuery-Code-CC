@@ -15,6 +15,8 @@ json_extract(first_renewal, '$.newRaterVersionQuote.premium.optionals') as first
 json_extract(first_renewal, '$.newRaterVersionQuote.premium.fees') as first_renewal_new_prem_fees,
 json_extract(first_renewal, '$.newRaterVersionQuote.premium.total') as first_renewal_new_prem_total,
 
+json_extract(second_renewal, '$.rateCapPercentage') as first_renewal_rate_cap,  
+
 json_extract(second_renewal, '$.oldRaterVersionQuote.premium.base') as second_renewal_old_prem_base,  
 json_extract(second_renewal, '$.oldRaterVersionQuote.premium.optionals') as second_renewal_old_prem_optionals,
 json_extract(second_renewal, '$.oldRaterVersionQuote.premium.fees') as second_renewal_old_prem_fees,
