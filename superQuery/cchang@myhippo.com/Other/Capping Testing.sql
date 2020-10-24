@@ -4,6 +4,8 @@ from s3.az_nv_policy_rate_capping_data
 where renewals is not null)
 select target_policy_number,
 
+json_extract(first_renewal, '$.rateCapPercentage') as first_renewal_rate_cap,  
+
 json_extract(first_renewal, '$.oldRaterVersionQuote.premium.base') as first_renewal_old_prem_base,  
 json_extract(first_renewal, '$.oldRaterVersionQuote.premium.optionals') as first_renewal_old_prem_optionals,
 json_extract(first_renewal, '$.oldRaterVersionQuote.premium.fees') as first_renewal_old_prem_fees,
