@@ -25,4 +25,4 @@ and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 -- and eps.carrier = 'topa'
 -- and eps.state = 'ca'
 group by 1,2,3,4,5,6,7,8,9
-order by 1,2
+order by 1,2,3
