@@ -10,6 +10,8 @@ select state
 ,date_trunc(ph.date_first_effective, MONTH) as original_effective_month
 ,sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl_x_pol_fee
 ,sum(earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl_x_pol_fee
+,sum(written_policy_fee) as written_pol_fee
+,sum(earned_policy_fee) as earned_pol_fee
 ,sum(written_exposure) as written_exposure
 ,sum(earned_exposure) as earned_exposure
 from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums mon
@@ -84,11 +86,19 @@ and p.original_effective_month = c.original_effective_month
 )
 , aggregated as (
 select state, accounting_treaty, accident_month, tenure, policy_effective_month
-, sum(written_prem_x_ebsl_x_pol_fee) as written_prem_x_ebsl_pol_fee, sum(earned_prem_x_ebsl_x_pol_fee) as earned_prem_x_ebsl_x_pol_fee
+, sum(written_prem_x_ebsl_x_pol_fee) as written_prem_x_ebsl_pol_fee
+, sum(earned_prem_x_ebsl_x_pol_fee) as earned_prem_x_ebsl_x_pol_fee
+, sum(written_pol_fee) as written_pol_fee
+, sum(earned_pol_fee) as earned_pol_fee
 , sum(earned_exposure) as earned_exposure
+, sum(non_cat_incurred) as non_cat_incurred
+, sum(total_incurred) as total_incurred
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
 , sum(cat_incurred) as cat_incurred
+, sum(total_claim_count) as total_claim_count
+, sum(non_cat_claim_count) as non_cat_claim_count
+, sum(cat_claim_count) as cat_claim_count
 -- , round(sum(capped_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as capped_NC
 -- , round(sum(excess_non_cat_incurred) / sum(earned_prem_x_ebsl),3) as excess_NC
 -- , round(sum(cat_incurred) / sum(earned_prem_x_ebsl),3) as cat
@@ -100,7 +110,7 @@ from combined
 where 1=1
 and accident_month >= '2019-09-01'
 -- and accounting_treaty = 'Spkr20_Classic'
-and carrier = 'topa'
+-- and carrier = 'topa'
 group by 1,2,3,4,5
 -- order by 1,2
 )
@@ -132,4 +142,4 @@ and earned_exposure <> 0
 group by 1
 order by 1
 )
-select * from summary
+select * from aggregated
