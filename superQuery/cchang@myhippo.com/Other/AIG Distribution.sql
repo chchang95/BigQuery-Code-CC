@@ -6,8 +6,8 @@ date_snapshot,
 case when eps.renewal_number = 0 then 'new' else 'renewal' end as tenure,
 -- channel, 
 cast(eps.coverage_a as numeric) - mod(cast(eps.coverage_a as numeric),10000) as coverage_a_banded,
-cast(eps.calculated_fields_age_of_home as numeric) - mod(cast(eps.calculated_fields_age_of_home as numeric),3) as age_of_home_banded
--- cast(eps.insurance_score as numeric) - mod(cast(eps.insurance_score as numeric),5)
+cast(eps.calculated_fields_age_of_home as numeric) - mod(cast(eps.calculated_fields_age_of_home as numeric),3) as age_of_home_banded,
+eps.insurance_score
 ,count(*) as active_count
 from dw_prod_extracts.ext_policy_snapshots eps
 left join dw_prod.dim_policies using(policy_id)
