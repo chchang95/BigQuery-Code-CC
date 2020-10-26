@@ -86,7 +86,7 @@ and p.original_effective_month = c.original_effective_month
 )
 , aggregated as (
 select state, accounting_treaty, accident_month, tenure, policy_effective_month
-, sum(written_prem_x_ebsl_x_pol_fee) as written_prem_x_ebsl_pol_fee
+, sum(written_prem_x_ebsl_x_pol_fee) as written_prem_x_ebsl_x_pol_fee
 , sum(earned_prem_x_ebsl_x_pol_fee) as earned_prem_x_ebsl_x_pol_fee
 , sum(written_pol_fee) as written_pol_fee
 , sum(earned_pol_fee) as earned_pol_fee
@@ -118,7 +118,7 @@ group by 1,2,3,4,5
 select 
 accounting_treaty
 -- original_effective_month
-, sum(written_prem_x_ebsl_x_pol_fee) as written_prem_x_ebsl_pol_fee, sum(earned_prem_x_ebsl_x_pol_fee) as earned_prem_x_ebsl_x_pol_fee
+, sum(written_prem_x_ebsl_x_pol_fee) as written_prem_x_ebsl_x_pol_fee, sum(earned_prem_x_ebsl_x_pol_fee) as earned_prem_x_ebsl_x_pol_fee
 , sum(earned_exposure) as earned_exposure
 , sum(capped_non_cat_incurred) as capped_non_cat_incurred
 , sum(excess_non_cat_incurred) as excess_non_cat_incurred
