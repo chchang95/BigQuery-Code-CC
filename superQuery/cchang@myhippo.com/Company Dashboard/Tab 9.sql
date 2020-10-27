@@ -1,10 +1,9 @@
-select reinsurance_treaty
-, sum(Total_Incurred_Loss_and_ALAE) as total_incurred, sum(earned) as EP, sum(Total_Incurred_Loss_and_ALAE) /sum(earned) as total_LR 
-,sum(total_claim_count) as total_CC, sum(Total_Incurred_Loss_and_ALAE) /sum(total_claim_count) as total_SEV 
-,sum(earned_exposure) as total_EE, sum(total_claim_count) / sum(earned_exposure) as total_FREQ
-,sum(Claim_Count_CAT) / sum(earned_exposure) as CAT_FREQ
-,sum(total_claim_count) - sum(Claim_Count_CAT) as NC_CC,(sum(total_claim_count) - sum(Claim_Count_CAT)) / sum(earned_exposure) as NC_Freq
-from dw_staging_extracts.ext_actuarial_monthly_loss_ratios_combined
-where date_bordereau = '2020-06-30'
+select carrier, count(distinct policy_id)
+,written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line
+from dw_prod_extracts.ext_policy_snapshots eps
+left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
+left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
+where date_snapshot = '2020-09-30'
+and status = 'active'
+-- and carrier = 'spinnaker'
 group by 1
-order by 1
