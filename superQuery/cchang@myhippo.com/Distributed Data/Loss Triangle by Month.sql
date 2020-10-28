@@ -46,5 +46,6 @@ SELECT
   and mon.date_knowledge <= '2020-09-30'
   group by 1,2,3,4,5
   )
- select *
+ select sum(Incurred_Loss_Cumulative)
  from aggregated
+ where as_of_month = '2020-09-30'
