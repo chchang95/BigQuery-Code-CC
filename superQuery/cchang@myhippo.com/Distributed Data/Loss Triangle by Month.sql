@@ -5,6 +5,7 @@ select mon.*
     when peril = 'wind' or peril = 'hail' then 'Y'
     when cat_code is not null then 'Y'
         else 'N' end as CAT
+, date_trunc(date_effective, MONTH) as policy_effective_month
 , coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
 , coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) as expense_incurred_calc
 from dw_prod_extracts.ext_all_claims_combined mon
@@ -15,8 +16,9 @@ where carrier <> 'canopius'
 SELECT
 -- mon.claim_number,
     mon.date_knowledge as as_of_month,
-    mon.carrier,
-    mon.property_data_address_state as state,
+    policy_effective_month,
+    -- mon.carrier,
+    -- mon.property_data_address_state as state,
     -- mon.product,
     accident_month as accident_month,
     maturity,
@@ -41,10 +43,8 @@ SELECT
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
   where is_ebsl is false
 --   and cat_indicator = false
-  and mon.date_knowledge = '2020-09-30'
-  group by 1,2,3,4,5,6
+  and mon.date_knowledge <= '2020-09-30'
+  group by 1,2,3,4,5
   )
- select CAT, sum(Incurred_Loss_Cumulative)
+ select *
  from aggregated
- where as_of_month = '2020-09-30'
- group by 1
