@@ -22,7 +22,7 @@ SELECT
     maturity,
     CAT
     -- ,reinsurance_treaty_property
-    ,peril
+    -- ,peril
     -- ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as Reported_Claim_Count_Excl_Closed_No_Pay
     -- ,sum(case when date_close is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
@@ -42,7 +42,7 @@ SELECT
   where is_ebsl is false
 --   and cat_indicator = false
   and mon.date_knowledge <= '2020-09-30'
-  group by 1,2,3,4,5,6,7
+  group by 1,2,3,4,5,6
   )
  select *
  from aggregated
