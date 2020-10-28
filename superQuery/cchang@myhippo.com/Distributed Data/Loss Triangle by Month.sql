@@ -13,7 +13,7 @@ where carrier <> 'canopius'
 )
 , aggregated as (
 SELECT
-mon.claim_number,
+-- mon.claim_number,
     mon.date_knowledge as as_of_month,
     mon.carrier,
     mon.property_data_address_state as state,
@@ -42,7 +42,7 @@ mon.claim_number,
   where is_ebsl is false
 --   and cat_indicator = false
   and mon.date_knowledge = '2020-09-30'
-  group by 1,2,3,4,5,6,7
+  group by 1,2,3,4,5,6
   )
  select *
  from aggregated
