@@ -13,7 +13,7 @@ where carrier <> 'canopius'
 )
 , aggregated as (
 SELECT
--- mon.claim_number,
+mon.claim_number,
     mon.date_knowledge as as_of_month,
     mon.carrier,
     mon.property_data_address_state as state,
@@ -41,8 +41,8 @@ SELECT
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
   where is_ebsl is false
 --   and cat_indicator = false
-  and mon.date_knowledge <= '2020-09-30'
-  group by 1,2,3,4,5,6
+  and mon.date_knowledge = '2020-09-30'
+  group by 1,2,3,4,5,6,7
   )
  select *
  from aggregated
