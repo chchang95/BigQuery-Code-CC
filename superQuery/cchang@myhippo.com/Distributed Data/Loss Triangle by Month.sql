@@ -44,6 +44,7 @@ SELECT
   where is_ebsl is false
 --   and cat_indicator = false
   and mon.date_knowledge <= '2020-09-30'
+  and product <> 'ho5'
   group by 1,2,3,4,5
   )
  select *
