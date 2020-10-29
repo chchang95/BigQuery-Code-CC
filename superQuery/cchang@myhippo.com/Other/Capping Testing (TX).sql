@@ -4,7 +4,7 @@ from s3.az_nv_policy_rate_capping_data
 where renewals is not null
 and _file <> 'ingestion/tx-policies-10-27-2020.json'
 )
-select target_policy_number, state, first_renewal,
+select _file, target_policy_number, state, first_renewal,
 
 json_extract(existing_rate_cap_amount, '$.current_term') as current_term_cap,
 json_extract(existing_rate_cap_amount, '$.next_term') as next_term_cap,
