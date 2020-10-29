@@ -32,5 +32,5 @@ json_extract(second_renewal, '$.newRaterVersionQuote.premium.fees') as second_re
 json_extract(second_renewal, '$.newRaterVersionQuote.premium.total') as second_renewal_new_prem_total,
 from x
 where first_renewal is not null
-and state = 'TX'
+-- and state = 'TX'
 order by 2 desc
