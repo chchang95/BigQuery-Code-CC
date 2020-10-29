@@ -3,6 +3,7 @@ select target_policy_number,JSON_EXTRACT(renewals,'$[0]') as first_renewal, JSON
 from s3.az_nv_policy_rate_capping_data
 where renewals is not null
 and _file <> 'ingestion/tx-policies-10-27-2020.json'
+and _file = 'ingestion/tx-data (1).json'
 )
 select _file, target_policy_number, state, first_renewal,
 
