@@ -9,7 +9,7 @@ select mon.*
 , coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
 , coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) as expense_incurred_calc
 from dw_prod_extracts.ext_all_claims_combined mon
-left join dbt_cchin.cat_coding_20200831 cc on mon.claim_number = cc.claim_number
+left join dbt_cchin.'cat_coding_20200831 _old' cc on mon.claim_number = cc.claim_number
 where carrier <> 'canopius'
 )
 , aggregated as (
