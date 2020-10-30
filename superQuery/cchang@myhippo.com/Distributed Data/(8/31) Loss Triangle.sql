@@ -16,7 +16,7 @@ where carrier <> 'canopius'
 )
 , aggregated as (
 SELECT
-mon.claim_number,
+-- mon.claim_number,
     mon.date_knowledge as as_of_month,
     policy_effective_month,
     -- mon.carrier,
@@ -47,7 +47,7 @@ mon.claim_number,
 --   and cat_indicator = false
   and mon.date_knowledge = '2020-08-31'
   and product <> 'ho5'
-  group by 1,2,3,4,5,6
+  group by 1,2,3,4,5
   )
  select *
  from aggregated
