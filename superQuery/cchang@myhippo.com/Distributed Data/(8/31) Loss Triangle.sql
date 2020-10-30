@@ -1,12 +1,13 @@
 with claims_supp as (
 select mon.*
-,case when peril = 'equipment_breakdown' or peril = 'service_line' then true
+,case when lower(peril) = 'equipment_breakdown' or lower(peril) = 'service_line' then true
       else is_ebsl end as EBSL
 , case when cc.cat_ind is true then 'Y'
     when cc.cat_ind is false then 'N'
     when peril = 'wind' or peril = 'hail' then 'Y'
     when cat_code is not null then 'Y'
         else 'N' end as CAT
+-- , case when 
 , date_trunc(date_effective, MONTH) as policy_effective_month
 , coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
 , coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) as expense_incurred_calc
