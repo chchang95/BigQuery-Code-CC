@@ -43,7 +43,7 @@ SELECT
   FROM
     claims_supp mon
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
-  where EBSL is false
+  where is_ebsl is false
 --   and cat_indicator = false
   and mon.date_knowledge = '2020-08-31'
   and product <> 'ho5'
