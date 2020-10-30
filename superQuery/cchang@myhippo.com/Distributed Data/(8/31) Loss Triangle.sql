@@ -1,5 +1,7 @@
 with claims_supp as (
 select mon.*
+,case when peril = 'equipment_breakdown' or peril = 'service_line' then true
+      else is_ebsl end as EBSL
 , case when cc.cat_ind is true then 'Y'
     when cc.cat_ind is false then 'N'
     when peril = 'wind' or peril = 'hail' then 'Y'
@@ -41,7 +43,7 @@ mon.claim_number,
   FROM
     claims_supp mon
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
-  where is_ebsl is false
+  where EBSL is false
 --   and cat_indicator = false
   and mon.date_knowledge = '2020-08-31'
   and product <> 'ho5'
