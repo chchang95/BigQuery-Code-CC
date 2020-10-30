@@ -49,5 +49,6 @@ SELECT
   and product <> 'ho5'
   group by 1,2,3,4,5
   )
- select *
+ select CAT, sum(incurred_loss_cumulative)
  from aggregated
+ group by 1
