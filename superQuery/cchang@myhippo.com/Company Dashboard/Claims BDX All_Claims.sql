@@ -13,9 +13,12 @@ SELECT DISTINCT
       , case when property_data_address_state = 'tx' and calculated_fields_cat_risk_class = 'referral' then 'cat referral' 
               when calculated_fields_non_cat_risk_class is null or date_effective <= '2020-05-01' then 'not_applicable'
               else calculated_fields_non_cat_risk_class end as rated_uw_action
+    , loss_description
+    , damage_description
   FROM dw_prod_extracts.ext_all_claims_combined mon
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id, channel from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') eps on eps.policy_id = mon.policy_id
+  left join (select claim_number, loss_description, damage_description from dw_prod.fct_claims) fc on mon.claim_number = fc.claim_number
   WHERE date_knowledge = '2020-10-31'
   and carrier <> 'canopius'
   )
@@ -58,6 +61,8 @@ SELECT DISTINCT
         ,term_effective_month
         ,rated_uw_action
         ,policy_id
+        ,loss_description
+        ,damage_description
     --   ,Total_Recoverable_Depreciation    
   from claims_supp
   where 1=1
