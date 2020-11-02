@@ -74,3 +74,4 @@ SELECT DISTINCT
   order by 1
   )
   select * from aggregated
+where claim_number = 'HTN-0635232-01-01'
