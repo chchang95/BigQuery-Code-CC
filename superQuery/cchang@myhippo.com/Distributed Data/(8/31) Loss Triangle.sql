@@ -26,7 +26,7 @@ SELECT
     accident_month as accident_month,
     maturity,
     CAT
-    -- ,reinsurance_treaty_property
+    ,reinsurance_treaty
     -- ,peril
     -- ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as Reported_Claim_Count_Excl_Closed_No_Pay
@@ -50,6 +50,6 @@ SELECT
 --   and cat_indicator = false
   and mon.date_knowledge <= '2020-08-31'
 --   and product <> 'ho5'
-  group by 1,2,3,4,5
+  group by 1,2,3,4,5,6
   )
  select * from aggregated
