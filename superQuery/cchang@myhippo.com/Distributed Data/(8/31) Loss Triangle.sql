@@ -32,6 +32,8 @@ SELECT
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as Reported_Claim_Count_Excl_Closed_No_Pay
     -- ,sum(case when date_close is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
     ,sum(expense_incurred_calc) as ALAE_cumulative
+    ,sum(coalesce(loss_paid,0) - coalesce(recoveries,0)) as Loss_Paid
+    ,sum(loss_net_reserve) as Loss_Reserves_Outstanding
     -- ,sum(loss_calculated_incurred_inception_to_date) as Indemnity_cumulative
     ,sum(total_incurred_calc) as Incurred_Loss_Cumulative
     -- ,sum(total_incurred_delta_this_month) as total_incurred_incremental
