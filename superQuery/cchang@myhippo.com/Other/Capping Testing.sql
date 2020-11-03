@@ -29,6 +29,26 @@ json_extract(second_renewal, '$.newRaterVersionQuote.premium.base') as second_re
 json_extract(second_renewal, '$.newRaterVersionQuote.premium.optionals') as second_renewal_new_prem_optionals,
 json_extract(second_renewal, '$.newRaterVersionQuote.premium.fees') as second_renewal_new_prem_fees,
 json_extract(second_renewal, '$.newRaterVersionQuote.premium.total') as second_renewal_new_prem_total,
+
+json_extract(first_renewal, '$.raterInputs.coverageA') as first_renewal_cov_a,
+json_extract(second_renewal, '$.raterInputs.coverageA') as second_renewal_cov_a,
+
+json_extract(first_renewal, '$.raterInputs.ageOfHome') as first_renewal_ageOfHome,
+json_extract(second_renewal, '$.raterInputs.ageOfHome') as second_renewal_ageOfHome,
+
+json_extract(first_renewal, '$.raterInputs.ageOfRoof') as first_renewal_ageOfRoof,
+json_extract(second_renewal, '$.raterInputs.ageOfRoof') as second_renewal_ageOfRoof,
+
+json_extract(first_renewal, '$.raterInputs.ageOfInsured') as first_renewal_ageOfInsured,
+json_extract(second_renewal, '$.raterInputs.ageOfInsured') as second_renewal_ageOfInsured,
+
+json_extract(first_renewal, '$.raterInputs.renewalNumber') as first_renewal_renewalNumber,
+json_extract(second_renewal, '$.raterInputs.renewalNumber') as second_renewal_renewalNumber,
+
+json_extract(first_renewal, '$.raterInputs.lossFreeYears') as first_renewal_lossFreeYears,
+json_extract(second_renewal, '$.raterInputs.lossFreeYears') as second_renewal_lossFreeYears,
+
+
 from x
 where first_renewal is not null
 order by 2 desc
