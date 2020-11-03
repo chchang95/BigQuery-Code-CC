@@ -20,7 +20,7 @@ SELECT
 -- mon.claim_number,
     mon.date_knowledge as as_of_month,
     -- policy_effective_month,
-    -- mon.carrier,
+    mon.carrier,
     -- mon.property_data_address_state as state,
     -- mon.product,
     accident_month as accident_month,
@@ -50,6 +50,6 @@ SELECT
 --   and cat_indicator = false
   and mon.date_knowledge <= '2020-08-31'
 --   and product <> 'ho5'
-  group by 1,2,3,4
+  group by 1,2,3,4,5
   )
  select * from aggregated
