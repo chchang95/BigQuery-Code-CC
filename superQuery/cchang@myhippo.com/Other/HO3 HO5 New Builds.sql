@@ -46,13 +46,13 @@ select eps.policy_id
 ,calculated_fields_age_of_roof as Age_Of_Roof
 ,calculated_fields_age_of_home as Age_Of_Home
 -- ,calculated_fields_wind_exclusion as Wind_Exclusion
-,coverage_deductible as Deductible
-,coverage_hurricane_deductible as Hurricane_Deductible
-,coverage_wind_deductible as Wind_Deductible
+-- ,coverage_deductible as Deductible
+-- ,coverage_hurricane_deductible as Hurricane_Deductible
+-- ,coverage_wind_deductible as Wind_Deductible
 ,coverage_a as cov_a
-,coverage_b as cov_b
-,coverage_c as cov_c
-,coverage_d as cov_d
+-- ,coverage_b as cov_b
+-- ,coverage_c as cov_c
+-- ,coverage_d as cov_d
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, channel, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
