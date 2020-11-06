@@ -61,3 +61,4 @@ from dw_prod.dim_organization_mappings) dom on dp.org_id = dom.organization_id
 where date_snapshot = '2020-09-30'
 -- and status = 'active'
 and carrier <> 'canopius'
+and status <> 'pending_active'
