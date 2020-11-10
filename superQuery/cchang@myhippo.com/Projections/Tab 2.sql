@@ -1,15 +1,24 @@
-with loss as (
+with claims_supp as (
+select mon.*
+, case when cc.cat_ind is true then 'Y'
+    when cc.cat_ind is false then 'N'
+    when peril = 'wind' or peril = 'hail' then 'Y'
+    when cat_code is not null then 'Y'
+        else 'N' end as CAT
+from dw_prod_extracts.ext_claim_monthly mon
+left join dbt_cchin.cat_coding_20201031 cc on mon.claim_number = cc.claim_number
+where carrier <> 'canopius'
+)
+, loss as (
 SELECT
     policy_id,
     mon.month_knowledge,
     month_of_loss,
     reinsurance_treaty,
-    sum(total_calculated_net_paid_delta_this_month) as incremental_paid,
-    sum(total_net_reserves_delta_this_month) as incremental_reserves,
-    sum(total_incurred_delta_this_month) as incremental_incurred,
-    sum(total_incurred_inception_to_date) as cumulative_incurred
+    sum(case when CAT = 'Y' then total_incurred_delta_this_month else 0 end) as CAT_incurred_incremental,
+    sum(case when CAT = 'N' then total_incurred_delta_this_month else 0 end) as NonCAT_incurred_incremental,
   FROM
-    dw_prod_extracts.ext_claim_monthly mon
+    claims_supp mon
     left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-10-31') USING(claim_number)
   where is_ebsl is false
   and carrier <> 'canopius'
@@ -39,9 +48,9 @@ coalesce(month_knowledge,date_accounting_start) as calendar_month,
 coalesce(month_of_loss,date_accounting_start) as accident_month,
 coalesce(p.policy_id, l.policy_id) as policy_id,
 coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as reinsurance_treaty
-,sum(coalesce(cumulative_incurred,0)) as cumulative_incurred
-,sum(coalesce(incremental_incurred,0)) as incremental_incurred
-,sum(coalesce(written_prem_x_ebsl,0)) as written_prem_x_ebsl
+,sum(coalesce(CAT_incurred_incremental,0)) as CAT_incurred_incremental
+,sum(coalesce(NonCAT_incurred_incremental,0)) as NonCAT_incurred_incremental
+,sum(coalesce(written_prem_x_ebsl,0)) as written_prem_x_ebsl_inc_policy_fees
 ,sum(coalesce(earned_prem_x_ebsl,0)) as earned_prem_x_ebsl_inc_policy_fees
 ,sum(coalesce(written_exposure,0)) as written_exposure
 ,sum(coalesce(earned_exposure,0)) as earned_exposure
@@ -57,9 +66,9 @@ group by 1,2,3,4
 )
 select calendar_month, accident_month, carrier, state, product, channel
 , case when renewal_number > 0 then 'renewal' else 'new' end as tenure
-,sum(cumulative_incurred) as cumulative_incurred
-,sum(incremental_incurred) as incremental_incurred
-,sum(written_prem_x_ebsl) as written_prem_x_ebsl
+,sum(CAT_incurred_incremental) as CAT_incurred_incremental
+,sum(NonCAT_incurred_incremental) as NonCAT_incurred_incremental
+,sum(written_prem_x_ebsl_inc_policy_fees) as written_prem_x_ebsl_inc_policy_fees
 ,sum(earned_prem_x_ebsl_inc_policy_fees) as earned_prem_x_ebsl_inc_policy_fees
 from aggregated a
 left join (select * from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') using(policy_id) 
