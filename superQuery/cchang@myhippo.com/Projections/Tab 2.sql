@@ -65,13 +65,15 @@ p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
 group by 1,2,3,4
 )
 select calendar_month, accident_month, carrier, state, product, channel, reinsurance_treaty
-, case when renewal_number > 0 then 'renewal' else 'new' end as tenure
+, case when renewal_number > 0 then 'RB' else 'NB' end as tenure
 ,sum(CAT_incurred_incremental) as CAT_incurred_incremental
 ,sum(NonCAT_incurred_incremental) as NonCAT_incurred_incremental
 ,sum(written_prem_x_ebsl_inc_policy_fees) as written_prem_x_ebsl_inc_policy_fees
 ,sum(earned_prem_x_ebsl_inc_policy_fees) as earned_prem_x_ebsl_inc_policy_fees
+,sum(coalesce(a.written_policy_fee,0)) as written_policy_fee
+,sum(coalesce(a.earned_policy_fee,0)) as earned_policy_fee
 from aggregated a
 left join (select * from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') using(policy_id) 
-left join (select policy_id, channel from dw_prod.dim_policies) using(policy_id)
+left join (select policy_id, case when channel is null then 'Online' else channel end as channel from dw_prod.dim_policies) using(policy_id)
 where calendar_month is not null
 group by 1,2,3,4,5,6,7,8
