@@ -50,10 +50,10 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 )
 , aggregated as (
     select 
-coalesce(date_accounting_start,month_knowledge),
-coalesce(p.carrier, l.carrier),
-coalesce(p.state, l.state),
-coalesce(p.product, l.product)
+coalesce(date_accounting_start,month_knowledge) as calendar_month,
+coalesce(p.carrier, l.carrier) as carrier,
+coalesce(p.state, l.state) as state,
+coalesce(p.product, l.product) as product
 ,sum(cumulative_incurred) as cumulative_incurred
 ,sum(incremental_incurred) as incremental_incurred
 ,sum(written_prem_x_ebsl) as written_prem_x_ebsl
