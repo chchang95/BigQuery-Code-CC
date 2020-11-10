@@ -64,7 +64,7 @@ p.policy_id = l.policy_id AND
 p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
 group by 1,2,3,4
 )
-select calendar_month, accident_month, carrier, state, product, channel
+select calendar_month, accident_month, carrier, state, product, channel, reinsurance_treaty
 , case when renewal_number > 0 then 'renewal' else 'new' end as tenure
 ,sum(CAT_incurred_incremental) as CAT_incurred_incremental
 ,sum(NonCAT_incurred_incremental) as NonCAT_incurred_incremental
@@ -74,4 +74,4 @@ from aggregated a
 left join (select * from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') using(policy_id) 
 left join (select policy_id, channel from dw_prod.dim_policies) using(policy_id)
 where calendar_month is not null
-group by 1,2,3,4,5,6,7
+group by 1,2,3,4,5,6,7,8
