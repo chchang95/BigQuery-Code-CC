@@ -70,6 +70,7 @@ p.date_accounting_start = l.month_of_loss AND
 p.carrier = l.carrier AND
 p.state = l.state AND
 p.product = l.product
+where coalesce(month_knowledge,date_accounting_start) is not null
 group by 1,2,3,4,5
 )
 select * from aggregated
