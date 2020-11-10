@@ -70,6 +70,6 @@ p.date_accounting_start = l.month_of_loss AND
 p.carrier = l.carrier AND
 p.state = l.state AND
 p.product = l.product
-group by 1,2,3,4
+group by 1,2,3,4,5
 )
 select * from aggregated
