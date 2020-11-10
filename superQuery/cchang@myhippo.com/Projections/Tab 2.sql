@@ -73,4 +73,5 @@ select calendar_month, accident_month, carrier, state, product, channel
 from aggregated a
 left join (select * from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') using(policy_id) 
 left join (select policy_id, channel from dw_prod.dim_policies) using(policy_id)
+where calendar_month is not null
 group by 1,2,3,4,5,6,7
