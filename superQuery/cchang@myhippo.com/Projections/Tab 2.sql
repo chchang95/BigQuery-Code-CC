@@ -52,6 +52,7 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
     select 
 coalesce(month_knowledge,date_accounting_start) as calendar_month,
 coalesce(month_of_loss,date_accounting_start) as accident_month,
+case when month_of_loss is null then date_accounting_start else month_of_loss end as accident_month2,
 coalesce(p.carrier, l.carrier) as carrier,
 coalesce(p.state, l.state) as state,
 coalesce(p.product, l.product) as product
@@ -70,7 +71,7 @@ p.date_accounting_start = l.month_of_loss AND
 p.carrier = l.carrier AND
 p.state = l.state AND
 p.product = l.product
-where coalesce(month_knowledge,date_accounting_start) is not null
-group by 1,2,3,4,5
+-- where coalesce(month_knowledge,date_accounting_start) is not null
+group by 1,2,3,4,5,6
 )
 select * from aggregated
