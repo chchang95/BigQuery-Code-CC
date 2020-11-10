@@ -51,11 +51,12 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 , aggregated as (
     select 
 coalesce(date_accounting_start,month_knowledge) as calendar_month,
+coalesce(date_accounting_start,month_of_loss) as accident_month,
 coalesce(p.carrier, l.carrier) as carrier,
 coalesce(p.state, l.state) as state,
 coalesce(p.product, l.product) as product
-,sum(cumulative_incurred) as cumulative_incurred
-,sum(incremental_incurred) as incremental_incurred
+,sum(coalesce(cumulative_incurred,0)) as cumulative_incurred
+,sum(coalesce(incremental_incurred,0)) as incremental_incurred
 ,sum(written_prem_x_ebsl) as written_prem_x_ebsl
 ,sum(earned_prem_x_ebsl) as earned_prem_x_ebsl_inc_policy_fees
 ,sum(written_exposure) as written_exposure
