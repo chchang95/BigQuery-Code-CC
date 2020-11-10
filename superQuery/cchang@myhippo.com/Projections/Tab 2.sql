@@ -5,7 +5,7 @@ SELECT
     mon.state,
     mon.product,
     month_of_loss,
-    maturity,
+    -- maturity,
     sum(total_calculated_net_paid_delta_this_month) as incremental_paid,
     sum(total_net_reserves_delta_this_month) as incremental_reserves,
     sum(total_incurred_delta_this_month) as incremental_incurred,
@@ -15,25 +15,25 @@ SELECT
     left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-10-31') USING(claim_number)
   where is_ebsl is false
   and carrier <> 'canopius'
-  group by 1,2,3,4,5,6
+  group by 1,2,3,4,5
  )
 , premium as (
     select 
-        epud.policy_id
-        , lower(state) as state
+        -- epud.policy_id
+        lower(state) as state
         , lower(carrier) as carrier
         , lower(product) as product
-        , extract(year from date_calendar_month_accounting_basis) as calendar_year
+        -- , extract(year from date_calendar_month_accounting_basis) as calendar_year
         , date_calendar_month_accounting_basis as date_accounting_start
-        , date_sub(date_add(date_calendar_month_accounting_basis, INTERVAL 1 MONTH), INTERVAL 1 DAY) as date_accounting_end
-        , reinsurance_treaty_property_accounting
-        , org_id as organization_id
-        , channel
-        , case when renewal_number = 0 then "New" else "Renewal" end as tenure
-        , date_trunc(date_effective, MONTH) as term_effective_month
-        , case when state = 'tx' and calculated_fields_cat_risk_class = 'referral' then 'cat referral' 
-              when calculated_fields_non_cat_risk_class is null or date_effective <= '2020-05-01' then 'not_applicable'
-              else calculated_fields_non_cat_risk_class end as rated_uw_action
+        -- , date_sub(date_add(date_calendar_month_accounting_basis, INTERVAL 1 MONTH), INTERVAL 1 DAY) as date_accounting_end
+        -- , reinsurance_treaty_property_accounting
+        -- , org_id as organization_id
+        -- , channel
+        -- , case when renewal_number = 0 then "New" else "Renewal" end as tenure
+        -- , date_trunc(date_effective, MONTH) as term_effective_month
+        -- , case when state = 'tx' and calculated_fields_cat_risk_class = 'referral' then 'cat referral' 
+        --       when calculated_fields_non_cat_risk_class is null or date_effective <= '2020-05-01' then 'not_applicable'
+        --       else calculated_fields_non_cat_risk_class end as rated_uw_action
         ,sum(earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
         ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
         ,sum(written_exposure) as written_exposure
@@ -46,7 +46,7 @@ from dw_prod_extracts.ext_policy_monthly_premiums epud
         where date_knowledge = '2020-10-31'
         and carrier <> 'canopius'
         -- and product <> 'HO5'
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+group by 1,2,3,4
 )
 , aggregated as (
     select 
