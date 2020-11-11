@@ -23,7 +23,7 @@ quote_id
 , calculated_fields_wind_exclusion as wind_exclusion
 from dw_prod.dim_quotes
 where carrier <> 'Canopius'
-and product = 'HO5'
+and product = 'ho5'
 -- and date_quote_first_seen >= '2019-01-01'
 and date_quote_first_seen <= '2020-09-30'
 and (calculated_fields_wind_exclusion <> 'true' or calculated_fields_wind_exclusion is null)
