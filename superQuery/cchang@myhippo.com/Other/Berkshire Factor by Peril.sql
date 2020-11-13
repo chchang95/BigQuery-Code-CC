@@ -35,4 +35,5 @@ and (SAFE_CAST(index as numeric) is not null or name = 'Total')
 -- and p.policy_number = 'HTX-2633748-00'
 )
 select policy_number, name, count(*) from combined
+group by 1,2
 order by 1,2
