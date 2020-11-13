@@ -52,5 +52,6 @@ and name = 'Coverage A'
 -- order by 1
 select policy_number, name, 
 p1,p2,p3,p4,p5,p6,p7,p8,p9,p10
+from combined
 -- select *, case when SAFE_CAST(index as numeric) is null then 'N' else 'Y' end as numeric from dw_prod_extracts.ext_factor_grids
 -- where policy_number = 'HTX-1863461-00'
