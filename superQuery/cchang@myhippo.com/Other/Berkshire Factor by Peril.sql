@@ -8,7 +8,7 @@ and product = 'ho3'
 and status = 'active'
 and carrier = 'spinnaker'
 and date_snapshot = '2020-09-30'
-and quote_rater_version = '5.0'
+and quote_rater_version in ('5.0','6.0','6.1','7.0')
 )
 , combined as (
 select 
@@ -34,6 +34,21 @@ where p.policy_id is not null
 and (SAFE_CAST(index as numeric) is not null or name = 'Total')
 -- and p.policy_number = 'HTX-2633748-00'
 )
-select policy_number, name, count(*) from combined
-group by 1,2
-order by 1,2
+select index, name, quote_rater_version
+-- , tx_region
+, avg(p1) as p1
+, avg(p2) as p2
+, avg(p3) as p3
+, avg(p4) as p4
+, avg(p5) as p5
+, avg(p6) as p6
+, avg(p7) as p7
+, avg(p8) as p8
+, avg(p9) as p9
+, avg(p10) as p10
+from combined
+group by 1, 2, 3
+order by 1
+
+-- select *, case when SAFE_CAST(index as numeric) is null then 'N' else 'Y' end as numeric from dw_prod_extracts.ext_factor_grids
+-- where policy_number = 'HTX-1863461-00'
