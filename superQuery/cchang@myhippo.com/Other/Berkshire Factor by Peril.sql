@@ -32,22 +32,6 @@ efg.policy_id = p.policy_id
 and efg.policy_update_id = p.latest_policy_update_id
 where p.policy_id is not null
 and (SAFE_CAST(index as numeric) is not null or name = 'Total')
+and policy_number = 'HTX-0808984-01'
 )
-select index, name, quote_rater_version
--- , tx_region
-, avg(p1) as p1
-, avg(p2) as p2
-, avg(p3) as p3
-, avg(p4) as p4
-, avg(p5) as p5
-, avg(p6) as p6
-, avg(p7) as p7
-, avg(p8) as p8
-, avg(p9) as p9
-, avg(p10) as p10
-from combined
-group by 1, 2, 3
-order by 1
-
--- select *, case when SAFE_CAST(index as numeric) is null then 'N' else 'Y' end as numeric from dw_prod_extracts.ext_factor_grids
--- where policy_number = 'HTX-1863461-00'
+select * from combined
