@@ -48,7 +48,7 @@ select index, name, quote_rater_version
 , avg(p10) as p10
 from combined
 group by 1, 2, 3,4
-order by 2,4
+order by 4,1
 
 -- select *, case when SAFE_CAST(index as numeric) is null then 'N' else 'Y' end as numeric from dw_prod_extracts.ext_factor_grids
 -- where policy_number = 'HTX-1863461-00'
