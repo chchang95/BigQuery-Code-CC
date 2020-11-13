@@ -32,6 +32,6 @@ efg.policy_id = p.policy_id
 and efg.policy_update_id = p.latest_policy_update_id
 where p.policy_id is not null
 and (SAFE_CAST(index as numeric) is not null or name = 'Total')
-and policy_number = 'HTX-0808984-01'
+and p.policy_number = 'HTX-0808984-01'
 )
 select * from combined
