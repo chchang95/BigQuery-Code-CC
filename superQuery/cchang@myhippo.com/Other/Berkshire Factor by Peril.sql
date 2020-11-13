@@ -34,4 +34,5 @@ where p.policy_id is not null
 and (SAFE_CAST(index as numeric) is not null or name = 'Total')
 -- and p.policy_number = 'HTX-2633748-00'
 )
-select * from combined
+select policy_number, name, count(*) from combined
+order by 1,2
