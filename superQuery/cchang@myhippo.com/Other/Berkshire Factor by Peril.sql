@@ -7,7 +7,7 @@ where state = 'tx'
 and product = 'ho3'
 and status = 'active'
 and carrier = 'spinnaker'
-and date_snapshot = '2020-09-30'
+and date_snapshot = '2020-08-31'
 and quote_rater_version in ('5.0','6.0','6.1','7.0')
 )
 , combined as (
