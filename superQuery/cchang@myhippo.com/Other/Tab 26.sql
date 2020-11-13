@@ -5,6 +5,9 @@ where state = 'tx'
 and product = 'ho3'
 and status = 'active'
 )
+, combined as (
 select efg.*, p.* from dw_prod_extracts.ext_factor_grids efg
 left join policies p using(policy_id)
 where p.policy_id is not null
+)
+select distinct name from combined
