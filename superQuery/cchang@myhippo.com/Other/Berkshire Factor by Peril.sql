@@ -35,7 +35,7 @@ and (SAFE_CAST(index as numeric) is not null or name = 'Total')
 -- and p.policy_number = 'HTX-2633748-00'
 )
 select index, name, quote_rater_version
--- , tx_region
+, tx_region
 , avg(p1) as p1
 , avg(p2) as p2
 , avg(p3) as p3
@@ -47,8 +47,8 @@ select index, name, quote_rater_version
 , avg(p9) as p9
 , avg(p10) as p10
 from combined
-group by 1, 2, 3
-order by 1
+group by 1, 2, 3,4
+order by 4,1
 
 -- select *, case when SAFE_CAST(index as numeric) is null then 'N' else 'Y' end as numeric from dw_prod_extracts.ext_factor_grids
 -- where policy_number = 'HTX-1863461-00'
