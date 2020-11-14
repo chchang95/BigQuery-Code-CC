@@ -15,8 +15,12 @@ SELECT
     mon.month_knowledge,
     month_of_loss,
     reinsurance_treaty,
-    sum(case when CAT = 'Y' then total_incurred_delta_this_month else 0 end) as CAT_incurred_incremental,
-    sum(case when CAT = 'N' then total_incurred_delta_this_month else 0 end) as NonCAT_incurred_incremental,
+    sum(case when CAT = 'Y' then total_incurred_delta_this_month else 0 end) as CAT_incurred_loss_and_alae_incremental,
+    sum(case when CAT = 'N' then total_incurred_delta_this_month else 0 end) as NonCAT_incurred_loss_and_alae_incremental,
+    sum(case when CAT = 'Y' then expense_calculated_incurred_delta_this_month else 0 end) as CAT_incurred_alae_incremental,
+    sum(case when CAT = 'N' then expense_calculated_incurred_delta_this_month else 0 end) as NonCAT_incurred_alae_incremental,
+    sum(case when CAT = 'Y' then loss_calculated_incurred_delta_this_month else 0 end) as CAT_incurred_loss_incremental,
+    sum(case when CAT = 'N' then loss_calculated_incurred_delta_this_month else 0 end) as NonCAT_incurred_loss_incremental,
   FROM
     claims_supp mon
     left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-10-31') USING(claim_number)
@@ -48,8 +52,15 @@ coalesce(month_knowledge,date_accounting_start) as calendar_month,
 coalesce(month_of_loss,date_accounting_start) as accident_month,
 coalesce(p.policy_id, l.policy_id) as policy_id,
 coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as reinsurance_treaty
-,sum(coalesce(CAT_incurred_incremental,0)) as CAT_incurred_incremental
-,sum(coalesce(NonCAT_incurred_incremental,0)) as NonCAT_incurred_incremental
+,sum(coalesce(CAT_incurred_loss_and_alae_incremental,0)) as CAT_incurred_loss_and_alae_incremental
+,sum(coalesce(NonCAT_incurred_loss_and_alae_incremental,0)) as NonCAT_incurred_loss_and_alae_incremental
+
+,sum(coalesce(CAT_incurred_alae_incremental,0)) as CAT_incurred_alae_incremental
+,sum(coalesce(NonCAT_incurred_alae_incremental,0)) as NonCAT_incurred_alae_incremental
+
+,sum(coalesce(CAT_incurred_loss_incremental,0)) as CAT_incurred_loss_incremental
+,sum(coalesce(NonCAT_incurred_loss_incremental,0)) as NonCAT_incurred_loss_incremental
+
 ,sum(coalesce(written_prem_x_ebsl,0)) as written_prem_x_ebsl_inc_policy_fees
 ,sum(coalesce(earned_prem_x_ebsl,0)) as earned_prem_x_ebsl_inc_policy_fees
 ,sum(coalesce(written_exposure,0)) as written_exposure
@@ -66,8 +77,15 @@ group by 1,2,3,4
 )
 select calendar_month, accident_month, carrier, state, product, channel, reinsurance_treaty
 , case when renewal_number > 0 then 'RB' else 'NB' end as tenure
-,sum(CAT_incurred_incremental) as CAT_incurred_incremental
-,sum(NonCAT_incurred_incremental) as NonCAT_incurred_incremental
+,sum(coalesce(CAT_incurred_loss_and_alae_incremental,0)) as CAT_incurred_loss_and_alae_incremental
+,sum(coalesce(NonCAT_incurred_loss_and_alae_incremental,0)) as NonCAT_incurred_loss_and_alae_incremental
+
+,sum(coalesce(CAT_incurred_alae_incremental,0)) as CAT_incurred_alae_incremental
+,sum(coalesce(NonCAT_incurred_alae_incremental,0)) as NonCAT_incurred_alae_incremental
+
+,sum(coalesce(CAT_incurred_loss_incremental,0)) as CAT_incurred_loss_incremental
+,sum(coalesce(NonCAT_incurred_loss_incremental,0)) as NonCAT_incurred_loss_incremental
+
 ,sum(written_prem_x_ebsl_inc_policy_fees) as written_prem_x_ebsl_inc_policy_fees
 ,sum(earned_prem_x_ebsl_inc_policy_fees) as earned_prem_x_ebsl_inc_policy_fees
 ,sum(coalesce(a.written_policy_fee,0)) as written_policy_fee
