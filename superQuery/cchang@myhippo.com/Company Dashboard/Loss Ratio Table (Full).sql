@@ -196,7 +196,8 @@ carrier
 ,f.organization_id
 ,channel
 ,organization_name
-,root_organization_name,
+,root_organization_name
+,effective_month,
 COALESCE(CAST(SUM(Written_Premium_Including_Policy_Fee) AS FLOAT64),0) AS Written_Premium_Including_Policy_Fee,
 COALESCE(CAST(SUM(Earned_Premium_Including_Policy_Fee) AS FLOAT64),0) AS Earned_Premium_Including_Policy_Fee,
 COALESCE(SUM(Total_Reported_Claim_Count),0) AS Total_Reported_Claim_Count,
@@ -206,6 +207,7 @@ sum(coalesce(NonCat_Incurred_Loss_and_ALAE,0)) as total_noncat
 from final f
 left join (select organization_id, organization_name, root_organization_name, from dw_prod.dim_organization_mappings) org_table on f.organization_id = org_table.organization_id
 where date_bordereau = '2020-10-31'
+and state = 'ca'
 and reinsurance_treaty not in 
 ('spkr17_mrdp_EBSL',
 'spkr19_hsb_old',
@@ -218,7 +220,7 @@ and reinsurance_treaty not in
 'spkr19_hsb_new',
 'spkr20_mbre'
 )
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9,10,11
 order by 1
 )
 select * from org_table
