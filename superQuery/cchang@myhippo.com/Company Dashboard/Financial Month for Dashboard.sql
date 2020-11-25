@@ -73,3 +73,4 @@ left join (select policy_id, date_snapshot, coalesce(coverage_a,0) + coalesce(co
 group by 1
 )
 select * from aggregated
+where state = 'ca'
