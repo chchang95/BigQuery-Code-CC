@@ -121,7 +121,7 @@ accounting_treaty
 , round(sum(cat_claim_count) / sum(earned_exposure),3) as cat_frequency
 from combined
 where 1=1
-and accident_month = '2020-11-01'
+and accident_month = '2020-10-01'
 and earned_exposure <> 0
 -- and tenure = 'New'
 -- and original_effective_month <= '2020-09-01'
