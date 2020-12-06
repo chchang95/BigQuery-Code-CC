@@ -26,20 +26,20 @@ SELECT
     -- ,reinsurance_treaty_property
     -- ,peril
     -- ,case when reinsurance_treaty = 'Spkr20_Classic' then 'Spkr19_GAP' else reinsurance_treaty end as original_treaty
-    ,sum(loss_paid) as loss_paid
-    ,sum(expense_paid) as expese_paid
+    ,sum(loss_paid) as Cumulative_Loss_Paid
+    ,sum(expense_paid) as Cumulative_ALAE_Paid
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as Reported_Claim_Count_Excl_Closed_No_Pay
     -- ,sum(case when date_close is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as paid_claim_count_x_cnp
-    ,sum(expense_incurred_calc) as ALAE_cumulative
+    ,sum(expense_incurred_calc) as Cumulative_ALAE_Incurred
     -- ,sum(loss_calculated_incurred_inception_to_date) as Indemnity_cumulative
-    ,sum(total_incurred_calc) as Incurred_Loss_Cumulative
+    ,sum(total_incurred_calc) as Cumulative_Loss_Incurred
     -- ,sum(total_incurred_delta_this_month) as total_incurred_incremental
     -- ,sum(case when total_incurred_inception_to_date >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_catastrophe is true) then 0 else total_incurred_inception_to_date end) as small_NC_total_incurred_cumulative
     -- ,sum(case when total_incurred_inception_to_date >= 100000 and not (mon.peril = 'wind' or mon.peril = 'hail' or is_catastrophe is true) then total_incurred_inception_to_date else 0 end) as large_NC_total_incurred_cumulative
     ,sum(case when total_incurred_calc >= 100000 and CAT = 'N' 
-        then 100000 else total_incurred_calc end) as Incurred_Loss_and_ALAE_Capped_At_100k_NonCat_Only_Cumulative
+        then 100000 else total_incurred_calc end) as Cumulative_Incurred_Loss_and_ALAE_Capped_At_100k_NonCat_Only
     ,sum(case when total_incurred_calc >= 100000 and CAT = 'N' 
-        then total_incurred_calc - 100000 else 0 end) as Incurred_Loss_and_ALAE_Excess_of_100k_NonCat_Only_Cumulative
+        then total_incurred_calc - 100000 else 0 end) as Cumulative_Incurred_Loss_and_ALAE_Excess_of_100k_NonCat_Only
   FROM
     claims_supp mon
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
