@@ -15,7 +15,7 @@ where carrier <> 'canopius'
 , aggregated as (
 SELECT
 -- mon.claim_number,
-    mon.date_knowledge as as_of_month,
+    mon.date_knowledge as evaluation_month,
     policy_effective_month,
     -- mon.carrier,
     -- mon.property_data_address_state as state,
