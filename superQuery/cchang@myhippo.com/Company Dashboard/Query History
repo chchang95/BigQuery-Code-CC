@@ -1,0 +1,13 @@
+select * from queryHistory where email ='cchang@myhippo.com'
+
+/*
+Explore query history further by adding more fields to your query.
+
+originalQuery - The SQL of your query.
+cost - Cost of your query after any cost-savings via cache are applied.
+savedCosts - How much $ saved as a result of using cache.
+savedBytes - # of bytes that were saved as a result of using cache.
+status - Whether your query executed (true) or had an error (false)
+boardName - Name of the Board where the selected query is stored.
+tabName - The name of the query tab your SQL is written in.
+*/
