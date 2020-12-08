@@ -1,5 +1,5 @@
 select policy_id
-, product, carrier
+, eps.product, carrier
 , case when state = 'ca' or state = 'tx' then state else 'other' end as state_grouped
 , state
 , date_trunc(date_policy_effective, MONTH) as policy_effective_month
