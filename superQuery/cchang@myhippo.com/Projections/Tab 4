@@ -4,6 +4,7 @@ select policy_id
 , case when state = 'ca' or state = 'tx' then state else 'other' end as state_grouped
 , state
 , date_trunc(date_policy_effective, MONTH) as policy_effective_month
+, case when date_policy_effective >= '2020-08-01' then 'Post August' else 'Pre August' end as policy_cohort
 , round(Pure_premium_adjusted,0) as noncat_uw_score
 , property_data_address_zip as zip
 , case when property_data_year_built is null then 'Missing'
@@ -99,13 +100,16 @@ p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
 group by 1,2,3
 )
 , final as (
-select date_trunc(accident_month, YEAR) as accident_year
+select 
+-- date_trunc(accident_month, YEAR) as accident_year
+accident_month
 ,product
 ,state
 ,noncat_uw_score
 ,zip_status
 ,year_built
 ,tenure
+,policy_cohort
 
 ,sum(coalesce(cat_incurred,0)) as cat_incurred
 ,sum(coalesce(noncat_incurred,0)) as noncat_incurred
@@ -125,7 +129,8 @@ select date_trunc(accident_month, YEAR) as accident_year
 from aggregated a
 left join policies using(policy_id) 
 where product <> 'ho5'
-group by 1,2,3,4,5,6,7
+and accident_month >= '2019-01-01'
+group by 1,2,3,4,5,6,7,8
 )
 select sum(total_incurred), sum(written_prem_x_ebsl_x_fees)
 from final
