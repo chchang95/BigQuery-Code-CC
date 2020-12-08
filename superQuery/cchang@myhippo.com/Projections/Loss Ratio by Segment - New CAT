@@ -93,6 +93,7 @@ p.policy_id = l.policy_id AND
 p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
 group by 1,2,3
 )
+, final as (
 select date_trunc(accident_month, YEAR) as accident_year
 ,product
 ,state
@@ -118,3 +119,6 @@ from aggregated a
 left join policies using(policy_id) 
 where product <> 'ho5'
 group by 1,2,3,4,5,6,7
+)
+select sum(total_incurred), sum(written_prem_x_ebsl_x_fees)
+from final
