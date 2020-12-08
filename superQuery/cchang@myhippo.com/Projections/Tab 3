@@ -1,5 +1,6 @@
+with policies as (
 select policy_id
-, eps.product, carrier
+, product, carrier
 , case when state = 'ca' or state = 'tx' then state else 'other' end as state_grouped
 , state
 , date_trunc(date_policy_effective, MONTH) as policy_effective_month
@@ -11,8 +12,105 @@ select policy_id
         else 'Pre 1980' end as year_built
 , channel
 , case when renewal_number = 0 then "New" else "Renewal" end as tenure
-, case when zips.Status = 'Shut Off' then 'shut_zip' else 'open' end as zip_status
 from dw_prod_extracts.ext_policy_snapshots eps
 left join dbt_cchin.noncat_uw_scored_policies_20201031 using(policy_id)
 left join (select policy_id, case when channel is null then 'Online' else channel end as channel from dw_prod.dim_policies) using(policy_id)
-left join dbt_cchin.ca_moratorium_zips_august_2020 zips on cast(eps.property_data_address_zip as numeric) = cast(zips.Zips_to_Shut_Off as numeric) and eps.product = lower(zips.Product)
+)
+,claims_supp as (
+select mon.*
+, case when cc.cat_ind is true then 'Y'
+    when cc.cat_ind is false then 'N'
+    when peril = 'wind' or peril = 'hail' then 'Y'
+    when cat_code is not null then 'Y'
+        else 'N' end as CAT
+from dw_prod_extracts.ext_all_claims_combined mon
+left join dbt_cchin.cat_coding_20201031 cc on mon.claim_number = cc.claim_number
+where carrier <> 'canopius'
+)
+, loss as (
+SELECT
+    policy_id,
+    mon.date_knowledge,
+    accident_month,
+    reinsurance_treaty,
+    sum(case when CAT = 'Y' then total_incurred else 0 end) as cat_incurred,
+    sum(case when CAT = 'N' then total_incurred else 0 end) as noncat_incurred,
+    sum(total_incurred) as total_incurred,
+  FROM
+    claims_supp mon
+  where is_ebsl is false
+  and carrier <> 'canopius'
+  and date_knowledge = '2020-10-31'
+  group by 1,2,3,4
+ )
+, premium as (
+    select 
+        epud.policy_id
+        , date_calendar_month_accounting_basis as date_accounting_start
+        , reinsurance_treaty_property_accounting
+        ,sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl_x_fees
+        ,sum(earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl_x_fees
+        ,sum(written_exposure) as written_exposure
+        ,sum(earned_exposure) as earned_exposure
+        ,sum(written_policy_fee) as written_policy_fee
+        ,sum(earned_policy_fee) as earned_policy_fee
+        ,sum((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_written_prem_x_ebsl_x_fees
+        ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_fees
+from dw_prod_extracts.ext_policy_monthly_premiums epud
+    left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') seps on seps.policy_id = epud.policy_id
+        where date_knowledge = '2020-10-31'
+        and carrier <> 'canopius'
+group by 1,2,3
+)
+, aggregated as (
+    select 
+-- coalesce(date_knowledge,date_accounting_start) as calendar_month,
+coalesce(accident_month,date_accounting_start) as accident_month,
+coalesce(p.policy_id, l.policy_id) as policy_id,
+coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as reinsurance_treaty
+
+,sum(coalesce(cat_incurred,0)) as cat_incurred
+,sum(coalesce(noncat_incurred,0)) as noncat_incurred
+,sum(coalesce(total_incurred,0)) as total_incurred
+
+,sum(coalesce(written_prem_x_ebsl_x_fees,0)) as written_prem_x_ebsl_x_fees
+,sum(coalesce(earned_prem_x_ebsl_x_fees,0)) as earned_prem_x_ebsl_x_fees
+,sum(coalesce(written_exposure,0)) as written_exposure
+,sum(coalesce(earned_exposure,0)) as earned_exposure
+,sum(coalesce(written_policy_fee,0)) as written_policy_fee
+,sum(coalesce(earned_policy_fee,0)) as earned_policy_fee
+,sum(coalesce(on_leveled_written_prem_x_ebsl_x_fees,0)) as on_leveled_written_prem_x_ebsl_x_fees
+,sum(coalesce(on_leveled_earned_prem_x_ebsl_x_fees,0)) as on_leveled_earned_prem_x_ebsl_x_fees
+
+from premium p
+full join loss l ON
+-- p.date_accounting_start = l.date_knowledge AND
+p.date_accounting_start = l.accident_month AND
+p.policy_id = l.policy_id AND
+p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
+group by 1,2,3
+)
+select date_trunc(accident_month, YEAR) as accident_year
+,product
+,state
+,noncat_uw_score
+,zip
+,year_built
+,tenure
+
+,sum(coalesce(cat_incurred,0)) as cat_incurred
+,sum(coalesce(noncat_incurred,0)) as noncat_incurred
+,sum(coalesce(total_incurred,0)) as total_incurred
+
+,sum(coalesce(written_prem_x_ebsl_x_fees,0)) as written_prem_x_ebsl_x_fees
+,sum(coalesce(earned_prem_x_ebsl_x_fees,0)) as earned_prem_x_ebsl_x_fees
+,sum(coalesce(a.written_exposure,0)) as written_exposure
+,sum(coalesce(a.earned_exposure,0)) as earned_exposure
+,sum(coalesce(a.written_policy_fee,0)) as written_policy_fee
+,sum(coalesce(a.earned_policy_fee,0)) as earned_policy_fee
+,sum(coalesce(on_leveled_written_prem_x_ebsl_x_fees,0)) as on_leveled_written_prem_x_ebsl_x_fees
+,sum(coalesce(on_leveled_earned_prem_x_ebsl_x_fees,0)) as on_leveled_earned_prem_x_ebsl_x_fees
+
+from aggregated a
+left join policies using(policy_id) 
+group by 1,2,3,4,5,6,7
