@@ -15,4 +15,4 @@ select policy_id
 from dw_prod_extracts.ext_policy_snapshots eps
 left join dbt_cchin.noncat_uw_scored_policies_20201031 using(policy_id)
 left join (select policy_id, case when channel is null then 'Online' else channel end as channel from dw_prod.dim_policies) using(policy_id)
-left join dbt.cchin.ca_moratorium_zips_august_2020 zips on eps.property_data_address_zip = zips.Zips_to_Shut_Off and eps.product = lower(zips.Product)
+left join dbt_cchin.ca_moratorium_zips_august_2020 zips on eps.property_data_address_zip = zips.Zips_to_Shut_Off and eps.product = lower(zips.Product)
