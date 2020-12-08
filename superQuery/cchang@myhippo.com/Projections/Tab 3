@@ -1,4 +1,22 @@
-with claims_supp as (
+with policies as (
+select policy_id
+, product, carrier
+, case when state = 'ca' or state = 'tx' then state else 'other' end as state_grouped
+, state
+, date_trunc(date_policy_effective, MONTH) as policy_effective_month
+, risk_score as noncat_uw_score
+, property_data_address_zip as zip
+, case when property_data_year_built is null then 'Missing'
+        when cast(property_data_year_built as numeric) >= 2000 then 'Post 2000' 
+        when cast(property_data_year_built as numeric) >= 1980 then 'Pre 2000' 
+        else 'Pre 1980' end as year_built
+, channel
+, case when renewal_number = 0 then "New" else "Renewal" end as tenure
+from dw_prod_extracts.ext_policy_snapshots eps
+left join dbt_cchin.noncat_uw_scored_policies_20201031 using(policy_id)
+left join (select policy_id, case when channel is null then 'Online' else channel end as channel from dw_prod.dim_policies) using(policy_id)
+)
+,claims_supp as (
 select mon.*
 , case when cc.cat_ind is true then 'Y'
     when cc.cat_ind is false then 'N'
@@ -72,8 +90,13 @@ p.policy_id = l.policy_id AND
 p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
 group by 1,2,3
 )
-select accident_month, carrier, state, product, channel, reinsurance_treaty
-, case when renewal_number > 0 then 'RB' else 'NB' end as tenure
+select accident_month
+,product
+,state
+,noncat_uw_score
+,zip
+,year_built
+,tenure
 
 ,sum(coalesce(cat_incurred,0)) as cat_incurred
 ,sum(coalesce(noncat_incurred,0)) as noncat_incurred
@@ -89,7 +112,5 @@ select accident_month, carrier, state, product, channel, reinsurance_treaty
 ,sum(coalesce(on_leveled_earned_prem_x_ebsl_x_fees,0)) as on_leveled_earned_prem_x_ebsl_x_fees
 
 from aggregated a
-left join (select * from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') using(policy_id) 
-left join (select policy_id, case when channel is null then 'Online' else channel end as channel from dw_prod.dim_policies) using(policy_id)
-where calendar_month is not null
+left join policies using(policy_id) 
 group by 1,2,3,4,5,6,7
