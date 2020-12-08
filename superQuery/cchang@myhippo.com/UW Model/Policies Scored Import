@@ -7,7 +7,7 @@ policy_id, state, carrier, product, renewal_number, calculated_fields_non_cat_ri
 ,coverage_a as cov_a
 ,ln(coverage_a) * -0.141714902  as score_cov_a
 ,insurance_score  
-,case when state = 'CA' or state = 'MD' then -0.078330927  
+,case when state = 'ca' or state = 'md' then -0.078330927  
 when insurance_score is null or insurance_score = 'no_hit' then 0.093400276  
 when insurance_score = 'no_score' then -0.078330927  
 when cast(insurance_score as numeric) < 500 then 0  
@@ -146,9 +146,9 @@ when coverage_e = 500000 or coverage_e = 1000000 then -0.073082463 else -999 end
 ,-1.63517384735612 as score_intercept
 from dw_prod_extracts.ext_policy_snapshots 
 where 1=1
-and date_snapshot = '2020-07-31'
-and product <> 'HO5'
-and carrier <> 'Canopius'
+and date_snapshot = '2020-10-31'
+and product <> 'ho5'
+and carrier <> 'canopius'
 -- and status = 'active'
 -- and date_policy_effective >= '2020-05-15'
 -- and calculated_fields_non_cat_risk_score is not null
@@ -187,6 +187,6 @@ from scoring_inter
 select *
 -- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
 from scoring_inter
-where policy_id = 3170387
+where policy_id = 2944001
 -- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
 -- 2513405
