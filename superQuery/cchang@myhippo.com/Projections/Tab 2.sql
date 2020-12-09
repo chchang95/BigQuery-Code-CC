@@ -5,8 +5,10 @@ select mon.*
     when peril = 'wind' or peril = 'hail' then 'Y'
     when cat_code is not null then 'Y'
         else 'N' end as CAT
+, case when large_loss is true then 'Y' else 'N' end as large_loss
 from dw_prod_extracts.ext_claim_monthly mon
 left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
+left join dbt_cchin.LL_listing_20201130 LL on mon.claim_number = LL.claim_number
 where carrier <> 'canopius'
 )
 , loss as (
@@ -21,6 +23,8 @@ SELECT
     sum(case when CAT = 'N' then expense_calculated_incurred_delta_this_month else 0 end) as NonCAT_incurred_alae_incremental,
     sum(case when CAT = 'Y' then loss_calculated_incurred_delta_this_month else 0 end) as CAT_incurred_loss_incremental,
     sum(case when CAT = 'N' then loss_calculated_incurred_delta_this_month else 0 end) as NonCAT_incurred_loss_incremental,
+    sum(case when CAT = 'N' and large_loss = 'Y' then total_incurred_delta_this_month else 0 end) as NonCat_Large_LLAE_incremental,
+    sum(case when CAT = 'N' and large_loss = 'N' then total_incurred_delta_this_month else 0 end) as NonCat_Small_LLAE_incremental
   FROM
     claims_supp mon
     left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-11-30') USING(claim_number)
@@ -61,6 +65,9 @@ coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as rein
 ,sum(coalesce(CAT_incurred_loss_incremental,0)) as CAT_incurred_loss_incremental
 ,sum(coalesce(NonCAT_incurred_loss_incremental,0)) as NonCAT_incurred_loss_incremental
 
+,sum(coalesce(NonCat_Large_LLAE_incremental,0)) as NonCat_Large_LLAE_incremental
+,sum(coalesce(NonCat_Small_LLAE_incremental,0)) as NonCat_Small_LLAE_incremental
+
 ,sum(coalesce(written_prem_x_ebsl,0)) as written_prem_x_ebsl_inc_policy_fees
 ,sum(coalesce(earned_prem_x_ebsl,0)) as earned_prem_x_ebsl_inc_policy_fees
 ,sum(coalesce(written_exposure,0)) as written_exposure
@@ -85,6 +92,9 @@ select calendar_month, accident_month, carrier, state, product, channel, reinsur
 
 ,sum(coalesce(CAT_incurred_loss_incremental,0)) as CAT_incurred_loss_incremental
 ,sum(coalesce(NonCAT_incurred_loss_incremental,0)) as NonCAT_incurred_loss_incremental
+
+,sum(coalesce(NonCat_Large_LLAE_incremental,0)) as NonCat_Large_LLAE_incremental
+,sum(coalesce(NonCat_Small_LLAE_incremental,0)) as NonCat_Small_LLAE_incremental
 
 ,sum(written_prem_x_ebsl_inc_policy_fees) as written_prem_x_ebsl_inc_policy_fees
 ,sum(earned_prem_x_ebsl_inc_policy_fees) as earned_prem_x_ebsl_inc_policy_fees
