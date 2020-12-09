@@ -31,6 +31,10 @@ SELECT
         then 500000 else loss_paid end) as Cumulative_Paid_Loss_Capped_At_500k_NonCat_Only
     ,sum(case when loss_paid >= 500000 and CAT = 'N' 
         then loss_paid - 500000 else 0 end) as Cumulative_Paid_Loss_Excess_500k_NonCat_Only
+    ,sum(case when loss_paid+expense_paid >= 500000 and CAT = 'N' 
+        then 500000 else loss_paid+expense_paid end) as Cumulative_Paid_Loss_and_ALAE_Capped_At_500k_NonCat_Only
+    ,sum(case when loss_paid+expense_paid >= 500000 and CAT = 'N' 
+        then loss_paid+expense_paid - 500000 else 0 end) as Cumulative_Paid_Loss_and_ALAE_Excess_500k_NonCat_Only
     ,sum(expense_paid) as Cumulative_ALAE_Paid
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as Reported_Claim_Count_Excl_Closed_No_Pay
     ,sum(expense_incurred_calc) as Cumulative_ALAE_Incurred
@@ -39,6 +43,8 @@ SELECT
         then 500000 else total_incurred_calc end) as Cumulative_Incurred_Loss_and_ALAE_Capped_At_500k_NonCat_Only
     ,sum(case when total_incurred_calc >= 500000 and CAT = 'N' 
         then total_incurred_calc - 500000 else 0 end) as Cumulative_Incurred_Loss_and_ALAE_Excess_of_500k_NonCat_Only
+        
+    
   FROM
     claims_supp mon
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
