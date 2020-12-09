@@ -6,7 +6,7 @@ select mon.*
     when cat_code is not null then 'Y'
         else 'N' end as CAT
 from dw_prod_extracts.ext_claim_monthly mon
-left join dbt_cchin.cat_coding_20201031 cc on mon.claim_number = cc.claim_number
+left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
 where carrier <> 'canopius'
 )
 , loss as (
@@ -23,7 +23,7 @@ SELECT
     sum(case when CAT = 'N' then loss_calculated_incurred_delta_this_month else 0 end) as NonCAT_incurred_loss_incremental,
   FROM
     claims_supp mon
-    left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-10-31') USING(claim_number)
+    left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-11-30') USING(claim_number)
   where is_ebsl is false
   and carrier <> 'canopius'
   group by 1,2,3,4
@@ -41,8 +41,8 @@ SELECT
         ,sum(earned_policy_fee) as earned_policy_fee
 from dw_prod_extracts.ext_policy_monthly_premiums epud
     left join (select policy_id, policy_number, case when organization_id is null then 0 else organization_id end as org_id, channel from dw_prod.dim_policies) dp on epud.policy_id = dp.policy_id
-    left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') eps on eps.policy_id = epud.policy_id
-        where date_knowledge = '2020-10-31'
+    left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') eps on eps.policy_id = epud.policy_id
+        where date_knowledge = '2020-11-30'
         and carrier <> 'canopius'
 group by 1,2,3
 )
@@ -91,7 +91,7 @@ select calendar_month, accident_month, carrier, state, product, channel, reinsur
 ,sum(coalesce(a.written_policy_fee,0)) as written_policy_fee
 ,sum(coalesce(a.earned_policy_fee,0)) as earned_policy_fee
 from aggregated a
-left join (select * from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') using(policy_id) 
+left join (select * from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') using(policy_id) 
 left join (select policy_id, case when channel is null then 'Online' else channel end as channel from dw_prod.dim_policies) using(policy_id)
 where calendar_month is not null
 group by 1,2,3,4,5,6,7,8
