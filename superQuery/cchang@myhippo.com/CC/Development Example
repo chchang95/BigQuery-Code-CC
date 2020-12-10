@@ -17,7 +17,7 @@ month_knowledge
 ,sum(case when date_close is null then 0 else 1 end) as closed_claim_count
 from dw_prod_extracts.ext_claim_monthly
 where month_of_loss = '2020-04-01'
--- and month_knowledge = '2020-11-01'
+and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
 group by 1,2,3
