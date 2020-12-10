@@ -32,5 +32,5 @@ and is_ebsl is false
 group by 1,2,3,4,5
 order by 1,2,3
 )
-select sum(reported_claim_count_x_CNP) from x
-where month_knowledge = '2020-11-01'
+select * from x
+-- where month_knowledge = '2020-11-01'
