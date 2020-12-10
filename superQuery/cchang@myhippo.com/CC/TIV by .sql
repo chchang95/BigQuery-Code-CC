@@ -15,7 +15,7 @@ from dw_prod_extracts.ext_policy_snapshots eps
 -- left join (select organization_id, organization_name, root_organization_name, from dw_prod.dim_organization_mappings) org_table on dp.org_id = org_table.organization_id
 -- left join (select date, last_day_of_month from dw_prod.utils_dates where date = date(last_day_of_month)) ud on eps.date_snapshot = date(ud.last_day_of_month)
 where 1=1
-and date_snapshot >= '2020-01-01'
+and date_snapshot >= '2018-01-01'
 and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 -- and ud.date is not null
 -- and carrier = 'spinnaker'
