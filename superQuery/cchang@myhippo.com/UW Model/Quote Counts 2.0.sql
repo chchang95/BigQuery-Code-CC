@@ -34,10 +34,10 @@ SELECT
     --   q.policy_number,
     --   q.policy_id,
     --   cast(q.date_quote_first_seen as DATE) as quote_date
-      date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
-      ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
-    --   ,qs.org_name as organization_name
-    --   ,q.organization_id
+    --   date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
+      date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
+      ,qs.org_name as organization_name
+      ,q.organization_id
       ,q.state
       ,q.product
       ,q.carrier
@@ -78,7 +78,7 @@ SELECT
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
     --   else 'not_applicable' end as UW_Path
 --       ,q.date_bound
-      ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
+    --   ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
       ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
       ,q.channel
       ,SUM(CASE WHEN ddp.is_bound IS TRUE THEN 1 ELSE 0 END) AS bound_count
@@ -89,7 +89,7 @@ SELECT
             LEFT JOIN quotes_supp qs using (quote_id)
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-08') ps on q.policy_id = ps.policy_id
-      where q.date_quote_first_seen >= '2020-05-01'
+      where q.date_quote_first_seen >= '2020-06-01'
     --   and q.state = 'tx'
       and q.product <> 'ho5'
       and q.carrier <> 'canopius'
