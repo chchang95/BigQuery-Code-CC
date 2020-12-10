@@ -59,7 +59,7 @@ SELECT
     --   ,q.deductible
     --   ,q.wind_deductible
     --   ,q.year_roof_built
-    --   ,q.insurance_score
+      ,q.insurance_score
     --   ,q.non_cat_risk_score
     --   ,q.cat_risk_score
       ,q.non_cat_risk_class
@@ -93,4 +93,4 @@ SELECT
     --   and q.state = 'tx'
       and q.product <> 'ho5'
       and q.carrier <> 'canopius'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
