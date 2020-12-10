@@ -53,7 +53,7 @@ SELECT
     --   ,property_data_roof_type as policy_roof_type
     --   ,q.construction_type
     --   ,q.square_footage
-    --   ,2020 - q.year_built + 1 as age_of_home
+      ,2020 - q.year_built + 1 as age_of_home
     --   ,q.year_built as year_home_built
     --   ,q.coverage_a
     --   ,q.deductible
@@ -93,4 +93,4 @@ SELECT
     --   and q.state = 'tx'
       and q.product <> 'ho5'
       and q.carrier <> 'canopius'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
