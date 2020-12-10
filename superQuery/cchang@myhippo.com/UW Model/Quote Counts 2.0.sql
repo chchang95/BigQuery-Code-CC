@@ -34,10 +34,10 @@ SELECT
     --   q.policy_number,
     --   q.policy_id,
     --   cast(q.date_quote_first_seen as DATE) as quote_date
-    --   date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
-      date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
-      ,qs.org_name as organization_name
-      ,q.organization_id
+      date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
+      ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
+    --   ,qs.org_name as organization_name
+    --   ,q.organization_id
       ,q.state
       ,q.product
       ,q.carrier
@@ -53,7 +53,7 @@ SELECT
     --   ,property_data_roof_type as policy_roof_type
     --   ,q.construction_type
     --   ,q.square_footage
-      ,2020 - q.year_built + 1 as age_of_home
+    --   ,2020 - q.year_built + 1 as age_of_home
     --   ,q.year_built as year_home_built
     --   ,q.coverage_a
     --   ,q.deductible
@@ -68,17 +68,15 @@ SELECT
       ,case when q.non_cat_risk_class is null then 'not_applicable'
       when q.state = 'TX' and q.cat_risk_class = 'referral' then 'referral'
       else q.non_cat_risk_class end as UW_Class_with_TX
-      , case when q.non_cat_risk_class is null then 'not_applicable'
-        when q.state = 'TX' and q.cat_risk_class = 'referral' then 'cat_referral'
-        when q.ready_for_risk_score is null and q.non_cat_risk_class = 'referral' then 'referral_no_message' 
-        when q.ready_for_risk_score = 'true' and q.non_cat_risk_class = 'referral' then 'referral_saw_message'
-        else q.non_cat_risk_class end as upd_non_cat_risk_class
+      , case when q.ready_for_risk_score is null and q.non_cat_risk_class = 'referral' then 'referral_no_message' 
+ when q.ready_for_risk_score = 'true' and q.non_cat_risk_class = 'referral' then 'referral_saw_message'
+ else q.non_cat_risk_class end as upd_non_cat_risk_class
     --   ,case when coalesce(q.date_bound, cast(q.date_quote_first_seen as date)) <= '2020-04-29' then 'not_applicable'
     --   when q.non_cat_risk_class = 'exterior_inspection_required' or q.non_cat_risk_class = 'interior_inspection_required' or q.non_cat_risk_class = 'referral' then 'rocky'
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
     --   else 'not_applicable' end as UW_Path
 --       ,q.date_bound
-    --   ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
+      ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
       ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
       ,q.channel
       ,SUM(CASE WHEN ddp.is_bound IS TRUE THEN 1 ELSE 0 END) AS bound_count
@@ -89,8 +87,8 @@ SELECT
             LEFT JOIN quotes_supp qs using (quote_id)
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-08') ps on q.policy_id = ps.policy_id
-      where q.date_quote_first_seen >= '2020-06-01'
+      where q.date_quote_first_seen >= '2020-05-01'
     --   and q.state = 'tx'
       and q.product <> 'ho5'
       and q.carrier <> 'canopius'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
