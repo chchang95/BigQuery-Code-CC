@@ -3,7 +3,13 @@ select
 month_knowledge
 ,month_of_loss as accident_month
 ,month_first_notice_of_loss as report_month
-,claim_number
+,peril
+, case when cc.cat_ind is true then 'Y'
+    when cc.cat_ind is false then 'N'
+    when peril = 'wind' or peril = 'hail' then 'Y'
+    when cat_code is not null then 'Y'
+        else 'N' end as CAT
+-- ,claim_number
 ,sum(loss_calculated_incurred_delta_this_month) as incurred_loss_incremental
 ,sum(expense_calculated_incurred_delta_this_month) as incurred_expense_incremental
 ,sum(total_incurred_delta_this_month) as incurred_total_incremental
@@ -12,15 +18,18 @@ month_knowledge
 ,sum(expense_calculated_incurred_inception_to_date ) as incurred_expense_cumulative
 ,sum(total_incurred_inception_to_date ) as incurred_total_cumulative
 
-,count(distinct claim_number) as reported_claim_count
+,count(distinct mon.claim_number) as reported_claim_count
+,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as reported_claim_count_x_CNP
+
 ,sum(case when date_close is null then 1 else 0 end) as open_claim_count
 ,sum(case when date_close is null then 0 else 1 end) as closed_claim_count
-from dw_prod_extracts.ext_claim_monthly
+from dw_prod_extracts.ext_claim_monthly mon
+left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
 where month_of_loss = '2020-04-01'
-and month_knowledge = '2020-11-01'
+-- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4
+group by 1,2,3,4,5
 order by 1,2,3
 )
 select * from x
