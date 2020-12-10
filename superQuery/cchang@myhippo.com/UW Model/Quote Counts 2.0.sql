@@ -59,7 +59,7 @@ SELECT
     --   ,q.deductible
     --   ,q.wind_deductible
     --   ,q.year_roof_built
-      ,q.insurance_score
+    --   ,q.insurance_score
     --   ,q.non_cat_risk_score
     --   ,q.cat_risk_score
       ,q.non_cat_risk_class
@@ -68,6 +68,11 @@ SELECT
       ,case when q.non_cat_risk_class is null then 'not_applicable'
       when q.state = 'TX' and q.cat_risk_class = 'referral' then 'referral'
       else q.non_cat_risk_class end as UW_Class_with_TX
+      , case when q.non_cat_risk_class is null then 'not_applicable'
+        when q.state = 'TX' and q.cat_risk_class = 'referral' then 'cat_referral'
+        when q.ready_for_risk_score is null and q.non_cat_risk_class = 'referral' then 'referral_no_message' 
+        when q.ready_for_risk_score = 'true' and q.non_cat_risk_class = 'referral' then 'referral_saw_message'
+        else q.non_cat_risk_class end as upd_non_cat_risk_class
     --   ,case when coalesce(q.date_bound, cast(q.date_quote_first_seen as date)) <= '2020-04-29' then 'not_applicable'
     --   when q.non_cat_risk_class = 'exterior_inspection_required' or q.non_cat_risk_class = 'interior_inspection_required' or q.non_cat_risk_class = 'referral' then 'rocky'
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
@@ -83,8 +88,8 @@ SELECT
             LEFT JOIN dw_prod.dim_quotes q USING (quote_id)
             LEFT JOIN quotes_supp qs using (quote_id)
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
-            left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-10-19') ps on q.policy_id = ps.policy_id
-      where q.date_quote_first_seen >= '2020-01-01'
+            left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-08') ps on q.policy_id = ps.policy_id
+      where q.date_quote_first_seen >= '2020-05-01'
     --   and q.state = 'tx'
       and q.product <> 'ho5'
       and q.carrier <> 'canopius'
