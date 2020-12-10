@@ -3,7 +3,7 @@ select
 month_knowledge
 ,month_of_loss as accident_month
 ,month_first_notice_of_loss as report_month
--- ,claim_number
+,claim_number
 ,sum(loss_calculated_incurred_delta_this_month) as incurred_loss_incremental
 ,sum(expense_calculated_incurred_delta_this_month) as incurred_expense_incremental
 ,sum(total_incurred_delta_this_month) as incurred_total_incremental
@@ -20,7 +20,7 @@ where month_of_loss = '2020-04-01'
 and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3
+group by 1,2,3,4
 order by 1,2,3
 )
 select * from x
