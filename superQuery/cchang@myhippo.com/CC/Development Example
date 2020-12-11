@@ -25,7 +25,8 @@ month_knowledge
 ,sum(case when date_close is null then 0 else 1 end) as closed_claim_count
 from dw_prod_extracts.ext_claim_monthly mon
 left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
-where month_of_loss = '2020-04-01'
+where 1=1
+-- and month_of_loss = '2020-04-01'
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
