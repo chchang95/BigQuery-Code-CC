@@ -3,6 +3,7 @@ select
 month_knowledge
 ,month_of_loss as accident_month
 ,month_first_notice_of_loss as report_month
+,maturity
 ,peril
 , case when cc.cat_ind is true then 'Y'
     when cc.cat_ind is false then 'N'
@@ -30,7 +31,7 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5
+group by 1,2,3,4,5,6
 order by 1,2,3
 )
 select * from x
