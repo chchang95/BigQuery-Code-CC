@@ -28,9 +28,9 @@ month_knowledge
 ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as reported_claim_count_x_CNP
 
 ,sum(case when date_close is null then 1 else 0 end) as open_claim_count
--- ,sum(case when lag(date_close,1) over (partition by mon.claim_number order by month_knowledge) is not null and total_incurred_delta_this_month <> 0 then 1 else 0 end) as reopened_claim_count
+,sum(reopened_claim_count) as reopened_claim_count
 ,sum(case when date_close is null then 0 else 1 end) as closed_claim_count
-from dw_prod_extracts.ext_claim_monthly mon
+from claims_supp mon
 left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
 where 1=1
 -- and month_of_loss = '2020-04-01'
@@ -40,5 +40,5 @@ and is_ebsl is false
 group by 1,2,3,4,5,6
 order by 1,2,3
 )
-select * from claims_supp where reopened_claim_count > 1
+select * from x
 -- where month_knowledge = '2020-11-01'
