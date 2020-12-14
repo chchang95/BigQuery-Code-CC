@@ -40,5 +40,5 @@ and is_ebsl is false
 group by 1,2,3,4,5,6
 order by 1,2,3
 )
-select * from claims_supp where reopened_claim_count = 1
+select * from claims_supp where reopened_claim_count > 1
 -- where month_knowledge = '2020-11-01'
