@@ -6,7 +6,7 @@ select eps.policy_id
 , date_trunc(date_policy_effective, MONTH) as term_policy_effective_month
 , date_trunc(date_first_effective, MONTH) as orig_policy_effective_month
 , case when date_policy_effective >= '2020-08-01' then 'Post August' else 'Pre August' end as policy_cohort
-, round(Pure_premium_adjusted,0) as noncat_uw_score
+-- , round(Pure_premium_adjusted,0) as noncat_uw_score
 , property_data_address_zip as zip
 , case when property_data_year_built is null then 'Missing'
         when cast(property_data_year_built as numeric) >= 2000 then 'Post 2000' 
@@ -14,11 +14,11 @@ select eps.policy_id
         else 'Pre 1980' end as year_built
 , channel
 , case when renewal_number = 0 then "New" else "Renewal" end as tenure
-, case when zips.Status = 'Shut Off' then 'shut_zip' else 'open' end as zip_status
+-- , case when zips.Status = 'Shut Off' then 'shut_zip' else 'open' end as zip_status
 from dw_prod_extracts.ext_policy_snapshots eps
-left join dbt_cchin.new_model_policies_scored_20201130 using(policy_id)
+-- left join dbt_cchin.new_model_policies_scored_20201130 using(policy_id)
 left join (select policy_id, case when channel is null then 'Online' else channel end as channel from dw_prod.dim_policies) using(policy_id)
-left join dbt_cchin.ca_moratorium_zips_august_2020 zips on safe_cast(eps.property_data_address_zip as numeric) = cast(zips.Zips_to_Shut_Off as numeric) and eps.product = lower(zips.Product)
+-- left join dbt_cchin.ca_moratorium_zips_august_2020 zips on safe_cast(eps.property_data_address_zip as numeric) = cast(zips.Zips_to_Shut_Off as numeric) and eps.product = lower(zips.Product)
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 where date_snapshot = '2020-11-30'
 )
@@ -65,7 +65,7 @@ SELECT
         ,sum((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_written_prem_x_ebsl_x_fees
         ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_fees
 from dw_prod_extracts.ext_policy_monthly_premiums epud
-    left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') seps on seps.policy_id = epud.policy_id
+    left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') seps on seps.policy_id = epud.policy_id
         where date_knowledge = '2020-11-30'
         and carrier <> 'canopius'
 group by 1,2,3
