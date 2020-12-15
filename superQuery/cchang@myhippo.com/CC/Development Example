@@ -23,27 +23,27 @@ month_knowledge
     when cat_code is not null then 'Y'
         else 'N' end as CAT
 -- ,claim_number
-,sum(loss_calculated_incurred_delta_this_month) as incurred_loss_incremental
-,sum(expense_calculated_incurred_delta_this_month) as incurred_expense_incremental
-,sum(total_incurred_delta_this_month) as incurred_total_incremental
+,sum(coalesce(loss_calculated_incurred_delta_this_month,0)) as incurred_loss_incremental
+,sum(coalesce(expense_calculated_incurred_delta_this_month,0)) as incurred_expense_incremental
+,sum(coalesce(total_incurred_delta_this_month,0)) as incurred_total_incremental
 
-,sum(loss_calculated_total_net_paid_delta_this_month) as paid_loss_incremental
-,sum(expense_calculated_total_net_paid_delta_this_month) as paid_expense_incremental
+,sum(coalesce(loss_calculated_total_net_paid_delta_this_month,0)) as paid_loss_incremental
+,sum(coalesce(expense_calculated_total_net_paid_delta_this_month,0)) as paid_expense_incremental
 
-,sum(loss_calculated_net_reserve_corrected_delta_this_month) as Change_in_Loss_Case_Reserves
-,sum(expense_calculated_net_reserve_delta_this_month) as Change_in_Expense_Case_Reserves
+,sum(coalesce(loss_calculated_net_reserve_corrected_delta_this_month,0)) as Change_in_Loss_Case_Reserves
+,sum(coalesce(expense_calculated_net_reserve_delta_this_month,0)) as Change_in_Expense_Case_Reserves
 
-,sum(loss_calculated_incurred_inception_to_date ) as incurred_loss_cumulative
-,sum(expense_calculated_incurred_inception_to_date ) as incurred_expense_cumulative
-,sum(total_incurred_inception_to_date ) as incurred_total_cumulative
+,sum(coalesce(loss_calculated_incurred_inception_to_date,0)) as incurred_loss_cumulative
+,sum(coalesce(expense_calculated_incurred_inception_to_date,0)) as incurred_expense_cumulative
+,sum(coalesce(total_incurred_inception_to_date,0)) as incurred_total_cumulative
 
 ,count(distinct mon.claim_number) as reported_claim_count
 ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as reported_claim_count_x_CNP
 
 ,sum(case when date_close is null then 1 else 0 end) as open_claim_count
-,sum(reopened_claim_count) as reopened_claim_count
-,sum(open_at_end_of_prior_month_count) as open_at_end_of_prior_month_count
-,sum(open_at_end_of_prior_month_x_CNP_count) as open_at_end_of_prior_month_x_CNP_count
+,sum(coalesce(reopened_claim_count,0)) as reopened_claim_count
+,sum(coalesce(open_at_end_of_prior_month_count,0)) as open_at_end_of_prior_month_count
+,sum(coalesce(open_at_end_of_prior_month_x_CNP_count,0)) as open_at_end_of_prior_month_x_CNP_count
 
 ,sum(case when reopened_claim_count > 0 then total_incurred_delta_this_month else 0 end) as reopened_incurred_delta
 
