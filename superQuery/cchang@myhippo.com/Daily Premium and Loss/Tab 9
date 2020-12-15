@@ -2,7 +2,7 @@ select eps.policy_id
 ,status
 -- ,eps.is_status_active
 -- ,date_cancellation
-,policy_number
+,dp.policy_number
 ,date_policy_effective as effective_date
 ,date_policy_expires as expiration_date
 ,written_base + written_total_optionals + written_policy_fee as written_total
@@ -11,8 +11,7 @@ select eps.policy_id
 ,written_total_optionals
 ,written_optionals_equipment_breakdown
 ,written_optionals_service_line
-from dw_prod_extracts.ext_policy_snapshots eps
+from dw_prod_extracts.ext_policy_snapshots
 where state = 'ca'
 and carrier = 'topa'
 and status = 'active'
-and date_snapshot = '2020-12-13'
