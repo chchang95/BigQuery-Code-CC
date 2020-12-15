@@ -31,7 +31,7 @@ month_knowledge
 ,sum(coalesce(expense_calculated_total_net_paid_delta_this_month,0)) as paid_expense_incremental
 
 ,sum(coalesce(loss_calculated_total_net_paid_inception_to_date,0)) as paid_loss_cumulative
-,sum(coalsece(expense_calculated_total_net_paid_inception_to_date,0)) as paid_expense_cumulative
+,sum(coalesce(expense_calculated_total_net_paid_inception_to_date,0)) as paid_expense_cumulative
 
 ,sum(coalesce(loss_calculated_net_reserve_corrected_delta_this_month,0)) as Change_in_Loss_Case_Reserves
 ,sum(coalesce(expense_calculated_net_reserve_delta_this_month,0)) as Change_in_Expense_Case_Reserves
