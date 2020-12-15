@@ -8,10 +8,11 @@ from dw_prod_extracts.ext_claim_monthly mon
 )
 ,x as (
 select 
-mon.claim_number,
+-- mon.claim_number,
 month_knowledge
 ,month_of_loss as accident_month
 ,month_first_notice_of_loss as report_month
+,state
 ,maturity
 ,peril
 , case when cc.cat_ind is true then 'Y'
@@ -56,4 +57,4 @@ where 1=1
 -- and report_month = '2020-07-01'
 -- and open_at_end_of_prior_month_x_CNP_count > 0
 -- and CAT = 'Y'
-and claim_number = 'HIL-0403915-01-01'
+-- and claim_number = 'HIL-0403915-01-01'
