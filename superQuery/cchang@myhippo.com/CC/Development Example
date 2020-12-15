@@ -8,6 +8,7 @@ from dw_prod_extracts.ext_claim_monthly mon
 )
 ,x as (
 select 
+claim_number,
 month_knowledge
 ,month_of_loss as accident_month
 ,month_first_notice_of_loss as report_month
@@ -45,7 +46,7 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7
 order by 1,2,3
 )
 select * from x
