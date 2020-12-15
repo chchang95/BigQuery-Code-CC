@@ -11,7 +11,7 @@ select eps.policy_id
 ,written_total_optionals
 ,written_optionals_equipment_breakdown
 ,written_optionals_service_line
-from dw_prod_extracts.ext_policy_snapshots`
+from dw_prod_extracts.ext_policy_snapshots eps
 where state = 'ca'
 and carrier = 'topa'
 and status = 'active'
