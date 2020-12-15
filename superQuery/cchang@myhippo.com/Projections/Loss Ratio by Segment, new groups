@@ -20,7 +20,7 @@ left join dbt_cchin.new_model_policies_scored_20201130 using(policy_id)
 left join (select policy_id, case when channel is null then 'Online' else channel end as channel from dw_prod.dim_policies) using(policy_id)
 left join dbt_cchin.ca_moratorium_zips_august_2020 zips on safe_cast(eps.property_data_address_zip as numeric) = cast(zips.Zips_to_Shut_Off as numeric) and eps.product = lower(zips.Product)
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
-where date_snapshot = '2020-10-31'
+where date_snapshot = '2020-11-30'
 )
 ,claims_supp as (
 select mon.*
@@ -30,7 +30,7 @@ select mon.*
     when cat_code is not null then 'Y'
         else 'N' end as CAT
 from dw_prod_extracts.ext_all_claims_combined mon
-left join dbt_cchin.cat_coding_20201031 cc on mon.claim_number = cc.claim_number
+left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
 where carrier <> 'canopius'
 )
 , loss as (
@@ -48,7 +48,7 @@ SELECT
     claims_supp mon
   where is_ebsl is false
   and carrier <> 'canopius'
-  and date_knowledge = '2020-10-31'
+  and date_knowledge = '2020-11-30'
   group by 1,2,3,4
  )
 , premium as (
@@ -66,7 +66,7 @@ SELECT
         ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_fees
 from dw_prod_extracts.ext_policy_monthly_premiums epud
     left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-10-31') seps on seps.policy_id = epud.policy_id
-        where date_knowledge = '2020-10-31'
+        where date_knowledge = '2020-11-30'
         and carrier <> 'canopius'
 group by 1,2,3
 )
