@@ -33,6 +33,8 @@ month_knowledge
 ,sum(case when date_close is null then 1 else 0 end) as open_claim_count
 ,sum(reopened_claim_count) as reopened_claim_count
 ,sum(open_at_end_of_prior_month_count) as open_at_end_of_prior_month_count
+,sum(open_at_end_of_prior_month_x_CNP_count) as open_at_end_of_prior_month_x_CNP_count
+
 ,sum(case when date_close is null then 0 else 1 end) as closed_claim_count
 from claims_supp mon
 left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
