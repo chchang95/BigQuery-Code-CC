@@ -18,7 +18,7 @@ left join (select policy_id, case when organization_id is null then 0 else organ
 where date_knowledge = '2020-12-13'
 and carrier <> 'canopius'
 and product <> 'ho5'
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7
 -- order by 1,2
 
 -- select state
