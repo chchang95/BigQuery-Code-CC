@@ -2,7 +2,7 @@
 select state
 ,carrier
 ,product
-,tenure
+,case when renewal_number > 0 then "renewal" else "new" end as tenure
 ,date_calendar_month_accounting_basis as accounting_month
 ,reinsurance_treaty_property_accounting as accounting_treaty
 -- ,org_id as organization_id
