@@ -19,7 +19,7 @@ left join (select claim_id, date_knowledge, total_recoverable_depreciation from 
 )
 ,x as (
 select 
-mon.claim_number,
+-- mon.claim_number,
 month_knowledge
 ,month_of_loss as accident_month
 ,month_first_notice_of_loss as report_month
@@ -53,9 +53,13 @@ month_knowledge
 ,sum(coalesce(total_incurred_inception_to_date,0)) as incurred_total_cumulative
 ,sum(coalesce(total_recoverable_depreciation,0)) as outstanding_recoverable_depreciation
 ,sum(incremental_recoverable_depreciation) as incremental_recoverable_depreciation
+,sum(case when reopened_claim_count > 0 then ABS(incremental_recoverable_depreciation) else 0 end) as paid_on_recov_depreciation
 
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then 100000 else total_incurred_inception_to_date end) as Cumulative_Incurred_Total_Capped_At_100k_NonCat
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then total_incurred_inception_to_date - 100000 else 0 end) as Cumulative_Incurred_Total_Excess_of_100k_NonCat
+
+,sum(case when date_close is null then total_incurred_inception_to_date else 0 end) as cumulative_incurred_total_on_closed_claims
+,sum(case when date_close is null then total_incurred_delta_this_month else 0 end) as incremental_incurred_total_on_closed_claims
 
 ,count(distinct mon.claim_number) as reported_claim_count
 ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as reported_claim_count_x_CNP
@@ -64,26 +68,29 @@ month_knowledge
 
 ,sum(case when date_close is null then 1 else 0 end) as open_claim_count
 ,sum(coalesce(reopened_claim_count,0)) as reopened_claim_count
+,sum(case when abs(incremental_recoverable_depreciation) = total_incurred_delta_this_month then 0 else reopened_claim_count end) as reopened_claim_count_x_recov_dep
 ,sum(coalesce(open_at_end_of_prior_month_count,0)) as open_at_end_of_prior_month_count
 ,sum(coalesce(open_at_end_of_prior_month_x_CNP_count,0)) as open_at_end_of_prior_month_x_CNP_count
 
 ,sum(case when reopened_claim_count > 0 then total_incurred_delta_this_month else 0 end) as reopened_incurred_delta
 
 ,sum(case when date_close is null then 0 else 1 end) as closed_claim_count
+,sum(case when claim_closed_no_total_payment is true then 0 when date_close is null then 0 else 1 end) as closed_claim_count_x_cnp
+
 from claims_supp mon
 where 1=1
 -- and month_of_loss = '2020-04-01'
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9
 order by 1,2,3
 )
 select * from x
 where 1=1
-and month_knowledge = '2020-11-01'
-and accident_month = '2020-04-01'
-and incremental_recoverable_depreciation < 0
+-- and month_knowledge = '2020-11-01'
+-- and accident_month = '2020-04-01'
+-- and incremental_recoverable_depreciation < 0
 -- and report_month = '2020-07-01'
 -- and open_at_end_of_prior_month_x_CNP_count > 0
 -- and CAT = 'Y'
