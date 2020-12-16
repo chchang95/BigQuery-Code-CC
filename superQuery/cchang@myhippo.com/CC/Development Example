@@ -56,6 +56,7 @@ month_knowledge
 ,sum(case when reopened_claim_count > 0 then ABS(incremental_recoverable_depreciation) else 0 end) as paid_on_recov_depreciation
 
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then 100000 else total_incurred_inception_to_date end) as Cumulative_Incurred_Total_Capped_At_100k_NonCat
+,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then 100000 else total_calculated_net_paid_inception_to_date end) as Cumulative_Paid_Total_Capped_At_100k_NonCat
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then total_incurred_inception_to_date - 100000 else 0 end) as Cumulative_Incurred_Total_Excess_of_100k_NonCat
 
 ,sum(case when date_close is null then total_incurred_inception_to_date else 0 end) as cumulative_incurred_total_on_closed_claims
