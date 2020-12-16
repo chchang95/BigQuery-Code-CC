@@ -59,8 +59,8 @@ month_knowledge
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then 100000 else total_calculated_net_paid_inception_to_date end) as Cumulative_Paid_Total_Capped_At_100k_NonCat
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then total_incurred_inception_to_date - 100000 else 0 end) as Cumulative_Incurred_Total_Excess_of_100k_NonCat
 
-,sum(case when date_close is null then total_incurred_inception_to_date else 0 end) as cumulative_incurred_total_on_closed_claims
-,sum(case when date_close is null then total_incurred_delta_this_month else 0 end) as incremental_incurred_total_on_closed_claims
+,sum(case when date_close is not null then total_incurred_inception_to_date else 0 end) as cumulative_incurred_total_on_closed_claims
+,sum(case when date_close is not null then total_incurred_delta_this_month else 0 end) as incremental_incurred_total_on_closed_claims
 
 ,count(distinct mon.claim_number) as reported_claim_count
 ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as reported_claim_count_x_CNP
@@ -89,10 +89,13 @@ order by 1,2,3
 )
 select * from x
 where 1=1
--- and month_knowledge = '2020-11-01'
--- and accident_month = '2020-04-01'
+and month_knowledge = '2020-11-01'
+and accident_month = '2020-01-01'
 -- and incremental_recoverable_depreciation < 0
--- and report_month = '2020-07-01'
+and report_month = '2020-01-01'
+and state = 'tx'
+and peril = 'hail'
+and product = 'ho3'
 -- and open_at_end_of_prior_month_x_CNP_count > 0
 -- and CAT = 'Y'
 -- and claim_number = 'HIL-0403915-01-01'
