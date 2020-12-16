@@ -1,10 +1,18 @@
 with claims_supp as (
-select *,
+select mon.*,
 case when lag(date_close,1) over (partition by mon.claim_number order by month_knowledge) is not null and (loss_calculated_incurred_delta_this_month <> 0 or expense_calculated_incurred_delta_this_month <> 0) then 1 else 0 end as reopened_claim_count,
 case when lag(date_close,1) over (partition by mon.claim_number order by month_knowledge) is null then 1 else 0 end as open_at_end_of_prior_month_count,
 case when claim_closed_no_total_payment is true then 0
 when lag(date_close,1) over (partition by mon.claim_number order by month_knowledge) is null then 1 else 0 end as open_at_end_of_prior_month_x_CNP_count
+, case when cc.cat_ind is true then 'Y'
+    when cc.cat_ind is false then 'N'
+    when peril = 'wind' or peril = 'hail' then 'Y'
+    when cat_code is not null then 'Y'
+        else 'N' end as CAT
+,coalesce(total_recoverable_depreciation,0) as total_recoverable_depreciation
 from dw_prod_extracts.ext_claim_monthly mon
+left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
+left join (select claim_id, date_knowledge, total_recoverable_depreciation from dw_prod_extracts.ext_claims_inception_to_date) citd on citd.claim_id = mon.claim_id and citd.date_knowledge = mon.month_knowledge
 )
 ,x as (
 select 
@@ -17,11 +25,7 @@ month_knowledge
 ,product
 ,maturity
 ,peril
-, case when cc.cat_ind is true then 'Y'
-    when cc.cat_ind is false then 'N'
-    when peril = 'wind' or peril = 'hail' then 'Y'
-    when cat_code is not null then 'Y'
-        else 'N' end as CAT
+,CAT
 -- ,claim_number
 ,sum(coalesce(loss_calculated_incurred_delta_this_month,0)) as incurred_loss_incremental
 ,sum(coalesce(expense_calculated_incurred_delta_this_month,0)) as incurred_expense_incremental
@@ -44,6 +48,7 @@ month_knowledge
 ,sum(coalesce(loss_calculated_incurred_inception_to_date,0)) as incurred_loss_cumulative
 ,sum(coalesce(expense_calculated_incurred_inception_to_date,0)) as incurred_expense_cumulative
 ,sum(coalesce(total_incurred_inception_to_date,0)) as incurred_total_cumulative
+,sum(coalesce(total_recoverable_depreciation,0)) as outstanding_recoverable_depreciation
 
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then 100000 else total_incurred_inception_to_date end) as Cumulative_Incurred_Total_Capped_At_100k_NonCat
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then total_incurred_inception_to_date - 100000 else 0 end) as Cumulative_Incurred_Total_Excess_of_100k_NonCat
@@ -52,7 +57,6 @@ month_knowledge
 ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as reported_claim_count_x_CNP
 ,sum(case when claim_closed_no_total_payment is true then 0
             when total_incurred_inception_to_date >= 100000 and CAT = 'N' then 1 else 0 end) as reported_excess_of_100k_NonCat_claim_count_x_CNP
-
 
 ,sum(case when date_close is null then 1 else 0 end) as open_claim_count
 ,sum(coalesce(reopened_claim_count,0)) as reopened_claim_count
@@ -63,7 +67,6 @@ month_knowledge
 
 ,sum(case when date_close is null then 0 else 1 end) as closed_claim_count
 from claims_supp mon
-left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
 where 1=1
 -- and month_of_loss = '2020-04-01'
 -- and month_knowledge = '2020-11-01'
