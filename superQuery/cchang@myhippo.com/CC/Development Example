@@ -79,11 +79,11 @@ and is_ebsl is false
 group by 1,2,3,4,5,6,7,8,9,10
 order by 1,2,3
 )
-select incremental_recoverable_depreciation, * from x
+select * from x
 where 1=1
-and month_knowledge = '2020-11-01'
-and accident_month = '2020-04-01'
-and incremental_recoverable_depreciation < 0
+-- and month_knowledge = '2020-11-01'
+-- and accident_month = '2020-04-01'
+-- and incremental_recoverable_depreciation < 0
 -- and report_month = '2020-07-01'
 -- and open_at_end_of_prior_month_x_CNP_count > 0
 -- and CAT = 'Y'
