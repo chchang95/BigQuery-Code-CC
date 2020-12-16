@@ -89,13 +89,13 @@ order by 1,2,3
 )
 select * from x
 where 1=1
-and month_knowledge = '2020-11-01'
-and accident_month = '2020-01-01'
+-- and month_knowledge = '2020-11-01'
+-- and accident_month = '2020-01-01'
 -- and incremental_recoverable_depreciation < 0
-and report_month = '2020-01-01'
-and state = 'tx'
-and peril = 'hail'
-and product = 'ho3'
+-- and report_month = '2020-01-01'
+-- and state = 'tx'
+-- and peril = 'hail'
+-- and product = 'ho3'
 -- and open_at_end_of_prior_month_x_CNP_count > 0
 -- and CAT = 'Y'
 -- and claim_number = 'HIL-0403915-01-01'
