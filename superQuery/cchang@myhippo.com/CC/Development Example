@@ -15,11 +15,11 @@ else coalesce(total_recoverable_depreciation,0) - lag(coalesce(total_recoverable
 end as incremental_recoverable_depreciation
 from dw_prod_extracts.ext_claim_monthly mon
 left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
-left join (select claim_id, date_knowledge, total_recoverable_depreciation from dw_prod_extracts.ext_claims_inception_to_date) citd on citd.claim_id = mon.claim_id and citd.date_knowledge = mon.month_knowledge
+left join (select claim_id, date_knowledge, total_recoverable_depreciation from dw_prod_extracts.ext_claims_inception_to_date) citd on citd.claim_id = mon.claim_id and citd.date_knowledge = last_day(mon.month_knowledge,MONTH)
 )
 ,x as (
 select 
--- mon.claim_number,
+mon.claim_number,
 month_knowledge
 ,month_of_loss as accident_month
 ,month_first_notice_of_loss as report_month
@@ -52,6 +52,7 @@ month_knowledge
 ,sum(coalesce(expense_calculated_incurred_inception_to_date,0)) as incurred_expense_cumulative
 ,sum(coalesce(total_incurred_inception_to_date,0)) as incurred_total_cumulative
 ,sum(coalesce(total_recoverable_depreciation,0)) as outstanding_recoverable_depreciation
+,sum(incremental_recoverable_depreciation) as incremental_recoverable_depreciation
 
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then 100000 else total_incurred_inception_to_date end) as Cumulative_Incurred_Total_Capped_At_100k_NonCat
 ,sum(case when total_incurred_inception_to_date >= 100000 and CAT = 'N' then total_incurred_inception_to_date - 100000 else 0 end) as Cumulative_Incurred_Total_Excess_of_100k_NonCat
@@ -75,13 +76,14 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8,9,10
 order by 1,2,3
 )
-select * from x
+select incremental_recoverable_depreciation, * from x
 where 1=1
--- and month_knowledge = '2020-11-01'
--- and accident_month = '2020-05-01'
+and month_knowledge = '2020-11-01'
+and accident_month = '2020-04-01'
+and incremental_recoverable_depreciation < 0
 -- and report_month = '2020-07-01'
 -- and open_at_end_of_prior_month_x_CNP_count > 0
 -- and CAT = 'Y'
