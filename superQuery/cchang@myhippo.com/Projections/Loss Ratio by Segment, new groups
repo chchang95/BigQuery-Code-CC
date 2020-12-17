@@ -53,7 +53,7 @@ SELECT
     claims_supp mon
   where is_ebsl is false
   and carrier <> 'canopius'
-  and date_knowledge = '2019-11-30'
+--   and date_knowledge = '2019-11-30'
   group by 1,2,3,4
  )
 , premium as (
@@ -71,13 +71,14 @@ SELECT
         ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_fees
 from dw_prod_extracts.ext_policy_monthly_premiums epud
     left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') seps on seps.policy_id = epud.policy_id
-        where date_knowledge = '2019-11-30'
+        where 1=1
+        -- and date_knowledge = '2019-11-30'
         and carrier <> 'canopius'
 group by 1,2,3
 )
 , aggregated as (
     select 
--- coalesce(date_knowledge,date_accounting_start) as calendar_month,
+coalesce(date_knowledge,date_accounting_start) as calendar_month,
 coalesce(accident_month,date_accounting_start) as accident_month,
 coalesce(p.policy_id, l.policy_id) as policy_id,
 coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as reinsurance_treaty
@@ -103,16 +104,17 @@ coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as rein
 
 from premium p
 full join loss l ON
--- p.date_accounting_start = l.date_knowledge AND
+p.date_accounting_start = l.date_knowledge AND
 p.date_accounting_start = l.accident_month AND
 p.policy_id = l.policy_id AND
 p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
-group by 1,2,3
+group by 1,2,3,4
 )
 , final as (
 select 
 -- date_trunc(accident_month, YEAR) as accident_year
-accident_month
+calendar_month
+,accident_month
 -- case when accident_month < '2020-01-01' then '2019'
 --  when accident_month >= '2020-08-01' then 'Post August 2020'
 --  when accident_month >= '2020-01-01' and accident_month < '2020-08-01' then 'Pre August 2020'
@@ -151,7 +153,7 @@ left join policies using(policy_id)
 where 1=1
 and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7
 )
 select *
 -- sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
