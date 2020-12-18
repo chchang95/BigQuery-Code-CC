@@ -5,7 +5,7 @@ select mon.*
     when peril = 'wind' or peril = 'hail' then 'Y'
     when cat_code is not null then 'Y'
         else 'N' end as CAT
-, case when peril_group is null or peril_group = 'to be mapped' then 'Other'
+, case when peril_group is null or peril_group = 'to be mapped' or peril_group = 'Flood' then 'Other'
 else peril_group end as peril_grouped
 , date_trunc(date_effective, MONTH) as policy_effective_month
 , coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
@@ -48,8 +48,21 @@ SELECT
     -- ,sum(expense_paid) as Cumulative_ALAE_Paid
     ,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as Reported_Claim_Count_Excl_Closed_No_Pay
     -- ,sum(expense_incurred_calc) as Cumulative_ALAE_Incurred
-
     
+    ,sum(case when peril_grouped = 'Wind_Hail' then total_incurred_calc else 0 end) as Cumulative_Loss_and_ALAE_Incurred_Wind_Hail
+    ,sum(case when peril_grouped = 'Water' then total_incurred_calc else 0 end) as Cumulative_Loss_and_ALAE_Incurred_Water
+    ,sum(case when peril_grouped = 'Fire_Smoke' then total_incurred_calc else 0 end) as Cumulative_Loss_and_ALAE_Incurred_Fire_Smoke
+    ,sum(case when peril_grouped = 'Theft' then total_incurred_calc else 0 end) as Cumulative_Loss_and_ALAE_Incurred_Theft
+    ,sum(case when peril_grouped = 'Liability' then total_incurred_calc else 0 end) as Cumulative_Loss_and_ALAE_Incurred_Liability
+    ,sum(case when peril_grouped = 'Other' then total_incurred_calc else 0 end) as Cumulative_Loss_and_ALAE_Incurred_Other
+
+    ,sum(case when claim_closed_no_total_payment is true then 0 when peril_grouped = 'Wind_Hail' then 1 else 0 end) as Reported_Claim_Count_Excl_Closed_No_Pay_Wind_Hail
+    ,sum(case when claim_closed_no_total_payment is true then 0 when peril_grouped = 'Water' then 1 else 0 end) as Reported_Claim_Count_Excl_Closed_No_Pay_Water
+    ,sum(case when claim_closed_no_total_payment is true then 0 when peril_grouped = 'Fire_Smoke' then 1 else 0 end) as Reported_Claim_Count_Excl_Closed_No_Pay_Fire_Smoke
+    ,sum(case when claim_closed_no_total_payment is true then 0 when peril_grouped = 'Theft' then 1 else 0 end) as Reported_Claim_Count_Excl_Closed_No_Pay_Theft
+    ,sum(case when claim_closed_no_total_payment is true then 0 when peril_grouped = 'Liability' then 1 else 0 end) as Reported_Claim_Count_Excl_Closed_No_Pay_Liability
+    ,sum(case when claim_closed_no_total_payment is true then 0 when peril_grouped = 'Other' then 1 else 0 end) as Reported_Claim_Count_Excl_Closed_No_Pay_Other
+
   FROM
     claims_supp mon
     -- left join (select claim_number, reinsurance_treaty from dw_prod_extracts.ext_claims_inception_to_date where date_knowledge = '2020-08-31') USING(claim_number)
