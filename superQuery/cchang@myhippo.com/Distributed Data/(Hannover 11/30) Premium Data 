@@ -17,6 +17,8 @@ with premium as (
               else calculated_fields_non_cat_risk_class end as rated_uw_action
         ,sum(earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) as earned_prem_x_ebsl
         ,sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
+        ,sum(earned_base + earned_total_optionals + earned_policy_fee) as earned_prem_inc_ebsl_inc_pol_fees
+        ,sum(written_base + written_total_optionals + written_policy_fee) as written_prem_inc_ebsl_inc_pol_fees
         ,sum(written_exposure) as written_exposure
         ,sum(earned_exposure) as earned_exposure
         ,sum(written_policy_fee) as written_policy_fee
@@ -48,10 +50,12 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
         -- ,rated_uw_action
         ,sum(written_prem_x_ebsl) as written_prem_x_ebsl_x_policy_fees
         ,sum(earned_prem_x_ebsl) as earned_prem_x_ebsl_x_policy_fees
+        ,sum(written_prem_inc_ebsl_inc_pol_fees) as written_prem_inc_ebsl_inc_pol_fees
+        ,sum(earned_prem_inc_ebsl_inc_pol_fees) as earned_prem_inc_ebsl_inc_pol_fees
         ,sum(written_exposure) as written_exposure
         ,sum(earned_exposure) as earned_exposure
-        ,sum(written_exposure * TIV) as written_TIV
-        ,sum(earned_exposure * TIV) as earned_TIV
+        -- ,sum(written_exposure * TIV) as written_TIV
+        -- ,sum(earned_exposure * TIV) as earned_TIV
         ,sum(written_policy_fee) as written_policy_fee
         ,sum(earned_policy_fee) as earned_policy_fee
         ,sum(on_leveled_written_prem_x_ebsl_x_pol_fees) as on_leveled_written_prem_x_ebsl_x_pol_fees
