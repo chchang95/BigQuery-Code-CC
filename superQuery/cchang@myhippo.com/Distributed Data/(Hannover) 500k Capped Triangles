@@ -11,7 +11,7 @@ else peril_group end as peril_grouped
 , coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
 , coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) as expense_incurred_calc
 from dw_prod_extracts.ext_all_claims_combined mon
-left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
+left join dbt_cchin.cat_coding_20201130 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
 where carrier <> 'canopius'
 )
 , aggregated as (
