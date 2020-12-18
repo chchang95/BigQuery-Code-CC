@@ -83,3 +83,4 @@ group by 1
 )
 select * from aggregated
 where product <> 'ho5'
+and date_accounting_start is not null
