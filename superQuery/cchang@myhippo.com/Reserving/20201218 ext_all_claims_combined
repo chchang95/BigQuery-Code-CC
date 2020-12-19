@@ -24,7 +24,7 @@ date_trunc(date_knowledge, MONTH) as calendar_month
 ,property_data_address_state as state
 ,carrier
 ,product
-,maturity
+-- ,maturity
 ,peril
 ,CAT
 
@@ -67,7 +67,7 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
 order by 1,2,3
 )
 select * from x
