@@ -1,0 +1,84 @@
+with claims_supp as (
+select mon.*
+, case when cc.cat_ind is true then 'Y'
+    when cc.cat_ind is false then 'N'
+    when peril = 'wind' or peril = 'hail' then 'Y'
+    when cat_code is not null then 'Y'
+        else 'N' end as CAT
+,coalesce(recoverable_depreciation,0) as total_recoverable_depreciation
+from dbt_cchin.ext_all_claims_combined_20201218 mon
+left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
+)
+,x as (
+select 
+-- mon.claim_number,
+date_trunc(date_knowledge, MONTH) as calendar_month
+,date_trunc(date_knowledge, QUARTER) as calendar_quarter
+,date_trunc(date_knowledge, YEAR) as calendar_year
+,date_of_loss as accident_month
+,date_trunc(date_of_loss, QUARTER) as accident_quarter
+,date_trunc(date_of_loss, YEAR) as accident_year
+,date_first_notice_of_loss as report_month
+,date_trunc(date_first_notice_of_loss, QUARTER) as report_quarter
+,date_trunc(date_first_notice_of_loss, YEAR) as report_year
+,property_data_address_state as state
+,carrier
+,product
+,maturity
+,peril
+,CAT
+
+,sum(coalesce(loss_paid,0)) as paid_loss_cumulative
+,sum(coalesce(expense_paid,0)) as paid_expense_cumulative
+,sum(coalesce(total_paid,0)) as paid_total_cumulative
+
+,sum(coalesce(loss_net_reserve,0)) as outstanding_loss_case_reserves
+,sum(coalesce(expense_net_reserve,0)) as outstanding_expense_case_reserves
+,sum(coalesce(total_net_reserve,0)) as outstanding_total_case_reserves
+
+,sum(coalesce(recoveries,0)) as total_recoveries
+
+,sum(coalesce(loss_incurred,0)) as incurred_loss_cumulative
+,sum(coalesce(expense_incurred,0)) as incurred_expense_cumulative
+,sum(coalesce(total_incurred,0)) as incurred_total_cumulative
+
+,sum(coalesce(total_recoverable_depreciation,0)) as outstanding_recoverable_depreciation
+
+,sum(case when total_incurred >= 100000 then 100000 else total_incurred end) as incurred_loss_cumulative_capped_at_100k
+,sum(case when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as incurred_loss_cumulative_excess_of_100k
+
+,count(distinct mon.claim_number) as reported_claim_count
+,sum(case when date_closed is null then 1 else 0 end) as open_claim_count
+,sum(case when date_closed is null then 0 else 1 end) as closed_claim_count
+
+,sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as reported_claim_count_x_Closed_No_TOTAL_Pay
+,sum(case when claim_closed_no_loss_payment is true then 0 else 1 end) as reported_claim_count_x_Closed_No_LOSS_Pay
+
+,sum(case when date_closed is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as closed_claim_count_x_Closed_No_TOTAL_Pay
+,sum(case when date_closed is null then 0 when claim_closed_no_loss_payment is true then 0 else 1 end) as closed_claim_count_x_Closed_No_LOSS_Pay
+
+,sum(case when claim_closed_no_total_payment is true then 0 when total_incurred >= 100000 then 1 else 0 end) as reported_claim_count_x_Closed_No_TOTAL_Pay_excess_100k
+,sum(case when claim_closed_no_loss_payment is true then 0 when total_incurred >= 100000 then 1 else 0 end) as reported_claim_count_x_Closed_No_LOSS_Pay_excess_100k
+
+
+from claims_supp mon
+where 1=1
+-- and month_of_loss = '2020-04-01'
+-- and month_knowledge = '2020-11-01'
+and carrier <> 'canopius'
+and is_ebsl is false
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+order by 1,2,3
+)
+select * from x
+where 1=1
+-- and month_knowledge = '2020-11-01'
+-- and accident_month = '2020-01-01'
+-- and incremental_recoverable_depreciation < 0
+-- and report_month = '2020-01-01'
+-- and state = 'tx'
+-- and peril = 'hail'
+-- and product = 'ho3'
+-- and open_at_end_of_prior_month_x_CNP_count > 0
+-- and CAT = 'Y'
+-- and claim_number = 'HIL-0403915-01-01'
