@@ -29,21 +29,22 @@ date_trunc(date_knowledge, MONTH) as calendar_month
 ,CAT
 ,reinsurance_treaty
 
-,sum(coalesce(loss_paid,0)) as paid_loss_cumulative
-,sum(coalesce(expense_paid,0)) as paid_expense_cumulative
-,sum(coalesce(total_paid,0)) as paid_total_cumulative
 
-,sum(coalesce(loss_net_reserve,0)) as outstanding_loss_case_reserves
-,sum(coalesce(expense_net_reserve,0)) as outstanding_expense_case_reserves
-,sum(coalesce(total_net_reserve,0)) as outstanding_total_case_reserves
+,sum(loss_paid) as paid_loss_cumulative
+,sum(expense_paid) as paid_expense_cumulative
+,sum(total_paid) as paid_total_cumulative
 
-,sum(coalesce(recoveries,0)) as total_recoveries
+,sum(loss_net_reserve) as outstanding_loss_case_reserves
+,sum(expense_net_reserve) as outstanding_expense_case_reserves
+,sum(total_net_reserve) as outstanding_total_case_reserves
 
-,sum(coalesce(loss_incurred,0)) as incurred_loss_cumulative
-,sum(coalesce(expense_incurred,0)) as incurred_expense_cumulative
-,sum(coalesce(total_incurred,0)) as incurred_total_cumulative
+,sum(recoveries) as total_recoveries
 
-,sum(coalesce(total_recoverable_depreciation,0)) as outstanding_recoverable_depreciation
+,sum(loss_incurred) as incurred_loss_cumulative
+,sum(expense_incurred) as incurred_expense_cumulative
+,sum(total_incurred) as incurred_total_cumulative
+
+,sum(total_recoverable_depreciation) as outstanding_recoverable_depreciation
 
 ,sum(case when total_incurred >= 100000 then 100000 else total_incurred end) as incurred_loss_cumulative_capped_at_100k
 ,sum(case when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as incurred_loss_cumulative_excess_of_100k
@@ -57,6 +58,9 @@ date_trunc(date_knowledge, MONTH) as calendar_month
 
 ,sum(case when date_closed is null then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as closed_claim_count_x_Closed_No_TOTAL_Pay
 ,sum(case when date_closed is null then 0 when claim_closed_no_loss_payment is true then 0 else 1 end) as closed_claim_count_x_Closed_No_LOSS_Pay
+,sum(case when date_closed is null then 0 when claim_closed_no_total_payment is true then 1 else 0 end) as closed_claim_count_No_TOTAL_Pay
+,sum(case when date_closed is null then 0 when claim_closed_no_loss_payment is true then 1 else 0 end) as closed_claim_count_No_LOSS_Pay
+
 
 ,sum(case when claim_closed_no_total_payment is true then 0 when total_incurred >= 100000 then 1 else 0 end) as reported_claim_count_x_Closed_No_TOTAL_Pay_excess_100k
 ,sum(case when claim_closed_no_loss_payment is true then 0 when total_incurred >= 100000 then 1 else 0 end) as reported_claim_count_x_Closed_No_LOSS_Pay_excess_100k
