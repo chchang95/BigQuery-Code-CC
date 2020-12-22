@@ -44,9 +44,10 @@ group by 1,2,3,4,5,6,7,8,9,10
         state
         ,carrier
         ,product
+        ,date_accounting_start as calendar_month_start
+        ,date_accounting_end as calendar_month_end
+        ,date_trunc(date_accounting_start, QUARTER) as calendar_quarter
         ,calendar_year
-        ,date_accounting_start
-        ,date_accounting_end
         ,reinsurance_treaty_property_accounting
         -- ,organization_id
         -- ,channel
