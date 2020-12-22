@@ -13,9 +13,9 @@ where (mon.date_knowledge = last_day(date_trunc(mon.date_knowledge, QUARTER),QUA
 ,x as (
 select 
 -- mon.claim_number,
-last_day(date_trunc(date_knowledge, MONTH),MONTH) as calendar_month
-,last_day(date_trunc(date_knowledge, QUARTER),QUARTER) as calendar_quarter
-,extract(YEAR from date_knowledge) as calendar_year
+last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
+-- ,last_day(date_trunc(date_knowledge, QUARTER),QUARTER) as calendar_quarter
+-- ,extract(YEAR from date_knowledge) as calendar_year
 ,last_day(date_trunc(date_of_loss, MONTH),MONTH) as accident_month
 ,last_day(date_trunc(date_of_loss, QUARTER),QUARTER) as accident_quarter
 ,extract(YEAR from date_of_loss) as accident_year
@@ -73,10 +73,10 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 order by 1,2,3
 )
-select distinct calendar_month from x
+select * from x
 where 1=1
 -- and month_knowledge = '2020-11-01'
 -- and accident_month = '2020-01-01'
