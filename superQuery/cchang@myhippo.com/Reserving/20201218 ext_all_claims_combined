@@ -8,19 +8,20 @@ select mon.*
 ,coalesce(recoverable_depreciation,0) as total_recoverable_depreciation
 from dbt_cchin.ext_all_claims_combined_20201218 mon
 left join dbt_cchin.cat_coding_20201130 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
+where (mon.date_knowledge = last_day(date_trunc(mon.date_knowledge, QUARTER),QUARTER) or mon.date_knowledge in ('2020-11-30','2020-12-18'))
 )
 ,x as (
 select 
 -- mon.claim_number,
-date_trunc(date_knowledge, MONTH) as calendar_month
-,date_trunc(date_knowledge, QUARTER) as calendar_quarter
-,date_trunc(date_knowledge, YEAR) as calendar_year
-,date_trunc(date_of_loss, MONTH) as accident_month
-,date_trunc(date_of_loss, QUARTER) as accident_quarter
-,date_trunc(date_of_loss, YEAR) as accident_year
-,date_first_notice_of_loss as report_month
-,date_trunc(date_first_notice_of_loss, QUARTER) as report_quarter
-,date_trunc(date_first_notice_of_loss, YEAR) as report_year
+last_day(date_trunc(date_knowledge, MONTH),MONTH) as calendar_month
+,last_day(date_trunc(date_knowledge, QUARTER),QUARTER) as calendar_quarter
+,extract(YEAR from date_knowledge) as calendar_year
+,last_day(date_trunc(date_of_loss, MONTH),MONTH) as accident_month
+,last_day(date_trunc(date_of_loss, QUARTER),QUARTER) as accident_quarter
+,extract(YEAR from date_of_loss) as accident_year
+,last_day(date_trunc(date_first_notice_of_loss,MONTH),MONTH) as report_month
+,last_day(date_trunc(date_first_notice_of_loss, QUARTER),QUARTER) as report_quarter
+,extract(YEAR from date_first_notice_of_loss) as report_year
 ,property_data_address_state as state
 ,carrier
 ,product
