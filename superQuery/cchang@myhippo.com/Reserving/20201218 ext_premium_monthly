@@ -1,9 +1,9 @@
 with premium as (
     select 
         epud.policy_id
-        ,lower(state) as state
-        ,lower(carrier) as carrier
-        ,lower(product) as product
+        ,lower(epud.state) as state
+        ,lower(epud.carrier) as carrier
+        ,lower(epud.product) as product
         ,extract(year from date_calendar_month_accounting_basis) as calendar_year
         ,date_calendar_month_accounting_basis as date_accounting_start
         ,date_sub(date_add(date_calendar_month_accounting_basis, INTERVAL 1 MONTH), INTERVAL 1 DAY) as date_accounting_end
@@ -26,13 +26,17 @@ with premium as (
         ,sum(written_policy_fee) as written_policy_fee
         ,sum(earned_policy_fee) as earned_policy_fee
         
-        ,sum((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_written_prem_x_ebsl_x_pol_fees
-        ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_pol_fees
+        ,sum(expense_load_digital) as written_expense_load
+        ,sum(expense_load_digital*earned_exposure) as earned_expense_load
+        
+        ,sum((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line - expense_load_digital) * coalesce(on_level_factor,1)) as on_leveled_written_prem_x_ebsl_x_pol_fees_x_exp_load
+        ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line - expense_load_digital*earned_exposure) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_pol_fees_x_exp_load
         
 from dbt_cchin.ext_today_knowledge_policy_monthly_premiums_20201218 epud
     left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-12-18') seps on seps.policy_id = epud.policy_id
+    left join dw_prod.map_expense_loads as exp ON epud.state=exp.state and epud.product=exp.product and epud.carrier = exp.carrier
         where date_knowledge = '2020-12-18'
-        and carrier <> 'canopius'
+        and epud.carrier <> 'canopius'
 group by 1,2,3,4,5,6,7,8,9,10
 )
 , aggregated as (
@@ -63,8 +67,11 @@ group by 1,2,3,4,5,6,7,8,9,10
         ,sum(written_policy_fee) as written_policy_fee
         ,sum(earned_policy_fee) as earned_policy_fee
         
-        ,sum(on_leveled_written_prem_x_ebsl_x_pol_fees) as on_leveled_written_prem_x_ebsl_x_pol_fees
-        ,sum(on_leveled_earned_prem_x_ebsl_x_pol_fees) as on_leveled_earned_prem_x_ebsl_x_pol_fees
+        ,sum(written_expense_load) as written_expense_load
+        ,sum(earned_expense_load) as earned_expense_load
+        
+        ,sum(on_leveled_written_prem_x_ebsl_x_pol_fees_x_exp_load) as on_leveled_written_prem_x_ebsl_x_pol_fees_x_exp_load
+        ,sum(on_leveled_earned_prem_x_ebsl_x_pol_fees_x_exp_load) as on_leveled_earned_prem_x_ebsl_x_pol_fees_x_exp_load
         
 from premium p
 group by 1,2,3,4,5,6,7,8
@@ -86,5 +93,6 @@ left join (select policy_id, date_snapshot, coalesce(coverage_a,0) + coalesce(co
 group by 1
 )
 select * from aggregated
-where product <> 'ho5'
+where 1=1
+-- and product <> 'ho5'
 and date_accounting_start is not null
