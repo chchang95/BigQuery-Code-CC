@@ -7,7 +7,7 @@ select mon.*
         else 'N' end as CAT
 ,coalesce(recoverable_depreciation,0) as total_recoverable_depreciation
 from dbt_cchin.ext_all_claims_combined_20201218 mon
-left join dbt_cchin.cat_coding_20201130 cc on mon.claim_number = cc.claim_number
+left join dbt_cchin.cat_coding_20201130 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
 )
 ,x as (
 select 
@@ -15,7 +15,7 @@ select
 date_trunc(date_knowledge, MONTH) as calendar_month
 ,date_trunc(date_knowledge, QUARTER) as calendar_quarter
 ,date_trunc(date_knowledge, YEAR) as calendar_year
-,date_of_loss as accident_month
+,date_trunc(date_of_loss, MONTH) as accident_month
 ,date_trunc(date_of_loss, QUARTER) as accident_quarter
 ,date_trunc(date_of_loss, YEAR) as accident_year
 ,date_first_notice_of_loss as report_month
@@ -27,6 +27,7 @@ date_trunc(date_knowledge, MONTH) as calendar_month
 -- ,maturity
 ,peril
 ,CAT
+,reinsurance_treaty
 
 ,sum(coalesce(loss_paid,0)) as paid_loss_cumulative
 ,sum(coalesce(expense_paid,0)) as paid_expense_cumulative
@@ -67,7 +68,7 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 order by 1,2,3
 )
 select * from x
