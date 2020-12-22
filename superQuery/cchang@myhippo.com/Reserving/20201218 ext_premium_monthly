@@ -47,7 +47,7 @@ group by 1,2,3,4,5,6,7,8,9,10
         ,calendar_year
         ,date_accounting_start
         ,date_accounting_end
-        -- ,reinsurance_treaty_property_accounting
+        ,reinsurance_treaty_property_accounting
         -- ,organization_id
         -- ,channel
         ,tenure
@@ -74,7 +74,7 @@ group by 1,2,3,4,5,6,7,8,9,10
         ,sum(on_leveled_earned_prem_x_ebsl_x_pol_fees_x_exp_load) as on_leveled_earned_prem_x_ebsl_x_pol_fees_x_exp_load
         
 from premium p
-group by 1,2,3,4,5,6,7,8
+group by 1,2,3,4,5,6,7,8,9
 )
 , summary as (
     select 
