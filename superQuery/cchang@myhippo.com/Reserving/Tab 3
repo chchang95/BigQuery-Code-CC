@@ -82,4 +82,4 @@ SELECT DISTINCT
 --   and tbl_source <> 'hippo_claims'
   order by 1
   )
-  select * from aggregated where ClaimsHandler = 'Hippo'
+  select * from aggregated where ClaimsHandler = 'Hippo' and recoded_loss_event = 'NA'
