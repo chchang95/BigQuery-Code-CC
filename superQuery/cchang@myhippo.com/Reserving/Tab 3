@@ -7,8 +7,6 @@ SELECT DISTINCT
     when peril = 'wind' or peril = 'hail' then 'Y'
     when cat_code is not null then 'Y'
         else 'N' end as CAT
-    , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
-    , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
       ,dp.org_id
       ,dp.channel
       , date_trunc(date_effective, MONTH) as term_effective_month
@@ -23,7 +21,7 @@ SELECT DISTINCT
   left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') eps on eps.policy_id = mon.policy_id
   left join (select claim_number, loss_description, damage_description from dw_prod.dim_claims) fc on mon.claim_number = fc.claim_number
   left join (select date, last_day_of_quarter from dw_prod.utils_dates where date = date(last_day_of_quarter)) ud on mon.date_knowledge = date(ud.last_day_of_quarter)
-  left join dbt_cchin.cat_coding_w_loss_20201218 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
+  left join dbt_cchin.cat_coding_20200930 cc on mon.claim_number = cc.claim_number
 --   WHERE date_knowledge = '2020-11-30'
   where carrier <> 'canopius'
 --   and last_day_of_quarter is not null
@@ -37,15 +35,13 @@ SELECT DISTINCT
         else 'ERROR' end as ClaimsHandler
         ,lower(Carrier) as carrier
         ,property_data_address_state as Policy_State
-        ,date_trunc(date_of_loss, MONTH) as accident_month_original
+        ,date_trunc(date_of_loss, MONTH) as accident_month
         ,lower(Product) as Product
         ,claims_policy_number
         ,date_effective
         ,date_expires
         ,Claim_Number
-        ,date_of_loss as original_loss_date
-        ,recoded_loss_date as recoded_loss_date
-        ,recoded_loss_Event as recoded_loss_event
+        ,date_of_loss
         ,date_first_notice_of_loss
         ,property_data_address_city
         ,property_data_address_state
