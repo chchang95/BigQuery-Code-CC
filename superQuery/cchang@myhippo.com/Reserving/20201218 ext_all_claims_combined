@@ -32,7 +32,7 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 
 ## Total Loss
 
-,sum(loss_paid-recoveries) as paid_loss_inc_recoveries_cumulative
+,sum(loss_paid) as paid_loss_inc_recoveries_cumulative
 ,sum(expense_paid) as paid_expense_cumulative
 ,sum(total_paid) as paid_total_cumulative
 
