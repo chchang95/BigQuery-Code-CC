@@ -32,7 +32,7 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 
 ## Total Loss
 
-,sum(loss_paid) as paid_loss_inc_recoveries_cumulative
+,sum(loss_paid-recoveries) as paid_loss_inc_recoveries_cumulative
 ,sum(expense_paid) as paid_expense_cumulative
 ,sum(total_paid) as paid_total_cumulative
 
@@ -92,9 +92,7 @@ select
 sum(incurred_loss_cumulative) as incurred_loss_cumulative,
 sum(incurred_expense_cumulative) as incurred_expense_cumulative,
 sum(incurred_total_cumulative) as incurred_total_cumulative,
-sum(total_recoveries) as total_recoveries,
-sum(paid_loss_inc_recoveries_cumulative) as paid_loss_inc_recoveries_cumulative,
-sum(outstanding_loss_case_reserves) as outstanding_loss_case_reserves
+sum(total_recoveries) as total_recoveries
 from x
 where 1=1
 -- and month_knowledge = '2020-11-01'
