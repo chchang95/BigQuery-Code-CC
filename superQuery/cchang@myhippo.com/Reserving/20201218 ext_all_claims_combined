@@ -30,8 +30,9 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 ,CAT
 ,reinsurance_treaty
 
+## Total Loss
 
-,sum(loss_paid) as paid_loss_cumulative
+,sum(loss_paid-recoveries) as paid_loss_inc_recoveries_cumulative
 ,sum(expense_paid) as paid_expense_cumulative
 ,sum(total_paid) as paid_total_cumulative
 
@@ -47,8 +48,19 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 
 ,sum(total_recoverable_depreciation) as outstanding_recoverable_depreciation
 
-,sum(case when total_incurred >= 100000 then 100000 else total_incurred end) as incurred_loss_cumulative_capped_at_100k
-,sum(case when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as incurred_loss_cumulative_excess_of_100k
+
+## Capped Loss
+
+,sum(least(100000,loss_incurred)) as capped_incurred_loss_at_100k
+,sum(loss_incurred - least(100000,loss_incurred)) as excess_incurred_loss_at_100k
+
+,sum((loss_net_reserve / loss_incurred) * least(100000,loss_incurred)) as capped_loss_case_reserves_at_100k
+,sum(loss_net_reserve - ((loss_net_reserve / loss_incurred) * least(100000,loss_incurred))) as excess_loss_case_reserves_at_100k
+
+,sum(((loss_paid-recoveries) / loss_incurred) * least(100000,loss_incurred)) as capped_loss_paid_inc_recoveries_at_100k
+,sum((loss_paid-recoveries) - (((loss_paid-recoveries) / loss_incurred) * least(100000,loss_incurred))) as excess_loss_paid_inc_recoveries_at_100k
+
+
 
 ,count(distinct mon.claim_number) as reported_claim_count
 ,sum(case when date_closed is null then 1 else 0 end) as open_claim_count
@@ -76,7 +88,14 @@ and is_ebsl is false
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 order by 1,2,3
 )
-select * from x
+select 
+sum(incurred_loss_cumulative) as incurred_loss_cumulative,
+sum(incurred_expense_cumulative) as incurred_expense_cumulative,
+sum(incurred_total_cumulative) as incurred_total_cumulative,
+sum(total_recoveries) as total_recoveries,
+sum(paid_loss_inc_recoveries_cumulative) as paid_loss_inc_recoveries_cumulative,
+sum(outstanding_loss_case_reserves) as outstanding_loss_case_reserves
+from x
 where 1=1
 -- and month_knowledge = '2020-11-01'
 -- and accident_month = '2020-01-01'
