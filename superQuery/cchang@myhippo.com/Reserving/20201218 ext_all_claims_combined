@@ -42,7 +42,7 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 
 ,sum(recoveries) as total_recoveries
 
-,sum(loss_incurred) as incurred_loss_cumulative
+,sum(loss_incurred) as incurred_loss_inc_recoveries_cumulative
 ,sum(expense_incurred) as incurred_expense_cumulative
 ,sum(total_incurred) as incurred_total_cumulative
 
@@ -54,13 +54,11 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 ,sum(least(100000,loss_incurred)) as capped_incurred_loss_at_100k
 ,sum(loss_incurred - least(100000,loss_incurred)) as excess_incurred_loss_at_100k
 
-,sum((loss_net_reserve / loss_incurred) * least(100000,loss_incurred)) as capped_loss_case_reserves_at_100k
-,sum(loss_net_reserve - ((loss_net_reserve / loss_incurred) * least(100000,loss_incurred))) as excess_loss_case_reserves_at_100k
+,sum(coalesce((loss_paid-recoveries) / loss_incurred,0) * least(100000,loss_incurred)) as capped_loss_paid_inc_recoveries_at_100k
+,sum((loss_paid-recoveries) - (coalesce((loss_paid-recoveries) / loss_incurred,0) * least(100000,loss_incurred))) as excess_loss_paid_inc_recoveries_at_100k
 
-,sum(((loss_paid-recoveries) / loss_incurred) * least(100000,loss_incurred)) as capped_loss_paid_inc_recoveries_at_100k
-,sum((loss_paid-recoveries) - (((loss_paid-recoveries) / loss_incurred) * least(100000,loss_incurred))) as excess_loss_paid_inc_recoveries_at_100k
-
-
+,sum(coalesce(loss_net_reserve / loss_incurred,0) * least(100000,loss_incurred)) as capped_loss_case_reserves_at_100k
+,sum(loss_net_reserve - (coalesce(loss_net_reserve / loss_incurred,0) * least(100000,loss_incurred))) as excess_loss_case_reserves_at_100k
 
 ,count(distinct mon.claim_number) as reported_claim_count
 ,sum(case when date_closed is null then 1 else 0 end) as open_claim_count
@@ -74,10 +72,8 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 ,sum(case when date_closed is null then 0 when claim_closed_no_total_payment is true then 1 else 0 end) as closed_claim_count_No_TOTAL_Pay
 ,sum(case when date_closed is null then 0 when claim_closed_no_loss_payment is true then 1 else 0 end) as closed_claim_count_No_LOSS_Pay
 
-
 ,sum(case when claim_closed_no_total_payment is true then 0 when total_incurred >= 100000 then 1 else 0 end) as reported_claim_count_x_Closed_No_TOTAL_Pay_excess_100k
 ,sum(case when claim_closed_no_loss_payment is true then 0 when total_incurred >= 100000 then 1 else 0 end) as reported_claim_count_x_Closed_No_LOSS_Pay_excess_100k
-
 
 from claims_supp mon
 where 1=1
@@ -89,10 +85,13 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 order by 1,2,3
 )
 select 
-sum(incurred_loss_cumulative) as incurred_loss_cumulative,
-sum(incurred_expense_cumulative) as incurred_expense_cumulative,
-sum(incurred_total_cumulative) as incurred_total_cumulative,
-sum(total_recoveries) as total_recoveries
+-- sum(incurred_loss_inc_recoveries_cumulative) as incurred_loss_inc_recoveries_cumulative,
+-- sum(incurred_expense_cumulative) as incurred_expense_cumulative,
+-- sum(incurred_total_cumulative) as incurred_total_cumulative,
+-- sum(total_recoveries) as total_recoveries,
+-- sum(paid_loss_inc_recoveries_cumulative) as paid_loss_inc_recoveries_cumulative,
+-- sum(outstanding_loss_case_reserves) as outstanding_loss_case_reserves
+*
 from x
 where 1=1
 -- and month_knowledge = '2020-11-01'
