@@ -90,7 +90,7 @@ sum(incurred_loss_inc_recoveries_cumulative) as incurred_loss_inc_recoveries_cum
 -- sum(incurred_total_cumulative) as incurred_total_cumulative,
 -- sum(total_recoveries) as total_recoveries,
 sum(paid_loss_inc_recoveries_cumulative) as paid_loss_inc_recoveries_cumulative,
-sum(outstanding_loss_case_reserves) as outstanding_loss_case_reserves,
+sum(outstanding_loss_case_reserves) as outstanding_loss_case_reserves
 sum(capped_loss_paid_inc_recoveries_at_100k) as capped_loss_paid_inc_recoveries_at_100k,
 sum(excess_loss_paid_inc_recoveries_at_100k) as excess_loss_paid_inc_recoveries_at_100k,
 sum(capped_loss_case_reserves_at_100k) as capped_loss_case_reserves_at_100k,
