@@ -54,11 +54,11 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 ,sum(least(100000,loss_incurred)) as capped_incurred_loss_at_100k
 ,sum(loss_incurred - least(100000,loss_incurred)) as excess_incurred_loss_at_100k
 
-,sum(((loss_paid-recoveries) / coalesce(loss_incurred,0)) * least(100000,loss_incurred)) as capped_loss_paid_inc_recoveries_at_100k
--- ,sum((loss_paid-recoveries) - (nullif((loss_paid-recoveries) / loss_incurred,0) * least(100000,loss_incurred))) as excess_loss_paid_inc_recoveries_at_100k
+,sum(((loss_paid-recoveries) / loss_incurred) * least(100000,loss_incurred)) as capped_loss_paid_inc_recoveries_at_100k
+,sum((loss_paid-recoveries) - (((loss_paid-recoveries) / loss_incurred) * least(100000,loss_incurred))) as excess_loss_paid_inc_recoveries_at_100k
 
--- ,sum(nullif(loss_net_reserve / loss_incurred,0) * least(100000,loss_incurred)) as capped_loss_case_reserves_at_100k
--- ,sum(loss_net_reserve - (nullif(loss_net_reserve / loss_incurred,0) * least(100000,loss_incurred))) as excess_loss_case_reserves_at_100k
+,sum((loss_net_reserve / loss_incurred) * least(100000,loss_incurred)) as capped_loss_case_reserves_at_100k
+,sum(loss_net_reserve - ((loss_net_reserve / loss_incurred) * least(100000,loss_incurred))) as excess_loss_case_reserves_at_100k
 
 ,count(distinct mon.claim_number) as reported_claim_count
 ,sum(case when date_closed is null then 1 else 0 end) as open_claim_count
