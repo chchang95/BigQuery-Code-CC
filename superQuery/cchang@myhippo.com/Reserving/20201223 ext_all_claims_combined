@@ -37,7 +37,7 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 
 ## Total Loss
 
-,sum(loss_paid) as paid_loss_inc_recoveries_cumulative
+,sum(loss_paid-recoveries) as paid_loss_inc_recoveries_cumulative
 ,sum(expense_paid) as paid_expense_cumulative
 ,sum(total_paid) as paid_total_cumulative
 
@@ -94,9 +94,9 @@ select
 -- sum(incurred_expense_cumulative) as incurred_expense_cumulative,
 -- sum(incurred_total_cumulative) as incurred_total_cumulative,
 -- sum(total_recoveries) as total_recoveries,
--- sum(paid_loss_inc_recoveries_cumulative) as paid_loss_inc_recoveries_cumulative,
--- sum(paid_expense_cumulative) as paid_expense_cumulative,
--- sum(paid_total_cumulative) as paid_total_cumulative
+sum(paid_loss_inc_recoveries_cumulative) as paid_loss_inc_recoveries_cumulative,
+sum(paid_expense_cumulative) as paid_expense_cumulative,
+sum(paid_total_cumulative) as paid_total_cumulative
 -- sum(outstanding_loss_case_reserves) as outstanding_loss_case_reserves,
 -- sum(capped_loss_paid_inc_recoveries_at_100k) as capped_loss_paid_inc_recoveries_at_100k,
 -- sum(excess_loss_paid_inc_recoveries_at_100k) as excess_loss_paid_inc_recoveries_at_100k,
@@ -104,7 +104,7 @@ select
 -- sum(excess_loss_case_reserves_at_100k) as excess_loss_case_reserves_at_100k,
 -- sum(capped_incurred_loss_at_100k) as capped_incurred_loss_at_100k,
 -- sum(excess_incurred_loss_at_100k) as excess_incurred_loss_at_100k,
-*
+-- *
 from x
 where 1=1
 -- and month_knowledge = '2020-11-01'
