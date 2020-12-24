@@ -5,9 +5,11 @@ select mon.*
     when peril = 'wind' or peril = 'hail' then 'Y'
     when cat_code is not null then 'Y'
         else 'N' end as CAT
+    , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
+    , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
 ,coalesce(recoverable_depreciation,0) as total_recoverable_depreciation
-from dbt_cchin.ext_all_claims_combined_20201218 mon
-left join dbt_cchin.cat_coding_20201130 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
+from dbt_cchin.ext_all_claims_combined_20201223 mon
+left join dbt_cchin.cat_coding_w_loss_20201218 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
 where (mon.date_knowledge = last_day(date_trunc(mon.date_knowledge, QUARTER),QUARTER) or mon.date_knowledge in ('2020-11-30','2020-12-23'))
 )
 ,x as (
@@ -19,6 +21,9 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 ,last_day(date_trunc(date_of_loss, MONTH),MONTH) as accident_month
 ,last_day(date_trunc(date_of_loss, QUARTER),QUARTER) as accident_quarter
 ,extract(YEAR from date_of_loss) as accident_year
+,last_day(date_trunc(recoded_loss_date, MONTH),MONTH) as accident_month_recoded
+,last_day(date_trunc(recoded_loss_date, QUARTER),QUARTER) as accident_quarter_recoded
+,extract(YEAR from recoded_loss_date) as accident_year_recoded
 ,last_day(date_trunc(date_first_notice_of_loss,MONTH),MONTH) as report_month
 ,last_day(date_trunc(date_first_notice_of_loss, QUARTER),QUARTER) as report_quarter
 ,extract(YEAR from date_first_notice_of_loss) as report_year
@@ -81,7 +86,7 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
 order by 1,2,3
 )
 select 
