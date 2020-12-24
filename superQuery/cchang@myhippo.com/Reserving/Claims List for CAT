@@ -24,7 +24,8 @@ SELECT DISTINCT
   left join (select claim_number, loss_description, damage_description from dw_prod.dim_claims) fc on mon.claim_number = fc.claim_number
   left join (select date, last_day_of_quarter from dw_prod.utils_dates where date = date(last_day_of_quarter)) ud on mon.date_knowledge = date(ud.last_day_of_quarter)
   left join dbt_cchin.cat_coding_w_loss_20201218 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
-  WHERE date_knowledge <= '2020-11-30'
+  WHERE 1=1
+--   and date_knowledge <= '2020-11-30'
   and carrier <> 'canopius'
 --   and last_day_of_quarter is not null
   )
