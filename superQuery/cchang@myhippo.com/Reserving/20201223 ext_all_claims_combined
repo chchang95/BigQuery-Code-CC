@@ -8,9 +8,9 @@ select mon.*
     , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
     , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
 ,coalesce(recoverable_depreciation,0) as total_recoverable_depreciation
-,loss_paid + loss_net_reserve - recoveries as loss_incurred_calc
-,expense_paid + expense_net_reserve as expense_incurred_calc
-,loss_paid + loss_net_reserve + expense_paid + expense_net_reserve - recoveries as total_incurred_calc
+,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) - coalesce(recoveries,0) as loss_incurred_calc
+,coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) as expense_incurred_calc
+,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
 from dbt_cchin.ext_all_claims_combined_20201223 mon
 left join dbt_cchin.cat_coding_w_loss_20201218 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
 where (mon.date_knowledge = last_day(date_trunc(mon.date_knowledge, QUARTER),QUARTER) or mon.date_knowledge in ('2020-11-30','2020-12-23'))
