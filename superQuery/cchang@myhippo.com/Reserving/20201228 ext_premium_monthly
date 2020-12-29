@@ -32,7 +32,7 @@ with premium as (
         ,sum((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line - expense_load_digital) * coalesce(on_level_factor,1)) as on_leveled_written_prem_x_ebsl_x_pol_fees_x_exp_load
         ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line - expense_load_digital*earned_exposure) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_pol_fees_x_exp_load
         
-from dbt_cchin.ext_today_knowledge_policy_monthly_premiums_20201223 epud
+from dbt_cchin.ext_today_knowledge_policy_monthly_premiums_20201228 epud
     left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-12-28') seps on seps.policy_id = epud.policy_id
     left join dw_prod.map_expense_loads as exp ON epud.state=exp.state and epud.product=exp.product and epud.carrier = exp.carrier
         where date_knowledge = '2020-12-28'
