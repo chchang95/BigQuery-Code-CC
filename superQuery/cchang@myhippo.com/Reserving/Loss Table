@@ -9,7 +9,7 @@ select mon.*
     , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
     , string_field_1 as new_peril_group
     , last_day(date_trunc(date_effective,MONTH),MONTH) as term_policy_effective_month
-    , date_trunc(date_first_effective, MONTH) as policy_effective_month
+    , last_day(date_trunc(date_first_effective, MONTH),MONTH) as policy_effective_month
     , case when renewal_number > 0 then 'renewal' else 'new' end as tenure
 ,coalesce(recoverable_depreciation,0) as total_recoverable_depreciation
 ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) - coalesce(recoveries,0) as loss_incurred_calc
