@@ -38,7 +38,7 @@ SELECT DISTINCT
       , total_calculated_net_paid AS Total_Paid
       , total_net_reserves AS Total_Net_Reserve
       , total_incurred AS Total_Incurred
-      , total_deductible_received AS Total_Deductibles
+      , total_deductible_received AS Total_Deductibles_Received
       , total_recovery_subr_salv AS Total_Recovery
       , Total_Recoverable_Depreciation
       , case when peril = 'equipment_breakdown' or peril = 'service_line' then 'Y'
@@ -47,11 +47,15 @@ SELECT DISTINCT
     --   when cat_code is not null then 'Y'
     --   else 'N' end as CAT
       , coverage_a as policy_cov_a
+      , coverage_deductible_amount as policy_coverage_deductible_amount
+      , coverage_wind_deductible_amount as policy_coverage_wind_deductible_amount
+      , coverage_hurricane_deductible_amount as policy_coverage_hurricane_deductible_amount
+      , calculated_fields_age_of_home as age_of_home
     --   ,fc.*
     --   ,dp.org_id as organization_id
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
 --   left join (select claim_id, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_id)
-  left join (select policy_id, coverage_a from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-31') dp on mon.policy_id = dp.policy_id
+  left join (select policy_id, coverage_a, coverage_deductible_amount, coverage_wind_deductible_amount, coverage_hurricane_deductible_amount, calculated_fields_age_of_home from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-31') dp on mon.policy_id = dp.policy_id
   WHERE date_knowledge = '2020-12-31'
   and carrier <> 'canopius'
   and is_ebsl is false
