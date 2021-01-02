@@ -8,18 +8,13 @@ select mon.*
     , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
     , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
     , string_field_1 as new_peril_group
-    , last_day(date_trunc(date_effective,MONTH),MONTH) as term_policy_effective_month
-    , last_day(date_trunc(date_first_effective, MONTH),MONTH) as policy_effective_month
-    , case when renewal_number > 0 then 'renewal' else 'new' end as tenure
 ,coalesce(recoverable_depreciation,0) as total_recoverable_depreciation
 ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) - coalesce(recoveries,0) as loss_incurred_calc
 ,coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) as expense_incurred_calc
 ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
 from dw_prod_extracts.ext_all_claims_combined mon
 left join dbt_cchin.cat_coding_w_loss_20201218 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
-left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-31') using(policy_id)
 left join dbt_cchin.claims_mappings_202012 map on mon.peril = map.string_field_0
-left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 where (mon.date_knowledge = last_day(date_trunc(mon.date_knowledge, QUARTER),QUARTER) or mon.date_knowledge in ('2020-11-30','2020-12-31'))
 )
 ,x as (
@@ -45,8 +40,6 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 ,new_peril_group
 ,CAT
 ,reinsurance_treaty
-,policy_effective_month
-,tenure
 
 ## Total Loss
 
@@ -99,7 +92,7 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
 order by 1,2,3
 )
 select 
