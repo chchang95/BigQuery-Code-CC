@@ -36,7 +36,7 @@ with premium as (
 from dw_prod_extracts.ext_policy_monthly_premiums epud
     left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-12-31') seps on seps.policy_id = epud.policy_id
     left join dw_prod.map_expense_loads as exp ON epud.state=exp.state and epud.product=exp.product and epud.carrier = exp.carrier
-    left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) dpg on epud.policy_id = dpg.policy_id
+    left join (select policy_id, date_first_effective from dw_prod.dim_policies dp left join dw_prod.dim_policy_groups dg on substr(dp.policy_number, 0,length(dp.policy_number)-3) = dg.policy_group_number) dpg on epud.policy_id = dpg.policy_id
 
         where date_knowledge = '2020-12-31'
         and epud.carrier <> 'canopius'
