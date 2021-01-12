@@ -1,0 +1,46 @@
+with
+  channel as (
+  select organization_id  
+  from dw_prod.dim_organization_mappings
+  where organization_type <> 'Online'
+)
+, leads as (
+  select 
+    date(timestamp_created) as lead_date, 
+    attribution_utm_source,
+    l.organization_id,
+    opportunity_id, 
+    lead_id, 
+    non_cat_risk_class, 
+    first_value(non_cat_risk_class) over(partition by opportunity_id order by timestamp_created desc) as last_non_cat_risk_class
+  from dw_prod.dim_leads l
+  left join channel ON l.organization_id = channel.organization_id
+  where non_cat_risk_class is not null
+  and channel.organization_id is null 
+  and date(timestamp_created) --= '2020-10-01'
+  between '2020-09-01' and '2020-11-30'
+)
+, non_dedup as (
+  select 
+    lead_date,
+    COUNT(distinct lead_id) as num_prelim_quotes, 
+    SUM(CASE WHEN non_cat_risk_class = 'referral' THEN 1 ELSE 0 END) AS num_referrals 
+  from leads
+  group by 1
+) 
+, dedup as (
+  select 
+    lead_date,
+    COUNT(distinct opportunity_id) as num_dedup_prelim_quotes, 
+    SUM(CASE WHEN last_non_cat_risk_class = 'referral' THEN 1 ELSE 0 END) AS num_referrals_from_dedup 
+  from leads
+  group by 1
+) 
+select 
+  lead_date, 
+  nd.num_prelim_quotes,
+  nd.num_referrals, 
+  d.num_dedup_prelim_quotes, 
+  d.num_referrals_from_dedup
+from non_dedup nd
+left join dedup d USING (lead_date)
