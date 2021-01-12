@@ -10,13 +10,9 @@ Select
 from
  dw_prod_extracts.ext_quote_conversion_rates q
 left join
- dw_prod.dim_policies dp
-on
-  dp.policy_id = q.policy_id
-left join 
- dw_prod.dim_quotes dq
-on dq.quote_id = q.quote_id
+ dw_prod.dim_policies dp on dp.policy_id = q.policy_id
+left join dw_prod.dim_quotes dq on dq.quote_id = q.quote_id
 where
   q.date_quote_first_seen > '2020-09-30'
-  )
- select upd_non_cat_risk_class,* from x where ready_for_risk_score is not null
+)
+select * from x
