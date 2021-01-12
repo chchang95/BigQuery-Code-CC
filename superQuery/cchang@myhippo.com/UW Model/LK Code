@@ -37,10 +37,10 @@ with
   group by 1
 ) 
 select 
-  lead_date, 
-  nd.num_prelim_quotes,
-  nd.num_referrals, 
-  d.num_dedup_prelim_quotes, 
-  d.num_referrals_from_dedup
+--   lead_date, 
+--   nd.num_prelim_quotes,
+--   nd.num_referrals, 
+  sum(d.num_dedup_prelim_quotes), 
+  sum(d.num_referrals_from_dedup)
 from non_dedup nd
 left join dedup d USING (lead_date)
