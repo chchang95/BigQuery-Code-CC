@@ -66,10 +66,10 @@ SELECT
       ,q.cat_risk_class
     --   ,coalesce(q.non_cat_risk_class, 'not_applicable') as UW_Action
       ,case when q.non_cat_risk_class is null then 'not_applicable'
-      when q.state = 'tx' and q.cat_risk_class = 'referral' then 'cat_referral'
+      when q.state = 'TX' and q.cat_risk_class = 'referral' then 'referral'
       else q.non_cat_risk_class end as UW_Class_with_TX
       , case when q.non_cat_risk_class is null then 'not_applicable'
-        when q.state = 'tx' and q.cat_risk_class = 'referral' then 'cat_referral'
+        when q.state = 'TX' and q.cat_risk_class = 'referral' then 'cat_referral'
         when q.ready_for_risk_score is null and q.non_cat_risk_class = 'referral' then 'referral_no_message' 
         when q.ready_for_risk_score = 'true' and q.non_cat_risk_class = 'referral' then 'referral_saw_message'
         else q.non_cat_risk_class end as upd_non_cat_risk_class
