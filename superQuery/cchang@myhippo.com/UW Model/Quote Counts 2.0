@@ -33,9 +33,9 @@ with quotes_supp as (
 SELECT
     --   q.policy_number,
     --   q.policy_id,
-    --   cast(q.date_quote_first_seen as DATE) as quote_date
-    --   date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
-      date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
+      cast(q.date_quote_first_seen as DATE) as quote_date
+      ,date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
+      ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
       ,qs.org_name as organization_name
       ,q.organization_id
       ,q.state
@@ -53,13 +53,13 @@ SELECT
     --   ,property_data_roof_type as policy_roof_type
     --   ,q.construction_type
     --   ,q.square_footage
-      ,2020 - q.year_built + 1 as age_of_home
+    --   ,2020 - q.year_built + 1 as age_of_home
     --   ,q.year_built as year_home_built
     --   ,q.coverage_a
     --   ,q.deductible
     --   ,q.wind_deductible
     --   ,q.year_roof_built
-      ,q.insurance_score
+    --   ,q.insurance_score
     --   ,q.non_cat_risk_score
     --   ,q.cat_risk_score
       ,q.non_cat_risk_class
