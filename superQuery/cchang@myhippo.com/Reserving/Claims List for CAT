@@ -84,6 +84,5 @@ SELECT DISTINCT
   order by 1
   )
   select * from aggregated
-  where date_knowledge = '2020-01-17'
-  
+
   
