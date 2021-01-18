@@ -1,0 +1,29 @@
+# select claims.claim_number, fpu.* from 
+# `datateam-248616.dw_prod.fct_policy_updates` fpu
+# left join (select * from `datateam-248616.dw_prod_extracts.ext_claims_inception_to_date` where date_knowledge = '2021-01-17') claims using(policy_id)
+# where update_action = 'reinstate'
+# and claims.claim_number is not null
+
+with reinstate as (
+select policy_id, date_update_effective from 
+`datateam-248616.dw_prod.fct_policy_updates` fpu
+where update_action = 'reinstate'
+)
+, cancellation as (
+select policy_id, date_update_effective from 
+`datateam-248616.dw_prod.fct_policy_updates` fpu
+where update_action = 'terminate'
+)
+, claims as (
+    select * from `datateam-248616.dw_prod_extracts.ext_claims_inception_to_date` where date_knowledge = '2021-01-17' and claim_closed_no_loss_payment is false
+)
+select distinct r.date_update_effective as reinstate_eff_date, c.date_update_effective as cancel_eff_date, claims.date_of_loss, claims.total_incurred, dp.*
+from dw_prod.dim_policies dp
+left join reinstate r using(policy_id)
+left join cancellation c using(policy_id)
+left join claims claims using(policy_id)
+where c.policy_id is not null
+and r.policy_id is not null
+and claims.policy_id is not null
+and r.date_update_effective > c.date_update_effective
+and claims.date_of_loss < r.date_update_effective
