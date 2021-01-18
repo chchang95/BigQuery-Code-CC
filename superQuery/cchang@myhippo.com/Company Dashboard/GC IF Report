@@ -60,6 +60,6 @@ and status = 'active'
 -- and carrier = 'spinnaker'
 -- and state = 'ca'
 and state = 'tx'
-and property_data_address_zip = 78332
+and property_data_address_zip = '78332'
 -- and calculated_fields_wind_exclusion <> 'true'
 -- and date_policy_effective <= '2020-05-31'
