@@ -80,8 +80,8 @@ SELECT
     --   when q.non_cat_risk_class = 'exterior_inspection_required' or q.non_cat_risk_class = 'interior_inspection_required' or q.non_cat_risk_class = 'referral' then 'rocky'
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
     --   else 'not_applicable' end as UW_Path
---       ,q.date_bound
-    --   ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
+      ,q.date_bound
+      ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
       ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
       ,q.channel
       ,SUM(CASE WHEN ddp.is_bound IS TRUE THEN 1 ELSE 0 END) AS bound_count
