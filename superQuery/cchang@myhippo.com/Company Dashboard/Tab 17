@@ -1,106 +1,72 @@
-with x as (
-SELECT DISTINCT
-       reinsurance_treaty AS Treaty
-      , policy_number AS Policy_Number
-      , date_effective AS Inception_Date
-      , product as Product
-      , date_expires AS Expiration_Date
-      , claim_number AS Claim_Number
-      , date_of_loss AS Loss_Date 
-      , date_first_notice_of_loss AS Report_Date 
-      , insured_name AS Insured_Name
-      , street AS Loss_Location
-      , city AS Loss_City
-      , state AS Loss_State
-      , zip_code AS Loss_Zip
-      , claim_status AS Claim_Status 
-      , peril AS Cause_Of_Loss
-      , date_close AS Closed_Date
-      --, '2019' AS Treaty_Year
-      , cat_code AS Cat_Code
-      , assigned_adjuster AS Adjuster_Name 
-      , carrier AS Carrier
-      , customer_email AS Customer_Email
-      , loss_calculated_incurred AS Loss_Incurred
-      , loss_calculated_net_reserve_corrected AS Loss_Net_Reserve
-      , loss_calculated_total_net_paid AS Loss_Paid
-      , loss_total_deductible_received AS Loss_Deductible
-      , loss_total_recoverable_depreciation AS Loss_Recoverable_Depreciation
-      , loss_recovery_subr_salv AS Loss_Recovered
-      , expense_calculated_incurred AS Expense_Incurred
-      , expense_calculated_net_reserve_corrected AS Expense_Net_Reserve
-      , expense_calculated_total_net_paid AS Expense_Paid   
-      , 0 AS Expense_Deductible
-      , expense_total_recoverable_depreciation AS Expense_Recoverable_Depreciation
-      , expense_recovery_subr_salv	AS Expense_Recovered
-      , total_calculated_net_paid AS Total_Paid
-      , total_net_reserves AS Total_Net_Reserve
-      , total_incurred AS Total_Incurred
-      , total_deductible_received AS Total_Deductibles
-      , total_recovery_subr_salv AS Total_Recovery
-      , Total_Recoverable_Depreciation
-      , case when peril = 'equipment_breakdown' or peril = 'service_line' then 'Y'
-      else 'N' end as EBSL
-      , case when peril = 'wind' or peril = 'hail' then 'Y'
-      when cat_code is not null then 'Y'
-      else 'N' end as CAT
-      , loss_description
-      , damage_description
-      ,property_purchase_age
-      ,vacancy
-      ,non_owner_occupied
-    --   ,fc.*
-      ,dp.org_id as organization_id
-  FROM dw_prod_extracts.ext_claims_inception_to_date mon
-  left join (select claim_id, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_id)
-  left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id, property_purchase_age from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  left join (select Policy_id, sum(case when message_code = 'A113' then 1 else 0 end) as vacancy, sum(case when message_code = 'A114' then 1 else 0 end) as non_owner_occupied 
-  from dw_prod.dim_transunion_rvp_messages group by 1) rvp
-  on mon.policy_id = rvp.policy_id
-  WHERE date_knowledge = '2020-12-31'
-  and carrier <> 'canopius'
---   and is_ebsl is false
-  )
-  select 'Hippo' as ClaimsHandler
-  ,lower(Carrier) as carrier
-  ,Loss_State as Policy_State
-  ,date_trunc(loss_date, MONTH) as accident_month
-  ,lower(Product) as Product
-  ,policy_number
-  ,Inception_Date
-  ,Expiration_Date
-  ,Claim_Number
-  ,loss_date
-  ,report_date
-  ,loss_city
-  ,loss_state
-  ,loss_zip
-  ,claim_status
-  ,cause_of_loss
-  ,closed_date
-  ,CAT as CAT_indicator
-  ,'' as placeholder
-  ,EBSL
-  ,loss_paid
-  ,Loss_Net_Reserve
-  ,expense_paid
-  ,expense_net_reserve
-  ,Total_Recovery
-  ,organization_id
-  ,CAT_code as internal_CAT_code
-  ,loss_description
-  ,damage_description
-  ,property_purchase_age
-        ,vacancy
-      ,non_owner_occupied
---   ,Total_Recoverable_Depreciation
-  from x
-  where 1=1
---   and policy_number = 'HMO-0345091-00'
-  
---   and ebsl = 'N'
---   and carrier = 'Topa'
-  
---   select * from dw_prod_extracts.ext_claims_inception_to_date mon
---   where claim_number = 'HCA-1029622-00-01'
-  
+with pol as (
+select eps.policy_id
+,status
+-- ,eps.is_status_active
+-- ,date_cancellation
+,dp.policy_number
+,date_policy_effective as effective_date
+,date_policy_expires as expiration_date
+,property_data_address_street as street
+,property_data_address_city as city
+,property_data_address_zip as zip
+,property_data_address_county as county
+,state 
+,product 
+-- ,fpu.quote_premium_total 
+-- ,fpu.quote_premium_base
+-- ,fpu.quote_premium_fees
+-- ,fpu.quote_premium_optionals
+-- ,fpu.quote_optionals_equipment_breakdown
+-- ,fpu.quote_optionals_service_line
+,written_base + written_total_optionals + written_policy_fee as written_total
+,written_base
+,written_policy_fee
+,written_total_optionals
+,written_optionals_equipment_breakdown
+,written_optionals_service_line
+,earned_base + earned_total_optionals + earned_policy_fee as earned_total
+,earned_policy_fee
+,earned_optionals_equipment_breakdown
+,earned_optionals_service_line
+,property_data_roof_type as Roof_Type
+,property_data_roof_shape as Roof_Shape
+,property_data_year_built as Year_Built
+,property_data_residence_type as Residence_Type
+,property_data_square_footage as Square_Footage
+,property_data_foundation_type as Foundation_Type
+,property_data_year_roof_built as Year_Roof_Built
+,property_data_protection_class as Protection_Class
+,property_data_construction_type as Construction_Type
+,property_data_number_of_stories as Number_Of_Stories
+,property_data_hail_resistant_roof as Hail_Resistant_Roof
+,property_data_number_of_family_units as Number_Of_Family_Units
+,prefilled_basement_finished_percent as Basement_Finished_Percent
+,property_data_other_wind_loss_prevention as Other_Wind_Loss_Prevention
+,calculated_fields_age_of_roof as Age_Of_Roof
+,calculated_fields_wind_exclusion as Wind_Exclusion
+,coverage_deductible as Deductible
+,coverage_hurricane_deductible as Hurricane_Deductible
+,coverage_wind_deductible as Wind_Deductible
+,coverage_a as cov_a
+,coverage_b as cov_b
+,coverage_c as cov_c
+,coverage_d as cov_d
+from dw_prod_extracts.ext_policy_snapshots eps
+left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
+left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
+where date_snapshot = '2020-12-31'
+-- and carrier <> 'Canopius'
+and product <> 'ho5'
+and status = 'active'
+-- and carrier = 'spinnaker'
+-- and state = 'ca'
+-- and state = 'tx'
+-- and property_data_address_zip = '78332'
+-- and calculated_fields_wind_exclusion <> 'true'
+-- and date_policy_effective <= '2020-05-31'
+)
+select sum(case when written_optionals_equipment_breakdown is null or written_optionals_equipment_breakdown = 0 then 0 else 1 end) as count_EB
+,sum(case when written_optionals_service_line is null or written_optionals_service_line = 0 then 0 else 1 end) as count_SL
+,sum(written_optionals_equipment_breakdown) as written_optionals_equipment_breakdown
+,sum(written_optionals_service_line) as written_optionals_service_line
+from pol
