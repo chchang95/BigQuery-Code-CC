@@ -67,7 +67,7 @@ and status = 'active'
 -- and date_policy_effective <= '2020-05-31'
 )
 select 
-count(distinct *) as pol_count
+count(distinct policy_id) as pol_count
 ,sum(case when written_optionals_equipment_breakdown is null or written_optionals_equipment_breakdown = 0 then 0 else 1 end) as count_EB
 ,sum(case when written_optionals_service_line is null or written_optionals_service_line = 0 then 0 else 1 end) as count_SL
 ,sum(written_optionals_equipment_breakdown) as written_optionals_equipment_breakdown
