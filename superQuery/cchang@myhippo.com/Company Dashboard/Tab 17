@@ -55,7 +55,7 @@ from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
 where date_snapshot = '2020-12-31'
--- and date_policy_effective >= '2020-07-01'
+and date_policy_effective >= '2020-07-01'
 -- and carrier <> 'Canopius'
 and product <> 'ho5'
 and status = 'active'
@@ -66,9 +66,7 @@ and status = 'active'
 -- and calculated_fields_wind_exclusion <> 'true'
 -- and date_policy_effective <= '2020-05-31'
 )
-select 
-count(distinct policy_id) as pol_count
-,sum(case when written_optionals_equipment_breakdown is null or written_optionals_equipment_breakdown = 0 then 0 else 1 end) as count_EB
+select sum(case when written_optionals_equipment_breakdown is null or written_optionals_equipment_breakdown = 0 then 0 else 1 end) as count_EB
 ,sum(case when written_optionals_service_line is null or written_optionals_service_line = 0 then 0 else 1 end) as count_SL
 ,sum(written_optionals_equipment_breakdown) as written_optionals_equipment_breakdown
 ,sum(written_optionals_service_line) as written_optionals_service_line
