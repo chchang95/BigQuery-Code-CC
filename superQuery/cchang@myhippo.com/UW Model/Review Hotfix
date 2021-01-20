@@ -1,1 +1,3 @@
 select DATETIME(createdat, "America/Los_Angeles") as pst_date, * from `datateam-248616.dbt_actuaries.staging_policies`
+
+-- select * from `datateam-248616.dbt_actuaries.staging_leads`
