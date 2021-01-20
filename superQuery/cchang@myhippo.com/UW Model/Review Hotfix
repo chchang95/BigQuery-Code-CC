@@ -1,1 +1,4 @@
-select * from `datateam-248616.dbt_actuaries.staging_policies`
+select DATETIME(createdat, "America/Los_Angeles") as pst_date, * from `datateam-248616.dbt_actuaries.staging_policies`
+where DATETIME(createdat, "America/Los_Angeles") >= '2021-01-20T13:00:00'
+
+-- select * from `datateam-248616.dbt_actuaries.staging_leads`
