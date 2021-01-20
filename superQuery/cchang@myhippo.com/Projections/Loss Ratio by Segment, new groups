@@ -133,6 +133,7 @@ accident_month
 --  when accident_month >= '2020-01-01' and accident_month < '2020-08-01' then 'Pre August 2020'
 --  else 'blank'
 -- end as accident_cohort
+,org_id
 ,org_name
 ,product
 ,state
