@@ -1,9 +1,1 @@
--- select DATETIME(createdat, "America/Los_Angeles") as pst_date, * from `datateam-248616.dbt_actuaries.staging_policies`
--- where DATETIME(createdat, "America/Los_Angeles") >= '2021-01-20T13:00:00'
-
--- select * from `datateam-248616.dbt_actuaries.staging_leads`
-
-select DATETIME(createdat, "America/Los_Angeles") as pst_date, * from `datateam-248616.dbt_actuaries.staging_leads`
-where DATETIME(createdat, "America/Los_Angeles") >= '2021-01-20T13:00:00'
-and state = 'tx'
-and product = 'ho3'
+select DATETIME(createdat, "America/Los_Angeles") as pst_date, * from `datateam-248616.dbt_actuaries.staging_policies`
