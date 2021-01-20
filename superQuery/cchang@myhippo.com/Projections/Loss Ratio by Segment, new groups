@@ -168,7 +168,7 @@ left join policies using(policy_id)
 where 1=1
 and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
-group by 1,2,3,4
+group by 1,2,3,4,5
 )
 select *
 -- sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
