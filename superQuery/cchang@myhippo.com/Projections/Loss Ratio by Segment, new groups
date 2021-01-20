@@ -23,7 +23,7 @@ left join (select policy_id, case when channel is null then 'Online' else channe
 -- left join dbt_cchin.ca_moratorium_zips_august_2020 zips on safe_cast(eps.property_data_address_zip as numeric) = cast(zips.Zips_to_Shut_Off as numeric) and eps.product = lower(zips.Product)
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 left join dw_prod.dim_organizations do on org_id = do.organization_id
-where date_snapshot = '2020-11-30'
+where date_snapshot = '2020-12-31'
 )
 ,claims_supp as (
 select mon.*
@@ -83,7 +83,7 @@ SELECT
         ,sum((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_written_prem_x_ebsl_x_fees
         ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_fees
 from dw_prod_extracts.ext_policy_monthly_premiums epud
-    left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') seps on seps.policy_id = epud.policy_id
+    left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-12-31') seps on seps.policy_id = epud.policy_id
         where 1=1
         and date_knowledge = '2020-12-31'
         and carrier <> 'canopius'
