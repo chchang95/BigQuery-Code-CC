@@ -23,7 +23,7 @@ left join dbt_cchin.cat_coding_w_loss_20201231 cc on mon.claim_number = cc.claim
 where date_knowledge >= '2019-09-01'
 and date_knowledge = date_trunc(date_knowledge,WEEK)
 and carrier <> 'canopius'
-and mon.date_first_notice_of_loss <= '2020-12-31'
+-- and mon.date_first_notice_of_loss < date_knowledge
 group by 1, 2, 3
 )
 , agg_claims as (
