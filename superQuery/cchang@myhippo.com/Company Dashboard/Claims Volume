@@ -1,5 +1,5 @@
 with claims as (
-select date_trunc(date_knowledge, WEEK) as date_knowledge
+select date_knowledge
 , carrier
 , case when peril = 'wind' or peril = 'hail' then 'Y'
       when cat_code is not null then 'Y'
@@ -19,12 +19,13 @@ select date_trunc(date_knowledge, WEEK) as date_knowledge
 from dw_prod_extracts.ext_claims_inception_to_date mon
 left join dbt_cchin.cat_coding_w_loss_20201231 cc on mon.claim_number = cc.claim_number
 where date_knowledge >= '2019-09-01'
+and date_knowledge = date_trunc(date_knowledge,WEEK)
 and carrier <> 'canopius'
 -- and mon.date_first_notice_of_loss < date_knowledge
 group by 1, 2, 3
 )
 , agg_claims as (
-select date_knowledge, carrier, CAT, total_incurred,
+select date_knowledge, carrier, CAT,
 
 total_incurred - lag(total_incurred) over(partition by carrier, CAT order by date_knowledge) as total_incurred_change,
 total_paid - lag(total_paid) over(partition by carrier, CAT order by date_knowledge) as total_paid_change,
