@@ -47,7 +47,8 @@ order by 1
 select date_snapshot, carrier
 , sum(earned_base + earned_total_optionals -earned_optionals_equipment_breakdown -earned_optionals_service_line) as total_earned_x_ebsl_x_pol_fees
 from dw_prod_extracts.ext_policy_snapshots
-where date_snapshot >= '2020-12-01'
+where date_snapshot >= '2019-09-01'
+and date_snapshot = date_trunc(date_snapshot,WEEK)
 and carrier <> 'canopius'
 group by 1, 2
 )
@@ -58,7 +59,7 @@ from premium
 order by 1
 )
 select ac.*
--- , ap.total_earned_x_ebsl_x_pol_fees_change
+, ap.total_earned_x_ebsl_x_pol_fees_change
 from agg_claims ac
 left join agg_premium ap 
 on ac.date_knowledge = ap.date_snapshot
