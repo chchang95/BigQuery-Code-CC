@@ -24,7 +24,7 @@ and carrier <> 'canopius'
 group by 1, 2, 3
 )
 , agg_claims as (
-select date_knowledge, carrier, CAT
+select date_knowledge, carrier, CAT,
 
 total_incurred - lag(total_incurred) over(partition by carrier, CAT order by date_knowledge) as total_incurred_change,
 total_paid - lag(total_paid) over(partition by carrier, CAT order by date_knowledge) as total_paid_change,
