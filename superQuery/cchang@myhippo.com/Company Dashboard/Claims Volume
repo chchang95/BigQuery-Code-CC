@@ -1,28 +1,49 @@
 with claims as (
-select date_knowledge, "x" as carrier, case when peril = 'wind' or peril = 'hail' then 'Y'
+select date_trunc(date_knowledge, WEEK) as date_knowledge
+, carrier
+, case when peril = 'wind' or peril = 'hail' then 'Y'
       when cat_code is not null then 'Y'
       else 'N' end as CAT
-, sum(total_incurred) as total_incured
-, sum(expense_calculated_net_reserve) as expense_net
-, sum(loss_calculated_net_reserve) as loss_net
+, sum(total_incurred) as total_incurred
+, sum(total_calculated_net_paid) as total_paid
+, sum(total_net_reserves) as total_net_reserves
+
+, sum(loss_calculated_incurred) as loss_incurred
+, sum(loss_calculated_total_net_paid) as loss_paid
+, sum(loss_calculated_net_reserve_corrected) as loss_net_reserves
+
+, sum(expense_calculated_incurred) as expense_incurred
+, sum(expense_total_payment_to_insured) as expense_paid
+, sum(expense_calculated_net_reserve_corrected) as expense_net_reserves
+
 from dw_prod_extracts.ext_claims_inception_to_date mon
 left join dbt_cchin.cat_coding_w_loss_20201231 cc on mon.claim_number = cc.claim_number
-where date_knowledge >= '2020-12-01'
+where date_knowledge >= '2019-09-01'
 and carrier <> 'canopius'
-and mon.date_first_notice_of_loss < date_knowledge
+-- and mon.date_first_notice_of_loss < date_knowledge
 group by 1, 2, 3
 )
 , agg_claims as (
-select date_knowledge, carrier, 
-total_incured - lag(total_incured) over(partition by carrier order by date_knowledge) as incurred_change,
-expense_net - lag(expense_net) over(partition by carrier order by date_knowledge) as expense_net_change,
-loss_net - lag(loss_net) over(partition by carrier order by date_knowledge) as loss_net_change
+select date_knowledge, carrier, CAT
+
+total_incurred - lag(total_incurred) over(partition by carrier, CAT order by date_knowledge) as total_incurred_change,
+total_paid - lag(total_paid) over(partition by carrier, CAT order by date_knowledge) as total_paid_change,
+total_net_reserves - lag(total_net_reserves) over(partition by carrier, CAT order by date_knowledge) as total_net_reserves_change,
+
+loss_incurred - lag(loss_incurred) over(partition by carrier, CAT order by date_knowledge) as loss_incurred_change,
+loss_paid - lag(loss_paid) over(partition by carrier, CAT order by date_knowledge) as loss_paid_change,
+loss_net_reserves - lag(loss_net_reserves) over(partition by carrier, CAT order by date_knowledge) as loss_net_reserves_change,
+
+expense_incurred - lag(expense_incurred) over(partition by carrier, CAT order by date_knowledge) as expense_incurred_change,
+expense_paid - lag(expense_paid) over(partition by carrier, CAT order by date_knowledge) as expense_paid_change,
+expense_net_reserves - lag(expense_net_reserves) over(partition by carrier, CAT order by date_knowledge) as expense_net_reserves_change
+
 from claims
 where CAT = 'N'
 order by 1
 )
 , premium as (
-select date_snapshot, "x" as carrier
+select date_snapshot, carrier
 , sum(earned_base + earned_total_optionals -earned_optionals_equipment_breakdown -earned_optionals_service_line) as total_earned_x_ebsl_x_pol_fees
 from dw_prod_extracts.ext_policy_snapshots
 where date_snapshot >= '2020-12-01'
@@ -35,7 +56,7 @@ total_earned_x_ebsl_x_pol_fees - lag(total_earned_x_ebsl_x_pol_fees) over(partit
 from premium
 order by 1
 )
-select * 
+select ac.*, ap.total_earned_x_ebsl_x_pol_fees_change
 from agg_claims ac
 left join agg_premium ap 
 on ac.date_knowledge = ap.date_snapshot
