@@ -56,7 +56,8 @@ total_earned_x_ebsl_x_pol_fees - lag(total_earned_x_ebsl_x_pol_fees) over(partit
 from premium
 order by 1
 )
-select ac.*, ap.total_earned_x_ebsl_x_pol_fees_change
+select ac.*
+-- , ap.total_earned_x_ebsl_x_pol_fees_change
 from agg_claims ac
 left join agg_premium ap 
 on ac.date_knowledge = ap.date_snapshot
