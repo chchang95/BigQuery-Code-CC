@@ -13,10 +13,11 @@ select eps.policy_id
 ,state 
 ,product 
 ,property_data_protection_class
-,property_data_zillow
+,JSON_EXTRACT_SCALAR(property_data_zillow,'$.zestimate') as zillow_market_value
 ,calculated_fields_market_value_much_below_rce
 ,prefilled_rebuilding_cost
-,prefilled_zillow
+-- ,JSON_EXTRACT_SCALAR(prefilled_zillow
+-- ,zestim
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
