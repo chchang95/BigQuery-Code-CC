@@ -88,7 +88,7 @@ select ac.date_knowledge, carrier, CAT, peril, accident_week, accident_month, ac
 -- , ap.total_earned_x_ebsl_x_pol_fees_change
 from agg_claims ac
 left join claims_supp cs on ac.claim_id = cs.claim_id
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8,9,10,11
 order by 2,1
 
 
