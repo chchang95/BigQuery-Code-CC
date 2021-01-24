@@ -1,6 +1,6 @@
 with claims_supp as (
 select 
-mon.*
+*
 ,last_day(date_of_loss, MONTH) as accident_month
 ,last_day(date_of_loss,QUARTER) as accident_quarter
 ,last_day(date_first_notice_of_loss, MONTH) as report_month
@@ -12,8 +12,7 @@ mon.*
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date mon
 left join dbt_cchin.cat_coding_w_loss_20201231 cc on mon.claim_number = cc.claim_number
-left join dbt_cchin.claims_mappings_202012 map on mon.peril = map.string_field_0
-where date_knowledge = (select max(date_knowledge) from dw_prod_extracts.ext_claims_inception_to_date)
+where date_knowledge = '2020-12-31'
 )
 ,claims as (
 select date_knowledge
@@ -87,6 +86,5 @@ select ac.date_knowledge, carrier, CAT, accident_month, accident_quarter, report
 from agg_claims ac
 left join claims_supp cs on ac.claim_id = cs.claim_id
 group by 1,2,3,4,5,6,7,8
-order by 2,1
 
 
