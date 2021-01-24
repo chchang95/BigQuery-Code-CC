@@ -7,6 +7,7 @@ mon.*
 ,last_day(date_first_notice_of_loss, WEEK) as report_week
 ,last_day(date_first_notice_of_loss, MONTH) as report_month
 ,last_day(date_first_notice_of_loss,QUARTER) as report_quarter
+, string_field_1 as peril_group
 , case when cc.cat_ind is true then 'Y'
     when cc.cat_ind is false then 'N'
     when peril = 'wind' or peril = 'hail' then 'Y'
@@ -74,7 +75,7 @@ total_earned_x_ebsl_x_pol_fees - lag(total_earned_x_ebsl_x_pol_fees) over(partit
 from premium
 order by 1
 )
-select ac.date_knowledge, carrier, CAT, peril, accident_week, accident_month, accident_quarter, report_week, report_month, report_quarter
+select ac.date_knowledge, carrier, CAT, peril_group, accident_week, accident_month, accident_quarter, report_week, report_month, report_quarter
 , case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 7 DAY) then 'New_Claim' else 'Existing_Claim' end as claim_type
 , sum(ac.total_incurred_change) as total_incurred_change
 , sum(ac.total_paid_change) as total_paid_change
