@@ -1,10 +1,10 @@
 with claims_supp as (
 select 
 mon.*
-,last_day(date_of_loss, WEEK) as accident_month
+,last_day(date_of_loss, WEEK) as accident_week
 ,last_day(date_of_loss, MONTH) as accident_month
 ,last_day(date_of_loss, QUARTER) as accident_quarter
-,last_day(date_first_notice_of_loss, WEEK) as report_month
+,last_day(date_first_notice_of_loss, WEEK) as report_week
 ,last_day(date_first_notice_of_loss, MONTH) as report_month
 ,last_day(date_first_notice_of_loss,QUARTER) as report_quarter
 , case when cc.cat_ind is true then 'Y'
