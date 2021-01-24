@@ -1,6 +1,6 @@
 with claims_supp as (
 select 
-*
+mon.*
 ,last_day(date_of_loss, MONTH) as accident_month
 ,last_day(date_of_loss,QUARTER) as accident_quarter
 ,last_day(date_first_notice_of_loss, MONTH) as report_month
