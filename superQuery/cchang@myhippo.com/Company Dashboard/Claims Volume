@@ -86,5 +86,6 @@ select ac.date_knowledge, cs.claim_number, carrier, CAT, accident_month, acciden
 from agg_claims ac
 left join claims_supp cs on ac.claim_id = cs.claim_id
 group by 1,2,3,4,5,6,7,8,9
+order by 1,2,3,4,5
 
 
