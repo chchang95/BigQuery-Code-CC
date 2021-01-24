@@ -8,8 +8,7 @@ mon.*
 ,last_day(date_first_notice_of_loss, MONTH) as report_month
 ,last_day(date_first_notice_of_loss,QUARTER) as report_quarter
 , string_field_1 as peril_group
-, case when string_field_1 = 'Fire_Smoke' or string_field_1 = 'Water' or string_field_1 = 'Liability' then string_field_1 else 'Other' end as noncat_peril_group
-, case when string_field_1 = 'Wind' or string_field_1 = 'Hail' or string_field_1 = 'Water' then string_field_1 else 'Other' end as cat_peril_group
+, case when string_field_1 = 'Fire_Smoke' or string_field_1 = 'Water' or string_field_1 = 'Liability' or string_field_1 = 'Wind' or string_field_1 = 'Hail' or string_field_1 = 'Hurricane' then string_field_1 else 'Other' end as peril_group_grouped
 , case when cc.cat_ind is true then 'Y'
     when cc.cat_ind is false then 'N'
     when peril = 'wind' or peril = 'hail' or peril = 'hurricane' then 'Y'
@@ -76,7 +75,7 @@ total_earned_x_ebsl_x_pol_fees - lag(total_earned_x_ebsl_x_pol_fees) over(partit
 from premium
 order by 1
 )
-select ac.date_knowledge, carrier, CAT, peril_group, noncat_peril_group, cat_peril_group, accident_week, accident_month, accident_quarter, report_week, report_month, report_quarter
+select ac.date_knowledge, carrier, CAT, peril_group, peril_group_grouped, accident_week, accident_month, accident_quarter, report_week, report_month, report_quarter
 , case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 7 DAY) then 'New_Claim' else 'Existing_Claim' end as claim_type
 , cast(sum(ac.total_incurred_change) as numeric) as total_incurred_change
 , sum(ac.total_paid_change) as total_paid_change
@@ -89,5 +88,5 @@ select ac.date_knowledge, carrier, CAT, peril_group, noncat_peril_group, cat_per
 , sum(ac.expense_net_reserves_change) as expense_net_reserves_change
 from agg_claims ac
 left join claims_supp cs on ac.claim_id = cs.claim_id
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+group by 1,2,3,4,5,6,7,8,9,10,11,12
 order by 2,1
