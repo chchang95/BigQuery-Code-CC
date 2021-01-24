@@ -33,7 +33,7 @@ select date_knowledge
 from dw_prod_extracts.ext_claims_inception_to_date mon
 left join dbt_cchin.cat_coding_w_loss_20201231 cc on mon.claim_number = cc.claim_number
 where date_knowledge >= '2019-09-01'
-and date_knowledge = last_day(date_knowledge,MONTH)
+and date_knowledge = last_day(date_knowledge,week)
 and carrier <> 'canopius'
 -- and mon.date_first_notice_of_loss <= '2020-12-31'
 group by 1, 2
@@ -71,7 +71,8 @@ total_earned_x_ebsl_x_pol_fees - lag(total_earned_x_ebsl_x_pol_fees) over(partit
 from premium
 order by 1
 )
-select ac.date_knowledge, carrier, CAT, accident_month, accident_quarter, report_month, report_quarter
+select ac.date_knowledge, claim_id, carrier, CAT, accident_month, accident_quarter, report_month, report_quarter
+, case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 7 DAY) then 'New_Claim' else 'Existing_Claim' end as claim_type
 , sum(ac.total_incurred_change) as total_incurred_change
 , sum(ac.total_paid_change) as total_paid_change
 , sum(ac.total_net_reserves_change) as total_net_reserves_change
@@ -84,6 +85,6 @@ select ac.date_knowledge, carrier, CAT, accident_month, accident_quarter, report
 -- , ap.total_earned_x_ebsl_x_pol_fees_change
 from agg_claims ac
 left join claims_supp cs on ac.claim_id = cs.claim_id
-group by 1,2,3,4,5,6,7
+group by 1,2,3,4,5,6,7,8,9
 
 
