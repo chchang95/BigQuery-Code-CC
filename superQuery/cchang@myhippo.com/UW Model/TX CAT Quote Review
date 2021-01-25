@@ -33,8 +33,8 @@ with quotes_supp as (
 SELECT
     --   q.policy_number,
     --   q.policy_id,
-      cast(q.date_quote_first_seen as DATE) as quote_date
-      ,date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
+    --   cast(q.date_quote_first_seen as DATE) as quote_date
+      date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
       ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
       ,qs.org_name as organization_name
       ,q.organization_id
@@ -48,8 +48,8 @@ SELECT
     --   else 'Pre 1980' end as year_built
     --   ,q.zip_code
     --   ,q.county
-    --   ,q.roof_type as quote_roof_type
-    --   ,q.prefilled_roof_type as prefilled_roof_type
+      ,q.roof_type as quote_roof_type
+      ,q.prefilled_roof_type as prefilled_roof_type
     --   ,property_data_roof_type as policy_roof_type
     --   ,q.construction_type
     --   ,q.square_footage
@@ -80,7 +80,7 @@ SELECT
     --   when q.non_cat_risk_class = 'exterior_inspection_required' or q.non_cat_risk_class = 'interior_inspection_required' or q.non_cat_risk_class = 'referral' then 'rocky'
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
     --   else 'not_applicable' end as UW_Path
-      ,q.date_bound
+    --   ,q.date_bound
       ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
       ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
       ,q.channel
