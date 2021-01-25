@@ -34,9 +34,9 @@ SELECT
     --   q.policy_number,
     --   q.policy_id,
     --   cast(q.date_quote_first_seen as DATE) as quote_date
-      date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
-      ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
-      ,qs.org_name as organization_name
+    --   date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
+    --   ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
+      qs.org_name as organization_name
       ,q.organization_id
       ,q.state
       ,q.product
@@ -51,14 +51,15 @@ SELECT
       ,q.roof_type as quote_roof_type
       ,q.prefilled_roof_type as prefilled_roof_type
     --   ,property_data_roof_type as policy_roof_type
-    --   ,q.construction_type
-    --   ,q.square_footage
-    --   ,2020 - q.year_built + 1 as age_of_home
+      ,q.construction_type
+      ,q.square_footage
+      ,2020 - q.year_built + 1 as age_of_home
     --   ,q.year_built as year_home_built
-    --   ,q.coverage_a
-    --   ,q.deductible
-    --   ,q.wind_deductible
-    --   ,q.year_roof_built
+      ,q.coverage_a
+      ,q.deductible
+      ,q.wind_deductible
+      ,q.year_roof_built
+      ,q.property_data_number_of_stories
     --   ,q.insurance_score
     --   ,q.non_cat_risk_score
     --   ,q.cat_risk_score
@@ -81,8 +82,8 @@ SELECT
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
     --   else 'not_applicable' end as UW_Path
     --   ,q.date_bound
-      ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
-      ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
+    --   ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
+    --   ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
       ,q.channel
       ,SUM(CASE WHEN ddp.is_bound IS TRUE THEN 1 ELSE 0 END) AS bound_count,
       count(distinct quote_id) as quote_count,
@@ -109,4 +110,4 @@ SELECT
       and q.state = 'tx'
       and q.product <> 'ho5'
       and q.carrier <> 'canopius'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
