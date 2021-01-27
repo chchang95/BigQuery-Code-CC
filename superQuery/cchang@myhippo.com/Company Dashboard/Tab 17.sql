@@ -51,11 +51,12 @@ select eps.policy_id
 ,coverage_b as cov_b
 ,coverage_c as cov_c
 ,coverage_d as cov_d
+,renewal_number
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
 where date_snapshot = '2020-12-31'
-and date_policy_effective >= '2020-07-01'
+-- and date_policy_effective >= '2020-07-01'
 -- and carrier <> 'Canopius'
 and product <> 'ho5'
 and status = 'active'
@@ -67,5 +68,6 @@ and state = 'ca'
 -- and date_policy_effective <= '2020-05-31'
 )
 select 
-count(*), avg(written_total - written_policy_fee)
+count(*), avg(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line)
 from pol
+where renewal_number > 0
