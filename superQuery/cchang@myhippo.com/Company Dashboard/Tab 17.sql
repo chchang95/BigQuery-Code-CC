@@ -51,7 +51,6 @@ select eps.policy_id
 ,coverage_b as cov_b
 ,coverage_c as cov_c
 ,coverage_d as cov_d
-,renewal_number
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
@@ -70,4 +69,3 @@ and state = 'ca'
 select 
 count(*), avg(written_total - written_policy_fee)
 from pol
-where renewal_number > 0
