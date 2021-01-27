@@ -68,6 +68,6 @@ and state = 'ca'
 -- and date_policy_effective <= '2020-05-31'
 )
 select 
-count(*), avg(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line)
+count(*), avg(written_total - written_policy_fee)
 from pol
 where renewal_number > 0
