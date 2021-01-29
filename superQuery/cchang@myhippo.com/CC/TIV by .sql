@@ -23,5 +23,5 @@ and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 -- and carrier = 'spinnaker'
 -- and product <> 'ho5'
 and status = 'active'
-group by 1,2,3,4
-order by 1,2,3,4
+group by 1,2,3,4,5
+order by 1,2,3,4,5
