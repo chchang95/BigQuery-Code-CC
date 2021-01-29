@@ -3,7 +3,7 @@ select
 state,
 -- property_data_address_zip,
 date_snapshot,
-date_trunc(date_policy_effective,DAY) as policy_eff_month,
+date_trunc(date_policy_effective,MONTH) as policy_eff_month,
 channel,
 case when renewal_number > 0 then 'renewal' else 'new' end as tenure,
 -- , org_id, organization_name, root_organization_name,
