@@ -52,6 +52,7 @@ select eps.policy_id
 ,coverage_c as cov_c
 ,coverage_d as cov_d
 ,renewal_number
+,reinsurance_treaty_property
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
@@ -60,14 +61,15 @@ where date_snapshot = '2020-12-31'
 -- and carrier <> 'Canopius'
 and product <> 'ho5'
 and status = 'active'
--- and carrier = 'spinnaker'
-and state = 'ca'
+and carrier = 'topa'
+-- and state = 'ca'
 -- and state = 'tx'
 -- and property_data_address_zip = '78332'
 -- and calculated_fields_wind_exclusion <> 'true'
 -- and date_policy_effective <= '2020-05-31'
 )
 select 
-count(*), avg(written_total - written_policy_fee)
+-- count(*), avg(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line)
+*
 from pol
-where renewal_number > 0
+-- where renewal_number > 0
