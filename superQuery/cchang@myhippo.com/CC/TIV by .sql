@@ -1,13 +1,13 @@
 select
 -- , carrier,
 state,
-property_data_address_zip,
+-- property_data_address_zip,
 date_snapshot,
 -- , org_id, organization_name, root_organization_name,
 -- sum(case when renewal_number > 0 then 1 else 0 end) as renewal_count,
 -- sum(case when renewal_number = 0 then 1 else 0 end) as new_business_count,
 -- sum(written_base + written_total_optionals) as total_WP,
--- count(eps.policy_id) as total_PIF_count,
+count(eps.policy_id) as total_PIF_count,
 sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) as total_TIV
 from dw_prod_extracts.ext_policy_snapshots eps
 -- left join (select policy_id, policy_number, channel, attributed_organization_id
@@ -21,5 +21,5 @@ and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 -- and carrier = 'spinnaker'
 -- and product <> 'ho5'
 and status = 'active'
-group by 1,2,3
-order by 1,2,3
+group by 1,2
+order by 1,2
