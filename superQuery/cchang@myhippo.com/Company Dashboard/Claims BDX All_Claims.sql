@@ -8,7 +8,7 @@ SELECT DISTINCT
       else 'N' end as CAT
       ,dp.org_id
       ,dp.channel
-      , date_trunc(date_effective, MONTH) as term_effective_month
+      , date_trunc(date_first_effective, MONTH) as term_effective_month
       , case when renewal_number = 0 then "New" else "Renewal" end as tenure
       , case when property_data_address_state = 'tx' and calculated_fields_cat_risk_class = 'referral' then 'cat referral' 
               when calculated_fields_non_cat_risk_class is null or date_effective <= '2020-05-01' then 'not_applicable'
@@ -19,6 +19,8 @@ SELECT DISTINCT
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id, channel from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2021-01-31') eps on eps.policy_id = mon.policy_id
   left join (select claim_number, loss_description, damage_description from dw_prod.dim_claims) fc on mon.claim_number = fc.claim_number
+  left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) dpg on mon.policy_id = dpg.policy_id
+  
   WHERE date_knowledge = '2021-01-31'
   and carrier <> 'canopius'
   )
