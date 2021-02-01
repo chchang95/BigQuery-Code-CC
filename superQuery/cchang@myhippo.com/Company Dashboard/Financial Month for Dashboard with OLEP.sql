@@ -21,8 +21,8 @@ with premium as (
         ,sum(earned_exposure) as earned_exposure
         ,sum(written_policy_fee) as written_policy_fee
         ,sum(earned_policy_fee) as earned_policy_fee
-        ,sum((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) * coalesce(on_level_factor,1) + written_policy_fee) as on_leveled_written_prem_x_ebsl
-        ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1) + earned_policy_fee) as on_leveled_earned_prem_x_ebsl
+        ,sum((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) * coalesce(on_level_factor,1) + written_policy_fee) as on_leveled_written_prem_x_ebsl_inc_pol_fees
+        ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1) + earned_policy_fee) as on_leveled_earned_prem_x_ebsl_inc_pol_fees
 from dw_prod_extracts.ext_policy_monthly_premiums epud
     left join (select policy_id, policy_number, case when organization_id is null then 0 else organization_id end as org_id, channel from dw_prod.dim_policies) dp on epud.policy_id = dp.policy_id
     left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') eps on eps.policy_id = epud.policy_id
@@ -54,8 +54,8 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
         ,sum(earned_exposure * TIV) as earned_TIV
         ,sum(written_policy_fee) as written_policy_fee
         ,sum(earned_policy_fee) as earned_policy_fee
-        ,sum(on_leveled_written_prem_x_ebsl) as on_leveled_written_prem_x_ebsl
-        ,sum(on_leveled_earned_prem_x_ebsl) as on_leveled_earned_prem_x_ebsl
+        ,sum(on_leveled_written_prem_x_ebsl_inc_pol_fees) as on_leveled_written_prem_x_ebsl_inc_pol_fees
+        ,sum(on_leveled_earned_prem_x_ebsl_inc_pol_fees) as on_leveled_earned_prem_x_ebsl_inc_pol_fees
 from premium p
 left join (select policy_id, date_snapshot, coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0) as TIV
       from dw_prod_extracts.ext_policy_snapshots) eps on p.policy_id = eps.policy_id and p.date_accounting_end = eps.date_snapshot
