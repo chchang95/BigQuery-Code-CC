@@ -25,9 +25,9 @@ with premium as (
         ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1) + earned_policy_fee) as on_leveled_earned_prem_x_ebsl_inc_pol_fees
 from dw_prod_extracts.ext_policy_monthly_premiums epud
     left join (select policy_id, policy_number, case when organization_id is null then 0 else organization_id end as org_id, channel from dw_prod.dim_policies) dp on epud.policy_id = dp.policy_id
-    left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') eps on eps.policy_id = epud.policy_id
+    left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2021-01-31') eps on eps.policy_id = epud.policy_id
     left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-11-30') seps on seps.policy_id = epud.policy_id
-        where date_knowledge = '2020-11-30'
+        where date_knowledge = '2021-01-31'
         and carrier <> 'canopius'
         -- and product <> 'HO5'
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13
