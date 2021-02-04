@@ -1,3 +1,4 @@
+create table dbt_actuaries.ext_all_claims_combined_20210131_with_salesforce as (
 select * from dbt_actuaries.ext_all_claims_combined_20210131
 union all 
 select 
@@ -65,3 +66,4 @@ development_factor,
 is_cat_override,
 cat_event_id
 from dbt_actuaries.salesforce_issue_claims_20210131
+)
