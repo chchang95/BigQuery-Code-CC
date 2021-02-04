@@ -75,4 +75,3 @@ SELECT DISTINCT
   order by 1
   )
   select * from aggregated
-where date_first_notice_of_loss >= '2021-01-28'
