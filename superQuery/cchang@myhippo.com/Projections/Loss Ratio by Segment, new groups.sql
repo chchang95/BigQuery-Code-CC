@@ -138,6 +138,7 @@ accident_month
 ,product
 ,state
 ,channel
+,zip
 -- ,noncat_uw_score
 ,zip_status
 -- ,year_built
@@ -170,7 +171,7 @@ where 1=1
 and state = 'ca'
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8,9,10
 )
 select 
 *
