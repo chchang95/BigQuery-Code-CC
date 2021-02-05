@@ -171,7 +171,7 @@ and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 group by 1,2,3,4,5,6
 )
-select *
--- sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
+select 
+sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
 from final
 where accident_month is not null
