@@ -16,11 +16,11 @@ select eps.policy_id
 , org_id
 ,do.name as org_name
 , case when renewal_number = 0 then "New" else "Renewal" end as tenure
--- , case when zips.Status = 'Shut Off' then 'shut_zip' else 'open' end as zip_status
+, case when zips.Status = 'Shut Off' then 'shut_zip' else 'open' end as zip_status
 from dw_prod_extracts.ext_policy_snapshots eps
 -- left join dbt_cchin.new_model_policies_scored_20201130 using(policy_id)
 left join (select policy_id, case when channel is null then 'Online' else channel end as channel, coalesce(organization_id,0) as org_id from dw_prod.dim_policies) using(policy_id)
--- left join dbt_cchin.ca_moratorium_zips_august_2020 zips on safe_cast(eps.property_data_address_zip as numeric) = cast(zips.Zips_to_Shut_Off as numeric) and eps.product = lower(zips.Product)
+left join dbt_cchin.ca_moratorium_zips_august_2020 zips on safe_cast(eps.property_data_address_zip as numeric) = cast(zips.Zips_to_Shut_Off as numeric) and eps.product = lower(zips.Product)
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 left join dw_prod.dim_organizations do on org_id = do.organization_id
 where date_snapshot = '2021-01-31'
@@ -125,7 +125,7 @@ group by 1,2,3
 )
 , final as (
 select 
--- date_trunc(accident_month, YEAR) as accident_year
+date_trunc(accident_month, YEAR) as accident_year,
 -- calendar_month
 accident_month
 -- case when accident_month < '2020-01-01' then '2019'
@@ -133,18 +133,18 @@ accident_month
 --  when accident_month >= '2020-01-01' and accident_month < '2020-08-01' then 'Pre August 2020'
 --  else 'blank'
 -- end as accident_cohort
-,org_id
-,org_name
+-- ,org_id
+-- ,org_name
 ,product
 ,state
 ,channel
 -- ,noncat_uw_score
--- ,zip_status
+,zip_status
 -- ,year_built
--- ,tenure
+,tenure
 -- ,policy_cohort
--- ,term_policy_effective_month
--- ,orig_policy_effective_month
+,term_policy_effective_month
+,orig_policy_effective_month
 
 ,sum(coalesce(cat_incurred,0)) as cat_incurred
 ,sum(coalesce(noncat_incurred,0)) as noncat_incurred
@@ -167,11 +167,13 @@ accident_month
 from aggregated a
 left join policies using(policy_id) 
 where 1=1
+and state = 'ca'
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7,8,9
 )
 select 
-sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
+*
+-- sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
 from final
 where accident_month is not null
