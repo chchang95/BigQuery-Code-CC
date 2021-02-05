@@ -104,9 +104,10 @@ order by 1,2,3
 )
 select 
 -- new_peril_group,
+cat,
 -- sum(incurred_loss_inc_recoveries_cumulative) as incurred_loss_inc_recoveries_cumulative,
 -- sum(incurred_expense_cumulative) as incurred_expense_cumulative,
--- sum(incurred_total_cumulative) as incurred_total_cumulative
+sum(incurred_total_cumulative) as incurred_total_cumulative
 -- sum(total_recoveries) as total_recoveries,
 -- sum(paid_loss_inc_recoveries_cumulative) as paid_loss_inc_recoveries_cumulative,
 -- sum(paid_expense_cumulative) as paid_expense_cumulative,
@@ -118,11 +119,11 @@ select
 -- sum(excess_loss_case_reserves_at_100k) as excess_loss_case_reserves_at_100k,
 -- sum(capped_incurred_loss_at_100k) as capped_incurred_loss_at_100k,
 -- sum(excess_incurred_loss_at_100k) as excess_incurred_loss_at_100k,
-*
+-- *
 from x
 where 1=1
--- and evaluation_date = '2020-12-31'
--- group by 1
+and evaluation_date = '2021-01-31'
+group by 1
 -- order by 1
 -- and evaluation_date = '2020-12-31'
 -- and month_knowledge = '2020-11-01'
