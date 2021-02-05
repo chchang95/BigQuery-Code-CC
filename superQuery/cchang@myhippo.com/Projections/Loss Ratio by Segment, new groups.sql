@@ -167,7 +167,7 @@ accident_month
 from aggregated a
 left join policies using(policy_id) 
 where 1=1
-and product <> 'ho5'
+-- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 group by 1,2,3,4,5,6
 )
