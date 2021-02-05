@@ -23,7 +23,7 @@ left join (select policy_id, case when channel is null then 'Online' else channe
 -- left join dbt_cchin.ca_moratorium_zips_august_2020 zips on safe_cast(eps.property_data_address_zip as numeric) = cast(zips.Zips_to_Shut_Off as numeric) and eps.product = lower(zips.Product)
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 left join dw_prod.dim_organizations do on org_id = do.organization_id
-where date_snapshot = '2020-12-31'
+where date_snapshot = '2021-01-31'
 )
 ,claims_supp as (
 select mon.*
@@ -42,9 +42,9 @@ select mon.*
 ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) - coalesce(recoveries,0) as loss_incurred_calc
 ,coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) as expense_incurred_calc
 ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
-from dbt_cchin.ext_all_claims_combined_20210117 mon
-left join dbt_cchin.cat_coding_w_loss_20201231 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
-left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-31') using(policy_id)
+from dbt_actuaries.ext_all_claims_combined_20210131_with_salesforce mon
+left join dbt_actuaries.cat_coding_w_loss_20210131 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
+left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2021-01-31') using(policy_id)
 left join dbt_cchin.claims_mappings_202012 map on mon.peril = map.string_field_0
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 )
@@ -66,7 +66,7 @@ SELECT
     claims_supp mon
   where is_ebsl is false
   and carrier <> 'canopius'
-  and date_knowledge = '2020-12-31'
+  and date_knowledge = '2021-01-31'
   group by 1,2,3,4
  )
 , premium as (
@@ -83,9 +83,9 @@ SELECT
         ,sum((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_written_prem_x_ebsl_x_fees
         ,sum((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_fees
 from dw_prod_extracts.ext_policy_monthly_premiums epud
-    left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2020-12-31') seps on seps.policy_id = epud.policy_id
+    left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2021-01-31') seps on seps.policy_id = epud.policy_id
         where 1=1
-        and date_knowledge = '2020-12-31'
+        and date_knowledge = '2021-01-31'
         and carrier <> 'canopius'
 group by 1,2,3
 )
