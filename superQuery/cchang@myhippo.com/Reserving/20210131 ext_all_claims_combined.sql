@@ -98,7 +98,7 @@ where 1=1
 -- and month_of_loss = '2020-04-01'
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
-and is_ebsl is false
+and is_ebsl is true
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
 order by 1,2,3
 )
