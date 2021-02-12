@@ -168,7 +168,7 @@ accident_month
 from aggregated a
 left join policies using(policy_id) 
 where 1=1
-and state = 'ca'
+-- and state = 'ca'
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 and policy_id = 2051353
