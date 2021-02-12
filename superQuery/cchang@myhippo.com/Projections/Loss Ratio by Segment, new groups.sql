@@ -168,10 +168,9 @@ accident_month
 from aggregated a
 left join policies using(policy_id) 
 where 1=1
--- and state = 'ca'
+and state = 'ca'
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
-and policy_id = 2051353
 group by 1,2,3,4,5,6,7,8,9,10,11
 )
 select 
@@ -179,5 +178,4 @@ select
 -- sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
 from final
 where accident_month is not null
--- and calendar_month <> accident_month
-order by 3,2
+and calendar_month <> accident_month
