@@ -86,4 +86,4 @@ SELECT DISTINCT
   from x
   where 1=1
 -- and loss_net_reserve > 0 and claim_status = 'closed'
--- and report_date >= '2021-01-31'
+-- and report_date >= '2021-01-28'
