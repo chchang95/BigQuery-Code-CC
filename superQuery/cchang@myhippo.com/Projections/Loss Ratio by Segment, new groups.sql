@@ -66,7 +66,7 @@ SELECT
     claims_supp mon
   where is_ebsl is false
   and carrier <> 'canopius'
-  and date_knowledge = '2021-01-31'
+--   and date_knowledge = '2021-01-31'
   group by 1,2,3,4
  )
 , premium as (
@@ -91,7 +91,7 @@ group by 1,2,3
 )
 , aggregated as (
     select 
--- coalesce(date_knowledge,date_accounting_start) as calendar_month,
+coalesce(date_knowledge,date_accounting_start) as calendar_month,
 coalesce(accident_month,date_accounting_start) as accident_month,
 coalesce(p.policy_id, l.policy_id) as policy_id,
 coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as reinsurance_treaty
@@ -117,16 +117,16 @@ coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as rein
 
 from premium p
 full join loss l ON
--- p.date_accounting_start = l.date_knowledge AND
+p.date_accounting_start = l.date_knowledge AND
 p.date_accounting_start = l.accident_month AND
 p.policy_id = l.policy_id AND
 p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
-group by 1,2,3
+group by 1,2,3,4
 )
 , final as (
 select 
 date_trunc(accident_month, YEAR) as accident_year,
--- calendar_month
+calendar_month,
 accident_month
 -- case when accident_month < '2020-01-01' then '2019'
 --  when accident_month >= '2020-08-01' then 'Post August 2020'
@@ -171,7 +171,7 @@ where 1=1
 and state = 'ca'
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9,10,11
 )
 select 
 *
