@@ -29,7 +29,6 @@ SELECT DISTINCT
 --   and date_knowledge <= '2021-01-31'
   and carrier <> 'canopius'
   and date_knowledge = '2020-12-31'
-  and mon.claim_number = '000000107480'
 --   and last_day_of_quarter is not null
   )
   , aggregated as (
@@ -87,6 +86,6 @@ SELECT DISTINCT
   order by 1
   )
   select * from aggregated
-  where recoded_loss_event = 'NA'
+--   where recoded_loss_event = 'NA'
 
   
