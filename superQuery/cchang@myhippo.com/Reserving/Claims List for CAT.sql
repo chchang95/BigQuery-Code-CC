@@ -85,6 +85,6 @@ and date_knowledge = '2020-12-31'
   order by 1
   )
   select * from aggregated
-  where CAT = 'NA'
+  where CAT_indicator = 'NA'
 
   
