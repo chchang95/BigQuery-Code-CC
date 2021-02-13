@@ -1,3 +1,4 @@
+with claims_supp as (
 SELECT DISTINCT
     trim(mon.claim_number,'0'),
     mon.*
@@ -23,9 +24,69 @@ SELECT DISTINCT
   left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-31') eps on eps.policy_id = mon.policy_id
   left join (select claim_number, loss_description, damage_description from dw_prod.dim_claims) fc on mon.claim_number = fc.claim_number
   left join (select date, last_day_of_quarter from dw_prod.utils_dates where date = date(last_day_of_quarter)) ud on mon.date_knowledge = date(ud.last_day_of_quarter)
-  left join dbt_actuaries.cat_coding_w_loss_20201231 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
+  left join dbt_actuaries.cat_coding_w_loss_20201231 cc on (case when tbl_source = 'topa_tpa_claims' then ltrim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
   WHERE 1=1
 --   and date_knowledge <= '2021-01-31'
   and carrier <> 'canopius'
   and date_knowledge = '2020-12-31'
   and mon.claim_number = '000000107480'
+--   and last_day_of_quarter is not null
+  )
+  , aggregated as (
+    select 
+    date_knowledge,
+        case when tbl_source = 'hippo_claims' then 'Hippo' 
+        when tbl_source = 'topa_tpa_claims' then 'TPA'
+        when tbl_source = 'spinnaker_tpa_claims' then 'TPA'
+        else 'ERROR' end as ClaimsHandler
+        ,lower(Carrier) as carrier
+        ,property_data_address_state as Policy_State
+        ,date_trunc(date_of_loss, MONTH) as accident_month_original
+        ,lower(Product) as Product
+        ,claims_policy_number
+        ,date_effective
+        ,date_expires
+        ,Claim_Number
+        ,date_of_loss as original_loss_date
+        ,recoded_loss_date as recoded_loss_date
+        ,recoded_loss_Event as recoded_loss_event
+        ,date_first_notice_of_loss
+        ,property_data_address_city
+        ,property_data_address_state
+        ,property_data_address_zip
+        ,claim_status
+        ,peril
+        ,date_closed
+        ,CAT as CAT_indicator
+--         ,'' as placeholder
+        ,is_ebsl
+        ,loss_paid
+        ,Loss_Net_Reserve
+        ,expense_paid
+        ,expense_net_reserve
+        ,recoveries
+        ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred
+--         ,CAT_code as internal_CAT_code
+        ,org_id as organization_id
+--         ,reinsurance_treaty
+        ,channel
+        ,tenure
+--         ,term_effective_month
+--         ,rated_uw_action
+--         ,policy_id
+--         ,loss_description
+--         ,damage_description
+    --   ,Total_Recoverable_Depreciation    
+  from claims_supp
+  where 1=1
+  and is_ebsl is false
+--   and claims_policy_number = 'HMO-0345091-00'
+--   and carrier = 'Topa'
+--   and tbl_source = 'hippo_claims'
+--   and tbl_source <> 'hippo_claims'
+  order by 1
+  )
+  select * from aggregated
+  where recoded_loss_event = 'NA'
+
+  
