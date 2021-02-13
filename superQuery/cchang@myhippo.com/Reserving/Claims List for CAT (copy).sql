@@ -85,6 +85,6 @@ SELECT DISTINCT
   order by 1
   )
   select * from aggregated
-  where cat_indicator = 'NA'
+  where recoded_loss_event = 'NA'
 
   
