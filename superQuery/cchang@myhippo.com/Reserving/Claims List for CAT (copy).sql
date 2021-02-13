@@ -27,4 +27,4 @@ SELECT DISTINCT
 --   and date_knowledge <= '2021-01-31'
   and carrier <> 'canopius'
   and date_knowledge = '2020-12-31'
-  and claim_number = '000000107480'
+  and mon.claim_number = '000000107480'
