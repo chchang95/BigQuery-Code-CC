@@ -18,14 +18,15 @@ SELECT DISTINCT
               else calculated_fields_non_cat_risk_class end as rated_uw_action
     , loss_description
     , damage_description
-  FROM dbt_actuaries.ext_all_claims_combined_20210131_with_salesforce mon
+  FROM dbt_cchin.ext_all_claims_combined_20201231 mon
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id, channel from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2021-01-31') eps on eps.policy_id = mon.policy_id
   left join (select claim_number, loss_description, damage_description from dw_prod.dim_claims) fc on mon.claim_number = fc.claim_number
   left join (select date, last_day_of_quarter from dw_prod.utils_dates where date = date(last_day_of_quarter)) ud on mon.date_knowledge = date(ud.last_day_of_quarter)
-  left join dbt_actuaries.cat_coding_w_loss_20210131 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
+  left join dbt_actuaries.cat_coding_w_loss_20201231 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
   WHERE 1=1
-  and date_knowledge <= '2021-01-31'
+--   and date_knowledge <= '2021-01-31'
+and date_knowledge = '2020-12-31'
   and carrier <> 'canopius'
 --   and last_day_of_quarter is not null
   )
@@ -84,5 +85,6 @@ SELECT DISTINCT
   order by 1
   )
   select * from aggregated
+  where CAT = 'NA'
 
   
