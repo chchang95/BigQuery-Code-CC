@@ -51,7 +51,7 @@ left join (select policy_id, date_first_effective from dw_prod.dim_policies left
 , loss as (
 SELECT
     policy_id,
-    mon.date_knowledge,
+    -- mon.date_knowledge,
     accident_month,
     reinsurance_treaty,
     sum(case when CAT = 'Y' then total_incurred_calc else 0 end) as cat_incurred,
@@ -61,13 +61,13 @@ SELECT
     sum(total_incurred_calc) as total_incurred,
     sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as total_reported_claim_count_x_CNP,
     sum(case when claim_closed_no_total_payment is true then 0 when CAT = 'Y' then 1 else 0 end) as cat_reported_claim_count_x_CNP,
-    sum(case when claim_closed_no_total_payment is true then 0 when CAT = 'N' then 1 else 0 end) as noncat_reported_claim_count_x_CNP,
-  FROM
+    sum(case when claim_closed_no_total_payment is true then 0 when CAT = 'N' then 1 else 0 end) as noncat_reported_claim_count_x_CNP
+FROM
     claims_supp mon
   where is_ebsl is false
   and carrier <> 'canopius'
---   and date_knowledge = '2021-01-31'
-  group by 1,2,3,4
+  and date_knowledge = '2021-01-31'
+  group by 1,2,3
  )
 , premium as (
     select 
@@ -91,7 +91,7 @@ group by 1,2,3
 )
 , aggregated as (
     select 
-coalesce(date_knowledge,date_accounting_start) as calendar_month,
+-- coalesce(date_knowledge,date_accounting_start) as calendar_month,
 coalesce(accident_month,date_accounting_start) as accident_month,
 coalesce(p.policy_id, l.policy_id) as policy_id,
 coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as reinsurance_treaty
@@ -117,7 +117,7 @@ coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as rein
 
 from premium p
 full join loss l ON
-p.date_accounting_start = l.date_knowledge AND
+-- p.date_accounting_start = l.date_knowledge AND
 p.date_accounting_start = l.accident_month AND
 p.policy_id = l.policy_id AND
 p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
@@ -126,7 +126,7 @@ group by 1,2,3,4
 , final as (
 select 
 date_trunc(accident_month, YEAR) as accident_year,
-calendar_month,
+-- calendar_month,
 accident_month
 -- case when accident_month < '2020-01-01' then '2019'
 --  when accident_month >= '2020-08-01' then 'Post August 2020'
@@ -168,14 +168,16 @@ accident_month
 from aggregated a
 left join policies using(policy_id) 
 where 1=1
-and state = 'ca'
+-- and state = 'ca'
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
-group by 1,2,3,4,5,6,7,8,9,10,11
+and policy_id = 2051353
+group by 1,2,3,4,5,6,7,8,9,10
 )
 select 
 *
 -- sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
 from final
 where accident_month is not null
-and calendar_month <> accident_month
+-- and calendar_month <> accident_month
+order by 3,2
