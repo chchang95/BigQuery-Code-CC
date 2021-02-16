@@ -3,9 +3,9 @@ select
 state,
 -- property_data_address_zip,
 date_snapshot,
-date_trunc(date_policy_effective,MONTH) as policy_eff_month,
-channel,
-case when renewal_number > 0 then 'renewal' else 'new' end as tenure,
+-- date_trunc(date_policy_effective,MONTH) as policy_eff_month,
+-- channel,
+-- case when renewal_number > 0 then 'renewal' else 'new' end as tenure,
 -- , org_id, organization_name, root_organization_name,
 -- sum(case when renewal_number > 0 then 1 else 0 end) as renewal_count,
 -- sum(case when renewal_number = 0 then 1 else 0 end) as new_business_count,
@@ -25,5 +25,5 @@ and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 and product <> 'ho5'
 and status = 'active'
 and state in ('ca', 'tx')
-group by 1,2,3,4,5
-order by 1,2,3,4,5
+group by 1,2
+order by 1,2
