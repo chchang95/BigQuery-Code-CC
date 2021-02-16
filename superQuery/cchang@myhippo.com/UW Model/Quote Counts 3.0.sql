@@ -47,18 +47,18 @@ SELECT
     --   else 'Pre 1980' end as year_built
     --   ,q.zip_code
     --   ,q.county
-      ,q.roof_type as quote_roof_type
-      ,q.prefilled_roof_type as prefilled_roof_type
-      ,property_data_roof_type as policy_roof_type
-      ,q.construction_type
+    --   ,q.roof_type as quote_roof_type
+    --   ,q.prefilled_roof_type as prefilled_roof_type
+    --   ,property_data_roof_type as policy_roof_type
+    --   ,q.construction_type
     --   ,q.square_footage
     --   ,2020 - q.year_built + 1 as age_of_home
-      ,q.year_built as year_home_built
+    --   ,q.year_built as year_home_built
       ,q.coverage_a
     --   ,q.deductible
     --   ,q.wind_deductible
     --   ,q.year_roof_built
-      ,q.insurance_score
+    --   ,q.insurance_score
     --   ,q.non_cat_risk_score
     --   ,q.cat_risk_score
       ,q.non_cat_risk_class
@@ -74,7 +74,7 @@ SELECT
         when q.ready_for_risk_score is null and q.non_cat_risk_class = 'referral' then 'referral_no_message' 
         when q.ready_for_risk_score = 'true' and q.non_cat_risk_class = 'referral' then 'referral_saw_message'
         else q.non_cat_risk_class end as upd_non_cat_risk_class
-    -- ,coalesce(zips.status,'Open') as tx_moratorium 
+    ,coalesce(zips.status,'Open') as tx_moratorium 
     --   ,case when coalesce(q.date_bound, cast(q.date_quote_first_seen as date)) <= '2020-04-29' then 'not_applicable'
     --   when q.non_cat_risk_class = 'exterior_inspection_required' or q.non_cat_risk_class = 'interior_inspection_required' or q.non_cat_risk_class = 'referral' then 'rocky'
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
@@ -96,4 +96,4 @@ SELECT
       and q.state = 'md'
       and q.product <> 'ho5'
       and q.carrier <> 'canopius'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
