@@ -121,7 +121,7 @@ full join loss l ON
 p.date_accounting_start = l.accident_month AND
 p.policy_id = l.policy_id AND
 p.reinsurance_treaty_property_accounting = l.reinsurance_treaty
-group by 1,2,3,4
+group by 1,2,3
 )
 , final as (
 select 
