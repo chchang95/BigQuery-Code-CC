@@ -15,10 +15,10 @@ select eps.policy_id
 ,property_data_protection_class
 ,prefilled_fireline_score
 ,written_base + written_total_optionals + written_policy_fee as written_total
-,coverage_a as cov_a
-,coverage_b as cov_b
-,coverage_c as cov_c
-,coverage_d as cov_d
+,coalesce(coverage_a,0) as cov_a
+,coalesce(coverage_b,0) as cov_b
+,coalesce(coverage_c,0) as cov_c
+,coalesce(coverage_d,0) as cov_d
 -- ,JSON_EXTRACT_SCALAR(property_data_zillow,'$.zestimate') as zillow_market_value
 -- ,property_data_zillow
 -- ,calculated_fields_market_value_much_below_rce
@@ -41,4 +41,5 @@ and status = 'active'
 )
 -- select count(*) from pol
 select * from pol
+where cov_a+cov_b+cov_c+cov_d >= 700000
 -- where policy_number = 'HAZ-1348250-00'
