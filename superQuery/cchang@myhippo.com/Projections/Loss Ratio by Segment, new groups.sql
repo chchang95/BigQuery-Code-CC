@@ -105,7 +105,6 @@ coalesce(p.reinsurance_treaty_property_accounting, l.reinsurance_treaty) as rein
 ,sum(coalesce(cat_reported_claim_count_x_CNP,0)) as cat_reported_claim_count_x_CNP
 ,sum(coalesce(noncat_reported_claim_count_x_CNP,0)) as noncat_reported_claim_count_x_CNP
 
-
 ,sum(coalesce(written_prem_x_ebsl_x_fees,0)) as written_prem_x_ebsl_x_fees
 ,sum(coalesce(earned_prem_x_ebsl_x_fees,0)) as earned_prem_x_ebsl_x_fees
 ,sum(coalesce(written_exposure,0)) as written_exposure
@@ -171,12 +170,12 @@ where 1=1
 -- and state = 'ca'
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
-and policy_id = 2051353
+-- and policy_id = 2051353
 group by 1,2,3,4,5,6,7,8,9,10
 )
 select 
-*
--- sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
+-- *
+sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
 from final
 where accident_month is not null
 -- and calendar_month <> accident_month
