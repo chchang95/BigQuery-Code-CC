@@ -124,7 +124,7 @@ group by 1,2,3
 )
 , final as (
 select 
-year(accident_month) as accident_year,
+extract(year from accident_month) as accident_year,
 -- calendar_month,
 accident_month
 -- case when accident_month < '2020-01-01' then '2019'
