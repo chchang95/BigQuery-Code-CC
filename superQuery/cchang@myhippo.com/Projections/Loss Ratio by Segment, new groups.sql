@@ -161,8 +161,8 @@ accident_month
 ,sum(coalesce(a.earned_exposure,0)) as earned_exposure
 ,sum(coalesce(a.written_policy_fee,0)) as written_policy_fee
 ,sum(coalesce(a.earned_policy_fee,0)) as earned_policy_fee
-,sum(coalesce(on_leveled_written_prem_x_ebsl_x_fees,0)) as on_leveled_written_prem_x_ebsl_x_fees
-,sum(coalesce(on_leveled_earned_prem_x_ebsl_x_fees,0)) as on_leveled_earned_prem_x_ebsl_x_fees
+-- ,sum(coalesce(on_leveled_written_prem_x_ebsl_x_fees,0)) as on_leveled_written_prem_x_ebsl_x_fees
+-- ,sum(coalesce(on_leveled_earned_prem_x_ebsl_x_fees,0)) as on_leveled_earned_prem_x_ebsl_x_fees
 
 from aggregated a
 left join policies using(policy_id) 
