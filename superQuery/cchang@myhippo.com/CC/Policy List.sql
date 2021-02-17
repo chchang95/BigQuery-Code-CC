@@ -12,11 +12,9 @@ select eps.policy_id
 ,property_data_address_county as county
 ,state 
 ,product 
-,calculated_fields_age_of_home as age_of_home
-,coverage_deductible as deductible
--- ,property_data_protection_class
--- ,prefilled_fireline_score
-,written_base + written_total_optionals + written_policy_fee as written_total_premium_inc_pol_fees
+,property_data_protection_class
+,prefilled_fireline_score
+,written_base + written_total_optionals + written_policy_fee as written_total
 ,coalesce(coverage_a,0) as cov_a
 ,coalesce(coverage_b,0) as cov_b
 ,coalesce(coverage_c,0) as cov_c
@@ -32,7 +30,7 @@ left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.p
 where date_snapshot = '2021-01-31'
 -- and date_policy_effective >= '2020-07-01'
 -- and carrier <> 'Canopius'
-and product <> 'ho5'
+-- and product = 'ho5'
 and status = 'active'
 -- and carrier = 'spinnaker'
 -- and state = 'ca'
@@ -43,6 +41,6 @@ and status = 'active'
 )
 -- select count(*) from pol
 select cov_a+cov_b+cov_c+cov_d,* from pol
-where cov_a >= 1000000
+where cov_a+cov_b+cov_c+cov_d >= 700000
 order by 1 desc
 -- where policy_number = 'HAZ-1348250-00'
