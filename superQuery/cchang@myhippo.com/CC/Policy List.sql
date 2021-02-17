@@ -43,6 +43,6 @@ and status = 'active'
 )
 -- select count(*) from pol
 select cov_a+cov_b+cov_c+cov_d,* from pol
-where cov_a+cov_b+cov_c+cov_d >= 1000000
+where cov_a >= 1100000
 order by 1 desc
 -- where policy_number = 'HAZ-1348250-00'
