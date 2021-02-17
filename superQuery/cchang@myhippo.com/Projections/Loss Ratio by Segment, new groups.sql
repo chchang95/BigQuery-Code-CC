@@ -179,4 +179,4 @@ select
 from final
 where accident_month is not null
 -- and calendar_month <> accident_month
-order by 3,2
+order by 2
