@@ -12,9 +12,11 @@ select eps.policy_id
 ,property_data_address_county as county
 ,state 
 ,product 
-,property_data_protection_class
-,prefilled_fireline_score
-,written_base + written_total_optionals + written_policy_fee as written_total
+,calculated_fields_age_of_home as age_of_home
+,coverage_deductible as deductible
+-- ,property_data_protection_class
+-- ,prefilled_fireline_score
+,written_base + written_total_optionals + written_policy_fee as written_total_premium_inc_pol_fees
 ,coalesce(coverage_a,0) as cov_a
 ,coalesce(coverage_b,0) as cov_b
 ,coalesce(coverage_c,0) as cov_c
@@ -41,6 +43,6 @@ and status = 'active'
 )
 -- select count(*) from pol
 select cov_a+cov_b+cov_c+cov_d,* from pol
-where cov_a+cov_b+cov_c+cov_d >= 700000
+where cov_a+cov_b+cov_c+cov_d >= 1000000
 order by 1 desc
 -- where policy_number = 'HAZ-1348250-00'
