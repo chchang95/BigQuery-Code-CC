@@ -30,7 +30,7 @@ left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.p
 where date_snapshot = '2021-01-31'
 -- and date_policy_effective >= '2020-07-01'
 -- and carrier <> 'Canopius'
--- and product = 'ho5'
+and product = 'ho5'
 and status = 'active'
 -- and carrier = 'spinnaker'
 -- and state = 'ca'
@@ -40,6 +40,7 @@ and status = 'active'
 -- and date_policy_effective <= '2020-05-31'
 )
 -- select count(*) from pol
-select * from pol
+select cov_a+cov_b+cov_c+cov_d,* from pol
 where cov_a+cov_b+cov_c+cov_d >= 700000
+order by 1 desc
 -- where policy_number = 'HAZ-1348250-00'
