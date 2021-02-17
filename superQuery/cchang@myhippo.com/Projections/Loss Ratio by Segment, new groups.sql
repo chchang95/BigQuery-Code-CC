@@ -144,7 +144,7 @@ accident_month
 -- ,tenure
 -- ,policy_cohort
 -- ,term_policy_effective_month
-,orig_policy_effective_month
+-- ,orig_policy_effective_month
 
 ,sum(coalesce(cat_incurred,0)) as cat_incurred
 ,sum(coalesce(noncat_incurred,0)) as noncat_incurred
@@ -171,7 +171,7 @@ where 1=1
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 -- and policy_id = 2051353
-group by 1,2,3,4,5,6,7,8
+group by 1,2,3,4,5,6,7
 )
 select 
 *
