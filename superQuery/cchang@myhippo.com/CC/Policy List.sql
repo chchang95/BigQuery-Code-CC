@@ -50,4 +50,4 @@ select * from pol
 -- where cov_a >= 1100000
 -- order by 1 desc
 -- where policy_number = 'HAZ-1348250-00'
-where building_quality is null
+-- where building_quality is null
