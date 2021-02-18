@@ -12,13 +12,19 @@ select eps.policy_id
 ,property_data_address_county as county
 ,state 
 ,product 
-,property_data_protection_class
-,prefilled_fireline_score
-,written_base + written_total_optionals + written_policy_fee as written_total
+,calculated_fields_age_of_home as age_of_home
+,coverage_deductible as deductible
+-- ,property_data_protection_class
+-- ,prefilled_fireline_score
+,written_base + written_total_optionals + written_policy_fee as written_total_premium_inc_pol_fees
+,prefilled_rebuilding_cost as prefilled_rebuilding_cost
+,property_data_rebuilding_cost as property_data_rebuilding_cost
+,property_data_building_quality as building_quality
 ,coalesce(coverage_a,0) as cov_a
 ,coalesce(coverage_b,0) as cov_b
 ,coalesce(coverage_c,0) as cov_c
 ,coalesce(coverage_d,0) as cov_d
+,coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0) as tiv
 -- ,JSON_EXTRACT_SCALAR(property_data_zillow,'$.zestimate') as zillow_market_value
 -- ,property_data_zillow
 -- ,calculated_fields_market_value_much_below_rce
@@ -30,17 +36,17 @@ left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.p
 where date_snapshot = '2021-01-31'
 -- and date_policy_effective >= '2020-07-01'
 -- and carrier <> 'Canopius'
--- and product = 'ho5'
+and product <> 'ho5'
 and status = 'active'
 -- and carrier = 'spinnaker'
 -- and state = 'ca'
--- and state = 'tx'
+and state = 'tx'
 -- and property_data_address_zip = '78332'
 -- and calculated_fields_wind_exclusion <> 'true'
 -- and date_policy_effective <= '2020-05-31'
 )
 -- select count(*) from pol
-select cov_a+cov_b+cov_c+cov_d,* from pol
-where cov_a+cov_b+cov_c+cov_d >= 700000
-order by 1 desc
+select * from pol
+-- where cov_a >= 1100000
+-- order by 1 desc
 -- where policy_number = 'HAZ-1348250-00'
