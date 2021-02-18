@@ -15,7 +15,7 @@ and date_snapshot = '2020-12-31'
 -- and ud.date is not null
 -- and carrier = 'spinnaker'
 -- and product <> 'ho5'
-and status = 'active'
+-- and status = 'active'
 and state in ('ct','md','wa')
 group by 1
 order by 3,1,2
