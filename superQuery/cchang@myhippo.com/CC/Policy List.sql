@@ -20,6 +20,11 @@ select eps.policy_id
 ,prefilled_rebuilding_cost as prefilled_rebuilding_cost
 ,property_data_rebuilding_cost as property_data_rebuilding_cost
 ,property_data_building_quality as building_quality
+,case when property_data_building_quality = 'standard' then 'E'
+when property_data_building_quality = 'premium' then 'A'
+when property_data_building_quality = 'luxury' then 'P'
+else 'Error' end as mapping_building_quality
+,property_data_square_footage as square_foot
 ,coalesce(coverage_a,0) as cov_a
 ,coalesce(coverage_b,0) as cov_b
 ,coalesce(coverage_c,0) as cov_c
@@ -51,3 +56,4 @@ select * from pol
 -- order by 1 desc
 -- where policy_number = 'HAZ-1348250-00'
 -- where building_quality is null
+
