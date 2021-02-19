@@ -30,6 +30,7 @@ else 'Error' end as mapping_building_quality
 ,coalesce(coverage_c,0) as cov_c
 ,coalesce(coverage_d,0) as cov_d
 ,coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0) as tiv
+,channel
 -- ,JSON_EXTRACT_SCALAR(property_data_zillow,'$.zestimate') as zillow_market_value
 -- ,property_data_zillow
 -- ,calculated_fields_market_value_much_below_rce
@@ -38,6 +39,7 @@ else 'Error' end as mapping_building_quality
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
+left join (select policy_id, policy_number, channel from dw_prod.dim_quotes) dq on CONCAT(left(eps.policy_number,length(eps.policy_number)-2),'00') = dq.policy_number
 where date_snapshot = '2021-02-17'
 -- and date_policy_effective >= '2020-07-01'
 -- and carrier <> 'Canopius'
