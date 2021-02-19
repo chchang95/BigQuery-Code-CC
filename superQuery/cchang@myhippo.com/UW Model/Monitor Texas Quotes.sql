@@ -54,7 +54,7 @@ SELECT
     --   ,q.construction_type
       ,q.square_footage
       ,q.rebuilding_cost
-      ,pgp.building_quality
+      ,coalesce(pgp.building_quality,"not_found") as building_quality
     --   ,q.prelim_quote_selected_plan
     --   ,2020 - q.year_built + 1 as age_of_home
     --   ,q.year_built as year_home_built
@@ -93,7 +93,7 @@ SELECT
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-08') ps on q.policy_id = ps.policy_id
             left join dw_prod.tx_moratorium_zips zips on safe_cast(q.zip_code as numeric) = safe_cast(zips.zip_code as numeric)
-            left join (select email, JSON_EXTRACT(transaction, '$.property_data.building_quality') as building_quality from postgres_public.policies) pgp on pgp.email = q.email
+            left join (select email, JSON_EXTRACT_SCALAR(transaction, '$.property_data.building_quality') as building_quality from postgres_public.policies) pgp on pgp.email = q.email
       where q.date_quote_first_seen >= '2020-03-01'
       and q.state = 'tx'
       and q.product = 'ho3'
