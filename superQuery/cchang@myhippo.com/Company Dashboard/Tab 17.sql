@@ -42,6 +42,8 @@ select eps.policy_id
 ,property_data_number_of_family_units as Number_Of_Family_Units
 ,prefilled_basement_finished_percent as Basement_Finished_Percent
 ,property_data_other_wind_loss_prevention as Other_Wind_Loss_Prevention
+,property_data_fireplaces as prefilled_fireplaces
+,property_data_foundation_type as Foundate_Type
 ,calculated_fields_age_of_roof as Age_Of_Roof
 ,calculated_fields_wind_exclusion as Wind_Exclusion
 ,coverage_deductible as Deductible
