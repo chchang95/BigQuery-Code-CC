@@ -47,7 +47,7 @@ SELECT DISTINCT
       ,fc.*
       ,dp.org_id as organization_id
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
-  left join (select claim_id, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_number)
+  left join (select claim_id, claim_number, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_number)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   WHERE date_knowledge = '2021-02-19'
   and carrier <> 'canopius'
