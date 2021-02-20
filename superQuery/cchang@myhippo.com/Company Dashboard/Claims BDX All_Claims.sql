@@ -21,7 +21,7 @@ SELECT DISTINCT
   left join (select claim_number, loss_description, damage_description from dw_prod.dim_claims) fc on mon.claim_number = fc.claim_number
   left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) dpg on mon.policy_id = dpg.policy_id
  
-  WHERE date_knowledge = '2021-01-31'
+  WHERE date_knowledge = '2021-02-19'
   and carrier <> 'canopius'
   )
   , aggregated as (
