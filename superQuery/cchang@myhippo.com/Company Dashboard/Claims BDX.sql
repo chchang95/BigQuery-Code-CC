@@ -44,10 +44,10 @@ SELECT DISTINCT
       , case when peril = 'wind' or peril = 'hail' then 'Y'
       when cat_code is not null then 'Y'
       else 'N' end as CAT
-    --   ,fc.*
+      ,fc.*
       ,dp.org_id as organization_id
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
---   left join (select claim_id, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_id)
+  left join (select claim_id, loss_description, damage_description from dw_prod.fct_claims) fc using (claim_id)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   WHERE date_knowledge = '2021-02-19'
   and carrier <> 'canopius'
@@ -80,8 +80,8 @@ SELECT DISTINCT
   ,Total_Recovery
   ,organization_id
   ,CAT_code as internal_CAT_code
---   ,loss_description
---   ,damage_description
+  ,loss_description
+  ,damage_description
 --   ,Total_Recoverable_Depreciation
   from x
   where 1=1
