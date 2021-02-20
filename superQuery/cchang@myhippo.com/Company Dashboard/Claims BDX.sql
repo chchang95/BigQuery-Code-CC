@@ -5,7 +5,7 @@ SELECT DISTINCT
       , date_effective AS Inception_Date
       , product as Product
       , date_expires AS Expiration_Date
-      , claim_number AS Claim_Number
+      , mon.claim_number AS Claim_Number
       , date_of_loss AS Loss_Date 
       , date_first_notice_of_loss AS Report_Date 
       , insured_name AS Insured_Name
