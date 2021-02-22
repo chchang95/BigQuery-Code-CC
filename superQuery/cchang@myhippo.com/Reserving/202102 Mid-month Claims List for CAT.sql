@@ -71,8 +71,8 @@ SELECT DISTINCT
 --         ,term_effective_month
 --         ,rated_uw_action
 --         ,policy_id
---         ,loss_description
---         ,damage_description
+        ,loss_description
+        ,damage_description
     --   ,Total_Recoverable_Depreciation    
   from claims_supp
   where 1=1
