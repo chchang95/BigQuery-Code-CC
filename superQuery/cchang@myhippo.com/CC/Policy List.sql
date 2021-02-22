@@ -10,8 +10,8 @@ select eps.policy_id
 ,property_data_address_city as city
 ,property_data_address_zip as zip
 ,property_data_address_county as county
-,state 
-,product 
+,eps.state 
+,eps.product 
 ,calculated_fields_age_of_home as age_of_home
 ,coverage_deductible as deductible
 -- ,property_data_protection_class
@@ -31,6 +31,16 @@ else 'Error' end as mapping_building_quality
 ,coalesce(coverage_d,0) as cov_d
 ,coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0) as tiv
 ,channel
+,written_base
+,written_total_optionals
+,written_optionals_equipment_breakdown
+,written_optionals_service_line
+,written_sum_perils
+,written_policy_fee
+,expense_load_digital
+,region_code
+,coverage_wind_deductible as wind_deductible
+
 -- ,JSON_EXTRACT_SCALAR(property_data_zillow,'$.zestimate') as zillow_market_value
 -- ,property_data_zillow
 -- ,calculated_fields_market_value_much_below_rce
@@ -40,14 +50,15 @@ from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
 left join (select policy_id, policy_number, channel from dw_prod.dim_quotes) dq on CONCAT(left(eps.policy_number,length(eps.policy_number)-2),'00') = dq.policy_number
+left join dw_prod.map_expense_loads as exp ON eps.state=exp.state and eps.product=exp.product and eps.carrier = exp.carrier
 where date_snapshot = '2021-02-17'
 -- and date_policy_effective >= '2020-07-01'
 -- and carrier <> 'Canopius'
-and product = 'ho3'
+and eps.product = 'ho3'
 and status = 'active'
 -- and carrier = 'spinnaker'
 -- and state = 'ca'
-and state = 'tx'
+and eps.state = 'tx'
 -- and property_data_address_zip = '78332'
 -- and calculated_fields_wind_exclusion <> 'true'
 -- and date_policy_effective <= '2020-05-31'
