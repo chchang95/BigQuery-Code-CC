@@ -82,3 +82,4 @@ select one.policy_id, one.policy_number, one.date_policy_effective
 from one_month one left join two_month two on one.policy_id = two.policy_id
 )
 select sum(one_month_non_cat_claim_count), sum(one_month_non_cat_claim_count_x_cnp), sum(two_month_non_cat_claim_count), sum(two_month_non_cat_claim_count_x_cnp)
+from summary
