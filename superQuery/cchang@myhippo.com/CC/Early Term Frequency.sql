@@ -59,6 +59,7 @@ select s2.policy_id, s2.policy_number, s2.state, s2.property_data_address_zip, s
 	left join claims c2 on s2.policy_id = c2.policy_id
 	where s2.date_snapshot = date_add(s2.date_policy_effective, interval 60 day)
 )
+, summary as (
 select one.policy_id, one.policy_number, one.date_policy_effective
 , one.date_snapshot as one_month_snapshot
 , one.earned_exposure as one_month_earned_exposure
@@ -79,3 +80,5 @@ select one.policy_id, one.policy_number, one.date_policy_effective
 , two.two_month_non_cat_claim_count as two_month_non_cat_claim_count
 , two.two_month_non_cat_claim_count_x_cnp as two_month_non_cat_claim_count_x_cnp
 from one_month one left join two_month two on one.policy_id = two.policy_id
+)
+select sum(one_month_non_cat_claim_count), sum(one_month_non_cat_claim_count_x_cnp), sum(two_month_non_cat_claim_count), sum(two_month_non_cat_claim_count_x_cnp)
