@@ -1,12 +1,13 @@
 with claims_supp as (
 select *
-, case when peril = 'equipment_breakdown' or peril = 'service_line' then 'Y'
-      else 'N' end as EBSL
-, case when peril = 'wind' or peril = 'hail' then 'Y'
-        when cat_code is not null then 'Y'
+, case when cc.cat_ind is true then 'Y'
+    when cc.cat_ind is false then 'N'
+    when peril = 'wind' or peril = 'hail' then 'Y'
+    when cat_code is not null then 'Y'
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date cd
-where carrier <> 'Canopius'
+left join dbt_actuaries.cat_coding_w_loss_20210131 cc on cd.claim_number = cc.claim_number
+where carrier <> 'canopius'
 )
 , claims as (
 select
@@ -21,7 +22,7 @@ policy_id
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then 100000 else total_incurred end) as capped_non_cat_incurred
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
-where ebsl = 'N'
+-- where ebsl = 'N'
 group by 1,2
 )
 , one_month as (
