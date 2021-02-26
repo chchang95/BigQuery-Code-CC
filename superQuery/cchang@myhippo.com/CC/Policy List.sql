@@ -57,7 +57,7 @@ left join (select policy_id, policy_number, channel from dw_prod.dim_quotes) dq 
 left join dw_prod.map_expense_loads as exp ON eps.state=exp.state and eps.product=exp.product and eps.carrier = exp.carrier
 where date_snapshot = '2021-01-31'
 -- and date_policy_effective >= '2020-07-01'
--- and carrier <> 'Canopius'
+and carrier <> 'canopius'
 -- and eps.product = 'ho3'
 -- and status = 'active'
 -- and carrier = 'spinnaker'
