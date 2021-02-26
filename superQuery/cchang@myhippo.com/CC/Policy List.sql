@@ -38,6 +38,8 @@ select eps.policy_id
 -- ,written_sum_perils
 -- ,written_policy_fee
 -- ,expense_load_digital
+,((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) * coalesce(on_level_factor,1) + written_policy_fee) as on_leveled_written_prem_x_ebsl_inc_pol_fees
+,((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line) * coalesce(on_level_factor,1) + earned_policy_fee) as on_leveled_earned_prem_x_ebsl_inc_pol_fees
 -- ,region_code
 -- ,coverage_wind_deductible as wind_deductible
 
