@@ -37,8 +37,9 @@ select eps.policy_id
 -- ,written_optionals_service_line
 -- ,written_sum_perils
 -- ,written_policy_fee
+-- ,expense_load_digital
 ,(expense_load_digital) as written_expense_load
-,(expense_load_digital*eps.earned_exposure) as earned_expense_load
+,(expense_load_digital*earned_exposure) as earned_expense_load
 
 ,((written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line - expense_load_digital) * coalesce(on_level_factor,1)) as on_leveled_written_prem_x_ebsl_x_pol_fees_x_exp_load
 ,((earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line - expense_load_digital*earned_exposure) * coalesce(on_level_factor,1)) as on_leveled_earned_prem_x_ebsl_x_pol_fees_x_exp_load
@@ -57,7 +58,7 @@ left join (select policy_id, policy_number, channel from dw_prod.dim_quotes) dq 
 left join dw_prod.map_expense_loads as exp ON eps.state=exp.state and eps.product=exp.product and eps.carrier = exp.carrier
 where date_snapshot = '2021-01-31'
 -- and date_policy_effective >= '2020-07-01'
-and eps.carrier <> 'canopius'
+-- and carrier <> 'Canopius'
 -- and eps.product = 'ho3'
 -- and status = 'active'
 -- and carrier = 'spinnaker'
