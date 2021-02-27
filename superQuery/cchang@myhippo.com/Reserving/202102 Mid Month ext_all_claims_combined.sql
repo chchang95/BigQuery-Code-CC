@@ -118,9 +118,10 @@ select
 -- sum(excess_loss_case_reserves_at_100k) as excess_loss_case_reserves_at_100k,
 -- sum(capped_incurred_loss_at_100k) as capped_incurred_loss_at_100k,
 -- sum(excess_incurred_loss_at_100k) as excess_incurred_loss_at_100k,
-*
+distinct evaluation_date
 from x
 where 1=1
+order by 1
 -- and evaluation_date = '2020-12-31'
 -- group by 1
 -- order by 1
