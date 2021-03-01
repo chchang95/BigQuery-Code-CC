@@ -5,6 +5,6 @@ select
         ,sum(written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line) as written_prem_x_ebsl
 from dw_prod_extracts.ext_policy_update_monthly_premiums epud
 where carrier = 'canopius'
-and date_knowledge = '2020-02-28'
+and date_knowledge = '2021-02-28'
 group by 1,2,3
 order by 1,2,3
