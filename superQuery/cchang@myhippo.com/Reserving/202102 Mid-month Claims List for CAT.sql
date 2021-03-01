@@ -2,8 +2,8 @@ with claims_supp as (
 SELECT DISTINCT
     mon.*
 --       , is_ebsl
-    , case when cc.cat_ind is true then 'Y'
-    when cc.cat_ind is false then 'N'
+    , case when cc.cat is true then 'Y'
+    when cc.cat is false then 'N'
     when peril = 'wind' or peril = 'hail' then 'Y'
     when cat_code is not null then 'Y'
         else 'N' end as CAT
@@ -23,9 +23,9 @@ SELECT DISTINCT
   left join (select policy_id, calculated_fields_non_cat_risk_class, calculated_fields_cat_risk_class, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2021-02-21') eps on eps.policy_id = mon.policy_id
   left join (select claim_number, loss_description, damage_description from dw_prod.dim_claims) fc on mon.claim_number = fc.claim_number
   left join (select date, last_day_of_quarter from dw_prod.utils_dates where date = date(last_day_of_quarter)) ud on mon.date_knowledge = date(ud.last_day_of_quarter)
-  left join dbt_actuaries.cat_coding_w_loss_20210131 cc on (case when tbl_source = 'topa_tpa_claims' then ltrim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
+  left join dbt_actuaries.claim_cat_coding_20210226 cc on (case when tbl_source = 'topa_tpa_claims' then ltrim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
   WHERE 1=1
-  and date_knowledge = '2021-02-21'
+  and date_knowledge = '2021-02-28'
   and carrier <> 'canopius'
 --   and last_day_of_quarter is not null
   )
