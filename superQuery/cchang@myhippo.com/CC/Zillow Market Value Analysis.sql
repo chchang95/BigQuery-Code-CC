@@ -32,6 +32,7 @@
 
 select cast(id as string)   as policy_number
 , policy_info
+,data
 from postgres_public.policies a
 where 1 = 1
       and bound is true
