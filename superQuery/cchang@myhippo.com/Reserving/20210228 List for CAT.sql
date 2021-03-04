@@ -85,5 +85,6 @@ SELECT DISTINCT
   )
   select * from aggregated
   where claim_number = 'CCA-1148557-00-01'
+  order by 1
 
   
