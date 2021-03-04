@@ -45,7 +45,7 @@ select mon.*
 ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) - coalesce(recoveries,0) as loss_incurred_calc
 ,coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) as expense_incurred_calc
 ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
-from dw_prod_extracts.ext_all_claims_combined mon
+from dbt_actuaries.ext_all_claims_combined_20210131_with_salesforce mon
 left join dbt_actuaries.cat_coding_w_loss_20210131 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
 left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2021-01-31') using(policy_id)
 left join dbt_cchin.claims_mappings_202012 map on mon.peril = map.string_field_0
@@ -131,7 +131,7 @@ group by 1,2,3
 )
 , final as (
 select 
--- policy_id, policy_number,
+policy_id, policy_number,
 extract(year from accident_month) as accident_year,
 -- calendar_month,
 accident_month
@@ -140,18 +140,18 @@ accident_month
 --  when accident_month >= '2020-01-01' and accident_month < '2020-08-01' then 'Pre August 2020'
 --  else 'blank'
 -- end as accident_cohort
--- ,org_id
+,org_id
 ,org_name
 ,product
 ,state
 ,channel
 ,zip
-,round(uw_model_score,0) as uw_model_score
+,uw_model_score
 -- ,zip_status
 ,year_built
 ,tenure
 -- ,policy_cohort
--- ,term_policy_effective_month
+,term_policy_effective_month
 ,orig_policy_effective_month
 
 ,sum(coalesce(cat_incurred,0)) as cat_incurred
@@ -181,7 +181,7 @@ and state = 'ca'
 and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 -- and policy_id = 2051353
-group by 1,2,3,4,5,6,7,8,9,10,11
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 )
 select 
 *
