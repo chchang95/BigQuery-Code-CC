@@ -15,7 +15,6 @@ select eps.policy_id
 ,channel
 ,written_base
 ,JSON_EXTRACT_SCALAR(property_data_zillow, '$.zestimate') as zestimate
-,JSON_EXTRACT_SCALAR(property_data_zillow, '$.url') as zillow_url
 ,property_data_zillow
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
@@ -27,5 +26,25 @@ where date_snapshot = '2021-01-31'
 and eps.carrier <> 'canopius'
 )
 -- select count(*) from pol
-select policy_id, zillow_url from pol
+select * from pol
 where property_data_zillow is not null
+
+
+
+-- select cast(id as string)   as policy_number
+-- , policy_info
+-- ,data
+-- from postgres_public.policies a
+-- where 1 = 1
+--       and bound is true
+--       and status not in ('pending_active', 'pending_bind')
+-- --       and effective_date::date <= '2020-04-31'::date
+-- and cast(initial_quote_date as date) >= '2019-10-20'
+-- --       and state = 'tx'
+-- and carrier <> 'canopius'
+-- and product not in ('ho5')
+-- and json_extract_scalar(coalesce(policy_info,transaction),'$.quote.premium.total') is not null
+-- and state is not null
+-- and initial_quote_date is not null
+-- and effective_date is not null
+--   LIMIT 100000
