@@ -187,6 +187,6 @@ select
 *
 -- sum(total_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
 from final
-where accident_month is not null
+where accident_year is not null
 -- and calendar_month <> accident_month
 order by 2
