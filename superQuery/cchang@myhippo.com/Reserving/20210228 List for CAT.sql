@@ -76,7 +76,7 @@ SELECT DISTINCT
     --   ,Total_Recoverable_Depreciation    
   from claims_supp
   where 1=1
-  and is_ebsl is false
+--   and is_ebsl is false
 --   and claims_policy_number = 'HMO-0345091-00'
 --   and carrier = 'Topa'
 --   and tbl_source = 'hippo_claims'
