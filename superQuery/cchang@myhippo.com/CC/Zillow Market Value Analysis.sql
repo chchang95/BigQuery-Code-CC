@@ -18,7 +18,7 @@ select eps.policy_id
 ,channel
 ,written_base
 ,JSON_EXTRACT_SCALAR(property_data_zillow, '$.zestimate') as zestimate
-property_data_zillow
+,property_data_zillow
 -- ,written_total_optionals
 -- ,written_optionals_equipment_breakdown
 -- ,written_optionals_service_line
