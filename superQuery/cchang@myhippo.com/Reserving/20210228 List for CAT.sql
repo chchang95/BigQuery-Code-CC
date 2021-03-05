@@ -25,7 +25,7 @@ SELECT DISTINCT
   left join (select date, last_day_of_quarter from dw_prod.utils_dates where date = date(last_day_of_quarter)) ud on mon.date_knowledge = date(ud.last_day_of_quarter)
   left join dbt_actuaries.cat_coding_w_loss_20210228_new cc on (case when tbl_source = 'topa_tpa_claims' then ltrim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
   WHERE 1=1
-  and date_knowledge = '2021-02-28'
+--   and date_knowledge = '2021-02-28'
   and carrier <> 'canopius'
 --   and last_day_of_quarter is not null
   )
