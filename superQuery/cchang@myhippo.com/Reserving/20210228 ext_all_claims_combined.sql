@@ -118,7 +118,7 @@ sum(incurred_total_cumulative) as incurred_total_cumulative
 -- sum(excess_loss_case_reserves_at_100k) as excess_loss_case_reserves_at_100k,
 -- sum(capped_incurred_loss_at_100k) as capped_incurred_loss_at_100k,
 -- sum(excess_incurred_loss_at_100k) as excess_incurred_loss_at_100k,
-*
+-- *
 from x
 where 1=1
 and new_peril_group = 'EBSL'
