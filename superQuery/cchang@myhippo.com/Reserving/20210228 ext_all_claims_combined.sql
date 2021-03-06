@@ -24,7 +24,7 @@ where (mon.date_knowledge = last_day(date_trunc(mon.date_knowledge, MONTH),MONTH
 )
 ,x as (
 select 
--- mon.claim_number,
+mon.claim_number,
 last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 -- ,last_day(date_trunc(date_knowledge, QUARTER),QUARTER) as calendar_quarter
 -- ,extract(YEAR from date_knowledge) as calendar_year
@@ -99,7 +99,8 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+
 order by 1,2,3
 )
 select 
