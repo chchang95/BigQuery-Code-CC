@@ -84,6 +84,7 @@ SELECT DISTINCT
   order by 1
   )
   select * from aggregated
-where claim_number = 'HCA-3463350-00-01'--   order by 1
+--   where claim_number = 'HCA-3463350-00-01'
+--   order by 1
 
   
