@@ -41,7 +41,7 @@ last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 ,carrier
 ,product
 -- ,maturity
--- ,peril
+,peril
 ,new_peril_group
 ,CAT
 ,reinsurance_treaty
@@ -99,8 +99,7 @@ where 1=1
 -- and month_knowledge = '2020-11-01'
 and carrier <> 'canopius'
 and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
 order by 1,2,3
 )
 select 
