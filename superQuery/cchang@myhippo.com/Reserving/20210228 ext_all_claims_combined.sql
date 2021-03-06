@@ -134,4 +134,4 @@ where 1=1
 -- and product = 'ho3'
 -- and open_at_end_of_prior_month_x_CNP_count > 0
 -- and CAT = 'Y'
--- and claim_number = 'HIL-0403915-01-01'
+and claim_number = 'HCA-3463350-00-01'
