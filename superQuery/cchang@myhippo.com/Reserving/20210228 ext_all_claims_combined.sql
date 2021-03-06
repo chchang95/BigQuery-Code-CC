@@ -106,7 +106,7 @@ select
 -- new_peril_group,
 -- sum(incurred_loss_inc_recoveries_cumulative) as incurred_loss_inc_recoveries_cumulative,
 -- sum(incurred_expense_cumulative) as incurred_expense_cumulative,
--- sum(incurred_total_cumulative) as incurred_total_cumulative
+sum(incurred_total_cumulative) as incurred_total_cumulative
 -- sum(total_recoveries) as total_recoveries,
 -- sum(paid_loss_inc_recoveries_cumulative) as paid_loss_inc_recoveries_cumulative,
 -- sum(paid_expense_cumulative) as paid_expense_cumulative,
@@ -122,6 +122,7 @@ select
 from x
 where 1=1
 and new_peril_group = 'EBSL'
+group by 1
 -- and evaluation_date = '2020-12-31'
 -- group by 1
 -- order by 1
