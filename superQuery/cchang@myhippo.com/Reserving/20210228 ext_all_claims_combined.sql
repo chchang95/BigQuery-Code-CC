@@ -122,7 +122,7 @@ sum(incurred_total_cumulative) as incurred_total_cumulative
 from x
 where 1=1
 and new_peril_group = 'EBSL'
-group by 1
+-- group by 1
 -- and evaluation_date = '2020-12-31'
 -- group by 1
 -- order by 1
