@@ -121,6 +121,7 @@ select
 *
 from x
 where 1=1
+and new_peril_group = 'EBSL'
 -- and evaluation_date = '2020-12-31'
 -- group by 1
 -- order by 1
@@ -134,4 +135,3 @@ where 1=1
 -- and product = 'ho3'
 -- and open_at_end_of_prior_month_x_CNP_count > 0
 -- and CAT = 'Y'
-and claim_number = 'HCA-3463350-00-01'
