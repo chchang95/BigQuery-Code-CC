@@ -104,6 +104,7 @@ order by 1,2,3
 )
 select 
 -- new_peril_group,
+peril,
 -- sum(incurred_loss_inc_recoveries_cumulative) as incurred_loss_inc_recoveries_cumulative,
 -- sum(incurred_expense_cumulative) as incurred_expense_cumulative,
 sum(incurred_total_cumulative) as incurred_total_cumulative
