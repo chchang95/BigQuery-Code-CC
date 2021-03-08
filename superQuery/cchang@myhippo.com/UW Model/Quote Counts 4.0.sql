@@ -75,7 +75,7 @@ SELECT
     --     when q.ready_for_risk_score is null and q.non_cat_risk_class = 'referral' then 'referral_no_message' 
     --     when q.ready_for_risk_score = 'true' and q.non_cat_risk_class = 'referral' then 'referral_saw_message'
     --     else q.non_cat_risk_class end as upd_non_cat_risk_class
-    -- ,coalesce(zips.status,'Open') as tx_moratorium 
+    ,coalesce(zips.status,'Open') as tx_moratorium 
     --   ,case when coalesce(q.date_bound, cast(q.date_quote_first_seen as date)) <= '2020-04-29' then 'not_applicable'
     --   when q.non_cat_risk_class = 'exterior_inspection_required' or q.non_cat_risk_class = 'interior_inspection_required' or q.non_cat_risk_class = 'referral' then 'rocky'
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
@@ -107,6 +107,6 @@ SELECT
       and q.state = 'tx'
     --   and q.product <> 'ho5'
       and q.carrier <> 'canopius'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 )
-select distinct dnq_rule_ids from final
+select * from final
