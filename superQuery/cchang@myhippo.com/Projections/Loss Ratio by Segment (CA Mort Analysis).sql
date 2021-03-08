@@ -19,6 +19,18 @@ select eps.policy_id
 , case when renewal_number = 0 then "New" else "Renewal" end as tenure
 , case when zips.Status = 'Shut Off' then 'shut_zip' else 'open' end as zip_status
 , UW_Model_Score as uw_model_score
+, case when uw_model_score is null or property_data_year_built is null or uw_model_score = 0 then 'NA'
+    when eps.product = 'ho6' 
+        then case when uw_model_score >= 1463 then 'referral' when uw_model_score >= 915 then 'interior' when uw_model_score >= 668 then 'exterior' else 'no_action' end
+    when eps.product = 'dp3' 
+        then case when uw_model_score >= 1296 then 'referral' when uw_model_score >= 891 then 'interior' when uw_model_score >= 700 then 'exterior' else 'no_action' end
+    when cast(property_data_year_built as numeric) >= 2000 
+        then case when uw_model_score >= 804 then 'referral' when uw_model_score >= 667 then 'interior' when uw_model_score >= 546 then 'exterior' else 'no_action' end
+    when cast(property_data_year_built as numeric) >= 1980 
+        then case when uw_model_score >= 1007 then 'referral' when uw_model_score >= 747 then 'interior' when uw_model_score >= 597 then 'exterior' else 'no_action' end
+    when cast(property_data_year_built as numeric) < 1980 
+        then case when uw_model_score >= 1007 then 'referral' when uw_model_score >= 747 then 'interior' when uw_model_score >= 597 then 'exterior' else 'no_action' end
+    else 'NA' end as ca_uw_action
 from dw_prod_extracts.ext_policy_snapshots eps
 -- left join dbt_cchin.new_model_policies_scored_20201130 using(policy_id)
 left join (select policy_id, case when channel is null then 'Online' else channel end as channel, coalesce(organization_id,0) as org_id from dw_prod.dim_policies) using(policy_id)
@@ -134,7 +146,7 @@ select
 -- policy_id, policy_number,
 extract(year from accident_month) as accident_year
 -- calendar_month,
--- accident_month
+,accident_month
 -- case when accident_month < '2020-01-01' then '2019'
 --  when accident_month >= '2020-08-01' then 'Post August 2020'
 --  when accident_month >= '2020-01-01' and accident_month < '2020-08-01' then 'Pre August 2020'
@@ -146,7 +158,7 @@ extract(year from accident_month) as accident_year
 ,state
 ,channel
 ,zip
-,round(uw_model_score,0) as uw_model_score
+,ca_uw_action
 -- ,zip_status
 ,year_built
 ,tenure
