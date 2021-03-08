@@ -29,6 +29,7 @@ with quotes_supp as (
       GROUP BY opportunity_policy_id, quote_id, organization_attribution, is_bound, quote_month
       ORDER BY opportunity_policy_id
 )
+, final as (
 SELECT
     --   q.policy_number,
     --   q.policy_id,
@@ -107,3 +108,5 @@ SELECT
     --   and q.product <> 'ho5'
       and q.carrier <> 'canopius'
       group by 1,2,3,4,5,6,7,8,9,10,11,12
+)
+select distinct dnq_rule_ids from final
