@@ -19,7 +19,7 @@ select eps.policy_id
 , case when renewal_number = 0 then "New" else "Renewal" end as tenure
 , case when zips.Status = 'Shut Off' then 'shut_zip' else 'open' end as zip_status
 , UW_Model_Score as uw_model_score
-, case when uw_model_score is null or property_data_year_built is null then 'NA'
+, case when uw_model_score is null or property_data_year_built is null or uw_model_score = 0 then 'NA'
     when eps.product = 'ho6' 
         then case when uw_model_score >= 1463 then 'referral' when uw_model_score >= 915 then 'interior' when uw_model_score >= 668 then 'exterior' else 'no_action' end
     when eps.product = 'dp3' 
