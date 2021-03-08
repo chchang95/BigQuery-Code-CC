@@ -29,13 +29,12 @@ with quotes_supp as (
       GROUP BY opportunity_policy_id, quote_id, organization_attribution, is_bound, quote_month
       ORDER BY opportunity_policy_id
 )
-, final as (
 SELECT
     --   q.policy_number,
     --   q.policy_id,
     --   cast(q.date_quote_first_seen as DATE) as quote_date,
     --   date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
-      date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
+      ,date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
       ,qs.org_name as organization_name
       ,q.organization_id
       ,q.state
@@ -75,7 +74,7 @@ SELECT
     --     when q.ready_for_risk_score is null and q.non_cat_risk_class = 'referral' then 'referral_no_message' 
     --     when q.ready_for_risk_score = 'true' and q.non_cat_risk_class = 'referral' then 'referral_saw_message'
     --     else q.non_cat_risk_class end as upd_non_cat_risk_class
-    ,coalesce(zips.status,'Open') as tx_moratorium 
+    -- ,coalesce(zips.status,'Open') as tx_moratorium 
     --   ,case when coalesce(q.date_bound, cast(q.date_quote_first_seen as date)) <= '2020-04-29' then 'not_applicable'
     --   when q.non_cat_risk_class = 'exterior_inspection_required' or q.non_cat_risk_class = 'interior_inspection_required' or q.non_cat_risk_class = 'referral' then 'rocky'
     --   when q.non_cat_risk_class = 'no_action' then 'happy'
@@ -107,6 +106,4 @@ SELECT
       and q.state = 'tx'
     --   and q.product <> 'ho5'
       and q.carrier <> 'canopius'
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
-)
-select * from final
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
