@@ -57,7 +57,7 @@ group by 1,2,3,4,5,6,7,8,9,10,11
         -- ,organization_id
         -- ,channel
         ,tenure
-        ,policy_effective_month
+        -- ,policy_effective_month
         -- ,rated_uw_action
         ,sum(written_prem_x_ebsl_x_policy_fees) as written_prem_x_ebsl_x_policy_fees
         ,sum(earned_prem_x_ebsl_x_policy_fees) as earned_prem_x_ebsl_x_policy_fees
