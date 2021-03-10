@@ -65,7 +65,7 @@ SELECT DISTINCT
         ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred
 --         ,CAT_code as internal_CAT_code
         ,org_id as organization_id
---         ,reinsurance_treaty
+        -- ,reinsurance_treaty
         ,channel
         ,tenure
 --         ,term_effective_month
@@ -73,10 +73,11 @@ SELECT DISTINCT
 --         ,policy_id
         ,loss_description
         ,damage_description
+        ,reinsurance_treaty
     --   ,Total_Recoverable_Depreciation    
   from claims_supp
   where 1=1
---   and is_ebsl is false
+  and is_ebsl is false
 --   and claims_policy_number = 'HMO-0345091-00'
 --   and carrier = 'Topa'
 --   and tbl_source = 'hippo_claims'
