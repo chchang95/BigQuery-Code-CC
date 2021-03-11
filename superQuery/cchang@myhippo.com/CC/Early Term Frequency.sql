@@ -6,7 +6,7 @@ select *
     when cat_code is not null then 'Y'
         else 'N' end as CAT
 from dw_prod_extracts.ext_claims_inception_to_date cd
-left join dbt_actuaries.cat_coding_w_loss_20210238_new cc on cd.claim_number = cc.claim_number
+left join dbt_actuaries.cat_coding_w_loss_20210228_new cc on cd.claim_number = cc.claim_number
 where carrier <> 'canopius'
 )
 , claims as (
