@@ -440,7 +440,7 @@ where
 --   and date_snapshot = DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 1 DAY)
 and date_snapshot = '2021-02-28'
   and carrier <> 'canopius'
-  and status <> 'pending_active'
+--   and status <> 'pending_active'
   )
 --   select *
 --   from aggregate
