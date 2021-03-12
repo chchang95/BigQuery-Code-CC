@@ -64,6 +64,6 @@ SELECT DISTINCT
   left join dw_prod.dim_policy_groups using (policy_group_id)
 group by 1
 )
-select policy_id, policy_number, claim_number, treaty, loss_date, report_date, Inception_Date, date_expires, first_term_eff, last_term_eff, max_term
+select policy_id, policy_number, claim_number, treaty, loss_date, report_date, Inception_Date, Expiration_Date, first_term_eff, last_term_eff, max_term
 from x
 left join policies using(policy_group_id)
