@@ -30,6 +30,7 @@ SELECT DISTINCT
 --   and date_knowledge = (select max(date_knowledge) from dw_prod_extracts.ext_all_claims_combined)
 and date_knowledge = '2021-02-28'
   and carrier <> 'canopius'
+  and is_ebsl is false
 --   and last_day_of_quarter is not null
 ),
 claims as (
@@ -448,4 +449,5 @@ and date_snapshot = '2021-02-28'
 --     ,coalesce(non_cat_risk_class, 'not_applicable') as UW_Action
 --     from dw_prod.dim_quotes) q on q.original_policy_number_1 = aggregate.original_policy_number
 select sum(total_incurred), sum(non_cat_incurred), sum(written_prem_x_ebsl_x_pol_fee), sum(earned_prem_x_ebsl_x_pol_fee) from aggregate
+where carrier = 'spinnaker'
     
