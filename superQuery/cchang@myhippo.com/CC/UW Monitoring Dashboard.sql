@@ -30,7 +30,6 @@ SELECT DISTINCT
 --   and date_knowledge = (select max(date_knowledge) from dw_prod_extracts.ext_all_claims_combined)
 and date_knowledge = '2021-02-28'
   and carrier <> 'canopius'
-  and is_ebsl is false
 --   and last_day_of_quarter is not null
 ),
 claims as (
