@@ -2,11 +2,13 @@ with claims_supp as (
 SELECT DISTINCT
     mon.*
 --       , is_ebsl
-    , case when cc.cat_ind is true then true
-    when cc.cat_ind is false then false
-    when peril = 'wind' or peril = 'hail' then true
-    when cat_code is not null then true
-        else false end as CAT
+    , case
+  when is_cat_override is not null then is_cat_override
+  when is_cat_override is null and lag(is_cat_override) over(partition by mon.claim_number, coalesce(major_peril, '') order by date_knowledge) is not null 
+    then lag(is_cat_override) over(partition by mon.claim_number, coalesce(major_peril, '') order by date_knowledge) -- property_data_house_under_construction
+  when peril in ('wind', 'hail') then true
+  else is_cat
+  end as CAT
     , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
     , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
       ,dp.org_id
