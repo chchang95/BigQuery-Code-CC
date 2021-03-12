@@ -449,5 +449,5 @@ and date_snapshot = '2021-02-28'
 --     ,coalesce(non_cat_risk_class, 'not_applicable') as UW_Action
 --     from dw_prod.dim_quotes) q on q.original_policy_number_1 = aggregate.original_policy_number
 select sum(total_incurred), sum(non_cat_incurred), sum(written_prem_x_ebsl_x_pol_fee), sum(earned_prem_x_ebsl_x_pol_fee) from aggregate
-where carrier = 'spinnaker'
+-- where carrier = 'spinnaker'
     
