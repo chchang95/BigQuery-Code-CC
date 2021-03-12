@@ -6,7 +6,7 @@ SELECT DISTINCT
     when cc.cat_ind is false then false
     when peril = 'wind' or peril = 'hail' then true
     when cat_code is not null then true
-        else 'N' end as CAT
+        else false end as CAT
     , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
     , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
       ,dp.org_id
