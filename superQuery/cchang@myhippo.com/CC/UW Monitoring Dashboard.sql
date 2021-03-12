@@ -2,13 +2,11 @@ with claims_supp as (
 SELECT DISTINCT
     mon.*
 --       , is_ebsl
-    , case
-  when is_cat_override is not null then is_cat_override
-  when is_cat_override is null and lag(is_cat_override) over(partition by mon.claim_number, coalesce(major_peril, '') order by date_knowledge) is not null 
-    then lag(is_cat_override) over(partition by mon.claim_number, coalesce(major_peril, '') order by date_knowledge) -- property_data_house_under_construction
-  when peril in ('wind', 'hail') then true
-  else is_cat
-  end as CAT
+    , case when cc.cat_ind is true then true
+    when cc.cat_ind is false then false
+    when peril = 'wind' or peril = 'hail' then true
+    when cat_code is not null then true
+        else 'N' end as CAT
     , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
     , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
       ,dp.org_id
@@ -449,5 +447,5 @@ and date_snapshot = '2021-02-28'
 --     ,coalesce(non_cat_risk_class, 'not_applicable') as UW_Action
 --     from dw_prod.dim_quotes) q on q.original_policy_number_1 = aggregate.original_policy_number
 select sum(total_incurred), sum(non_cat_incurred), sum(written_prem_x_ebsl_x_pol_fee), sum(earned_prem_x_ebsl_x_pol_fee) from aggregate
--- where carrier = 'spinnaker'
+where carrier = 'spinnaker'
     
