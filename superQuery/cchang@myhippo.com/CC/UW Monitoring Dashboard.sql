@@ -30,6 +30,7 @@ SELECT DISTINCT
 --   and date_knowledge = (select max(date_knowledge) from dw_prod_extracts.ext_all_claims_combined)
 and date_knowledge = '2021-02-28'
   and carrier <> 'canopius'
+  and is_ebsl is false
 --   and last_day_of_quarter is not null
 ),
 claims as (
@@ -378,12 +379,14 @@ select distinct
   prior_claims,
   coverage_a,
   round(Market_Value/coverage_a,2) as mv_to_cov_a,
-  written_base + written_total_optionals + written_policy_fee - written_optionals_equipment_breakdown - written_optionals_service_line as written_prem_x_ebsl_inc_pol_fee,
-  earned_base + earned_total_optionals + earned_policy_fee - earned_optionals_equipment_breakdown - earned_optionals_service_line as earned_prem_x_ebsl_inc_pol_fee,
+  written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line as written_prem_x_ebsl_x_pol_fee,
+  earned_base + earned_total_optionals - earned_optionals_equipment_breakdown - earned_optionals_service_line as earned_prem_x_ebsl_x_pol_fee,
   written_base,
   earned_base,
   written_exposure,
   earned_exposure,
+  written_policy_fee,
+  earned_policy_fee,
   coalesce(total_incurred, 0) as total_incurred,
   coalesce(non_cat_incurred, 0) as non_cat_incurred,
   coalesce(capped_non_cat_incurred, 0) as capped_non_cat_incurred,
@@ -434,13 +437,16 @@ from
   left join early_term et on et.policy_id = eps.policy_id
 where
   1 = 1
-  and date_snapshot = DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 1 DAY)
+--   and date_snapshot = DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 1 DAY)
+and date_snapshot = '2021-02-28'
   and carrier <> 'canopius'
-  and status <> 'pending_active')
-  
-  select *
-  from aggregate
-    left join(
-    select distinct policy_number as original_policy_number_1
-    ,coalesce(non_cat_risk_class, 'not_applicable') as UW_Action
-    from dw_prod.dim_quotes) q on q.original_policy_number_1 = aggregate.original_policy_number
+  and status <> 'pending_active'
+  )
+--   select *
+--   from aggregate
+--     left join(
+--     select distinct policy_number as original_policy_number_1
+--     ,coalesce(non_cat_risk_class, 'not_applicable') as UW_Action
+--     from dw_prod.dim_quotes) q on q.original_policy_number_1 = aggregate.original_policy_number
+select sum(total_incurred), sum(non_cat_incurred), sum(written_prem_x_ebsl_x_pol_fee), sum(earned_prem_x_ebsl_x_pol_fee) from aggregate
+    
