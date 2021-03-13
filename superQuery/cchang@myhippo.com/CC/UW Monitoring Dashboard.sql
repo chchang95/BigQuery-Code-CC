@@ -2,11 +2,11 @@ with claims_supp as (
 SELECT DISTINCT
     mon.*
 --       , is_ebsl
-    , case when cc.cat_ind is true then 'Y'
-    when cc.cat_ind is false then 'N'
-    when peril = 'wind' or peril = 'hail' then 'Y'
-    when cat_code is not null then 'Y'
-        else 'N' end as CAT
+    , case when cc.cat_ind is true then true
+    when cc.cat_ind is false then false
+    when peril = 'wind' or peril = 'hail' then true
+    when cat_code is not null then true
+        else false end as CAT
     , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
     , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
       ,dp.org_id
@@ -440,12 +440,12 @@ and date_snapshot = '2021-02-28'
   and carrier <> 'canopius'
 --   and status <> 'pending_active'
   )
---   select *
---   from aggregate
---     left join(
---     select distinct policy_number as original_policy_number_1
---     ,coalesce(non_cat_risk_class, 'not_applicable') as UW_Action
---     from dw_prod.dim_quotes) q on q.original_policy_number_1 = aggregate.original_policy_number
-select sum(total_incurred), sum(non_cat_incurred), sum(written_prem_x_ebsl_x_pol_fee), sum(earned_prem_x_ebsl_x_pol_fee) from aggregate
-where carrier = 'spinnaker'
+  select *
+  from aggregate
+    left join(
+    select distinct policy_number as original_policy_number_1
+    ,coalesce(non_cat_risk_class, 'not_applicable') as UW_Action
+    from dw_prod.dim_quotes) q on q.original_policy_number_1 = aggregate.original_policy_number
+-- select sum(total_incurred), sum(non_cat_incurred), sum(written_prem_x_ebsl_x_pol_fee), sum(earned_prem_x_ebsl_x_pol_fee) from aggregate
+-- where carrier = 'spinnaker'
     
