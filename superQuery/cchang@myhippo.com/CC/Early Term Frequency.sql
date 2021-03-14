@@ -46,7 +46,7 @@ select s2.policy_id, s2.policy_number, s2.state, s2.property_data_address_zip, s
 	left join claims c2 on s2.policy_id = c2.policy_id and date_add(s2.date_policy_effective, interval 2 month) = c2.date_knowledge
 	where s2.date_snapshot = date_add(s2.date_policy_effective, interval 2 month)
 )
-select one.policy_id, one.policy_number, one.date_policy_effective
+select one.policy_id, one.policy_number, one.date_policy_effective, one.state
 , one.date_snapshot as one_month_snapshot
 , one.earned_exposure as one_month_earned_exposure
 , one.earned_policy_fee as one_month_earned_policy_fee
