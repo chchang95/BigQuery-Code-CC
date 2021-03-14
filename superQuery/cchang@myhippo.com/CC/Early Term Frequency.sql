@@ -22,7 +22,7 @@ policy_id
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then 100000 else total_incurred end) as capped_non_cat_incurred
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
--- where ebsl = 'N'
+where ebsl = 'N'
 group by 1,2
 )
 , one_month as (
