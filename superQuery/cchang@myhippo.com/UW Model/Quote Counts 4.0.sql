@@ -105,7 +105,7 @@ SELECT
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-08') ps on q.policy_id = ps.policy_id
             left join dw_prod.tx_moratorium_zips zips on safe_cast(q.zip_code as numeric) = safe_cast(zips.zip_code as numeric)
       where q.date_quote_first_seen >= '2020-01-01'
-      and q.state = 'tx'
+      and q.state = 'ca'
     --   and q.product <> 'ho5'
       and q.carrier <> 'canopius'
       group by 1,2,3,4,5,6,7,8,9,10,11,12,13
