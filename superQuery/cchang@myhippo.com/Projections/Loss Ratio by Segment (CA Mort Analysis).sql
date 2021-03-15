@@ -156,11 +156,11 @@ extract(year from accident_month) as accident_year
 ,org_name
 ,product
 ,state
-,channel
+-- ,channel
 ,zip
 ,ca_uw_action
 -- ,zip_status
-,year_built
+-- ,year_built
 ,tenure
 -- ,policy_cohort
 -- ,term_policy_effective_month
