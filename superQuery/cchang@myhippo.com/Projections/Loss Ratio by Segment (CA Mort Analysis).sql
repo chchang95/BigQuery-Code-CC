@@ -146,7 +146,7 @@ select
 -- policy_id, policy_number,
 extract(year from accident_month) as accident_year
 -- calendar_month,
--- accident_month
+,accident_month
 -- case when accident_month < '2020-01-01' then '2019'
 --  when accident_month >= '2020-08-01' then 'Post August 2020'
 --  when accident_month >= '2020-01-01' and accident_month < '2020-08-01' then 'Pre August 2020'
@@ -193,7 +193,7 @@ and state = 'ca'
 and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 -- and policy_id = 2051353
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9,10,11
 )
 select 
 *
