@@ -153,10 +153,10 @@ extract(year from accident_month) as accident_year
 --  else 'blank'
 -- end as accident_cohort
 -- ,org_id
-,org_name
+-- ,org_name
 ,product
 ,state
--- ,channel
+,channel
 ,zip
 ,ca_uw_action
 -- ,zip_status
@@ -193,7 +193,7 @@ and state = 'ca'
 and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 -- and policy_id = 2051353
-group by 1,2,3,4,5,6,7,8,9,10,11
+group by 1,2,3,4,5,6,7,8,9
 )
 select 
 *
