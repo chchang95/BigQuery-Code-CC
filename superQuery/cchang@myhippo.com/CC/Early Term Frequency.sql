@@ -22,7 +22,7 @@ policy_id
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then 100000 else total_incurred end) as capped_non_cat_incurred
 ,sum(case when CAT = 'Y' then 0 when total_incurred >= 100000 then total_incurred - 100000 else 0 end) as excess_non_cat_incurred
 from claims_supp
-where ebsl = 'N'
+where is_ebsl is false
 group by 1,2
 )
 , one_month as (
@@ -32,8 +32,8 @@ select s1.policy_id, s1.policy_number, s1.state, s1.property_data_address_zip, s
 	, c1.total_incurred, c1.non_cat_incurred, c1.cat_incurred, c1.total_claim_count_x_cnp, c1.non_cat_claim_count_x_cnp
 	, c1.cat_claim_count_x_cnp, c1.capped_non_cat_incurred, c1.excess_non_cat_incurred
 	from dw_prod_extracts.ext_policy_snapshots s1
-	left join claims c1 on s1.policy_id = c1.policy_id and date_add(s1.date_policy_effective, interval 1 month) = c1.date_knowledge
-	where s1.date_snapshot = date_add(s1.date_policy_effective, interval 1 month)
+	left join claims c1 on s1.policy_id = c1.policy_id and least(date_add(s1.date_policy_effective, interval 1 month),current_date()-1) = c1.date_knowledge
+	where s1.date_snapshot = least(date_add(s1.date_policy_effective, interval 1 month),current_date()-1)
 )
 -- and c1.date_knowledge is not null
 , two_month as (
@@ -43,10 +43,10 @@ select s2.policy_id, s2.policy_number, s2.state, s2.property_data_address_zip, s
 	, c2.total_incurred, c2.non_cat_incurred, c2.cat_incurred, c2.total_claim_count_x_cnp, c2.non_cat_claim_count_x_cnp
 	, c2.cat_claim_count_x_cnp, c2.capped_non_cat_incurred, c2.excess_non_cat_incurred
 	from dw_prod_extracts.ext_policy_snapshots s2
-	left join claims c2 on s2.policy_id = c2.policy_id and date_add(s2.date_policy_effective, interval 2 month) = c2.date_knowledge
-	where s2.date_snapshot = date_add(s2.date_policy_effective, interval 2 month)
+	left join claims c2 on s2.policy_id = c2.policy_id and least(date_add(s2.date_policy_effective, interval 2 month),current_date()-1) = c2.date_knowledge
+	where s2.date_snapshot = least(date_add(s2.date_policy_effective, interval 2 month),current_date()-1)
 )
-select one.policy_id, one.policy_number, one.date_policy_effective, one.state
+, final as (select one.policy_id, one.policy_number, one.date_policy_effective, one.state
 , one.date_snapshot as one_month_snapshot
 , one.earned_exposure as one_month_earned_exposure
 , one.earned_policy_fee as one_month_earned_policy_fee
@@ -63,4 +63,9 @@ select one.policy_id, one.policy_number, one.date_policy_effective, one.state
 , two.non_cat_incurred as two_month_non_cat_incurred
 , two.total_claim_count_x_cnp as two_month_total_claim_count_x_cnp
 , two.non_cat_claim_count_x_cnp as two_month_non_cat_claim_count_x_cnp
-from one_month one left join two_month two on one.policy_id = two.policy_id
+from one_month one left join two_month two on one.policy_id = two.policy_id)
+select date_policy_effective, sum(one_month_earned_exposure), sum(one_month_non_cat_claim_count_x_cnp), sum(two_month_earned_exposure), sum(two_month_non_cat_claim_count_x_cnp)
+from final
+where date_policy_effective >= '2021-01-01'
+group by 1
+order by 1
