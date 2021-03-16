@@ -64,7 +64,7 @@ select s2.policy_id, s2.policy_number, s2.state, s2.property_data_address_zip, s
 , two.total_claim_count_x_cnp as two_month_total_claim_count_x_cnp
 , two.non_cat_claim_count_x_cnp as two_month_non_cat_claim_count_x_cnp
 from one_month one left join two_month two on one.policy_id = two.policy_id)
-select date_policy_effective, sum(one_month_earned_exposure), sum(one_month_non_cat_claim_count_x_cnp), sum(two_month_earned_exposure), sum(two_month_non_cat_claim_count_x_cnp)
+select date_policy_effective, ROUND(sum(one_month_earned_exposure),0), sum(one_month_non_cat_claim_count_x_cnp), round(sum(two_month_earned_exposure),0), sum(two_month_non_cat_claim_count_x_cnp)
 from final
 where date_policy_effective >= '2021-01-01'
 group by 1
