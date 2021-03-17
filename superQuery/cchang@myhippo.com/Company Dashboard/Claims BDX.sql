@@ -88,6 +88,6 @@ SELECT DISTINCT
 --   ,Total_Recoverable_Depreciation
   from x
   where 1=1
-  and policy_state = 'mi'
+  and Loss_State = 'mi'
 -- and loss_net_reserve > 0 and claim_status = 'closed'
 -- and report_date >= '2021-01-31'
