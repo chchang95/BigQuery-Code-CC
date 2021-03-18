@@ -247,6 +247,6 @@ select policy_id, state, product, carrier, tenure, risk_score, calculated_fields
 , CAST(calculated_fields_cat_risk_score as numeric) - risk_score
 from scoring_final
 where 1=1
-and tenure = 'New' 
-and state = 'TX'
+and tenure = 'new' 
+and state = 'tx'
 and CAST(calculated_fields_cat_risk_score as numeric) - risk_score > 0
