@@ -189,6 +189,6 @@ select *
 -- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
 from scoring_final
 -- where policy_id = 2944001
-where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
+-- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
 -- 2513405
 -- )
