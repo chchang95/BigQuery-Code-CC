@@ -249,4 +249,4 @@ from scoring_final
 where 1=1
 and tenure = 'New' 
 and state = 'tx'
-and round(CAST(calculated_fields_cat_risk_score as numeric) - risk_score,3) > 0.01
+and round(CAST(calculated_fields_cat_risk_score as numeric) - risk_score,4) > 0.01
