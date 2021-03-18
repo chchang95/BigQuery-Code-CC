@@ -244,7 +244,7 @@ policy_id, state, carrier, product, case when renewal_number > 0 then 'Renewal' 
 from scoring_inter
 )
 select policy_id, state, product, carrier, tenure, risk_score, calculated_fields_cat_risk_class
-, ROUND(CAST(calculated_fields_cat_risk_score as numeric) - risk_score,2)
+, ROUND(CAST(calculated_fields_cat_risk_score as numeric) - risk_score,4)
 from scoring_final
 where 1=1
 and tenure = 'New' 
