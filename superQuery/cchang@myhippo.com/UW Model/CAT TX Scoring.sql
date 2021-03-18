@@ -201,10 +201,10 @@ when coverage_a >= 980000 then 0.220242498373873 else -999 end as score_coverage
 
 from dw_prod_extracts.ext_policy_snapshots 
 where 1=1
-and date_snapshot = '2020-06-29'
-and product <> 'HO5'
-and carrier = 'Spinnaker'
-and state = 'TX'
+and date_snapshot = '2021-02-28'
+and product <> 'ho5'
+and carrier = 'spinnaker'
+and state = 'tx'
 -- and status = 'active'
 -- and date_policy_effective >= '2020-05-15'
 and renewal_number = 0
