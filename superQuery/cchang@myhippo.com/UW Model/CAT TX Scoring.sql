@@ -1,3 +1,4 @@
+create table dbt_cchin.cat_uw_scored_policies_20210228 as (
 with scoring_begin as (
 select 
 -- policy_id, state, carrier, product, calculated_fields_non_cat_risk_score
@@ -244,9 +245,10 @@ policy_id, state, carrier, product, case when renewal_number > 0 then 'Renewal' 
 from scoring_inter
 )
 select policy_id, state, product, carrier, tenure, risk_score, calculated_fields_cat_risk_class
-, ROUND(CAST(calculated_fields_cat_risk_score as numeric) - risk_score,3)
+, ROUND(CAST(calculated_fields_cat_risk_score as numeric) - risk_score,3) as score_diff
 from scoring_final
 where 1=1
 and tenure = 'New' 
 and state = 'tx'
-and round(CAST(calculated_fields_cat_risk_score as numeric) - risk_score,4) > 0.01
+-- and round(CAST(calculated_fields_cat_risk_score as numeric) - risk_score,3) > 0.01
+)
