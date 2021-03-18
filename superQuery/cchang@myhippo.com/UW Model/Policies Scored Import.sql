@@ -1,4 +1,4 @@
--- create table dbt_cchin.noncat_uw_scored_policies_20201031 as (
+create table dbt_cchin.noncat_uw_scored_policies_20210228 as (
 with scoring_begin as (
 select 
 policy_id, state, carrier, product, renewal_number, calculated_fields_non_cat_risk_class, calculated_fields_non_cat_risk_score, written_base, property_data_number_of_family_units, property_data_zillow, property_data_rebuilding_cost
@@ -147,7 +147,7 @@ when coverage_e = 500000 or coverage_e = 1000000 then -0.073082463 else -999 end
 ,-1.63517384735612 as score_intercept
 from dw_prod_extracts.ext_policy_snapshots 
 where 1=1
-and date_snapshot = '2020-10-31'
+and date_snapshot = '2021-02-28'
 and product <> 'ho5'
 and carrier <> 'canopius'
 -- and status = 'active'
@@ -191,4 +191,4 @@ from scoring_final
 -- where policy_id = 2944001
 -- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
 -- 2513405
--- )
+)
