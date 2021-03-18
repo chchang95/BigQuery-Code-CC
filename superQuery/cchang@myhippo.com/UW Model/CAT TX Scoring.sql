@@ -1,4 +1,3 @@
-create table dbt_cchin.cat_uw_scored_policies_20210228 as (
 with scoring_begin as (
 select 
 -- policy_id, state, carrier, product, calculated_fields_non_cat_risk_score
@@ -251,4 +250,3 @@ where 1=1
 and tenure = 'New' 
 and state = 'tx'
 -- and round(CAST(calculated_fields_cat_risk_score as numeric) - risk_score,3) > 0.01
-)
