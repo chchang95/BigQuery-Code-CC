@@ -37,7 +37,7 @@ SELECT
     --   date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
       date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
       ,qs.org_name as organization_name
-      ,q.organization_id
+    --   ,q.organization_id
       ,q.state
       ,q.product
     --   ,q.carrier
