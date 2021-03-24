@@ -1,4 +1,4 @@
-create table dbt_actuaries.ext_all_claims_combined_20210314 as (
+create table dbt_actuaries.ext_all_claims_combined_20210323 as (
 select * from `dw_prod_extracts.ext_all_claims_combined`
 )
 
