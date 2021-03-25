@@ -46,6 +46,7 @@ SELECT
       when cast(q.year_built as numeric) >= 2000 then 'Post 2000' 
       when cast(q.year_built as numeric) > 1980 then 'Pre 2000' 
       else 'Pre 1980' end as year_built
+      , 
     --   ,q.zip_code
     --   ,q.county
     --   ,q.roof_type as quote_roof_type
@@ -104,7 +105,7 @@ SELECT
             LEFT JOIN dw_prod.dim_policies dp on (q.policy_number = dp.policy_number)
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-08') ps on q.policy_id = ps.policy_id
             left join dw_prod.tx_moratorium_zips zips on safe_cast(q.zip_code as numeric) = safe_cast(zips.zip_code as numeric)
-            left join dbt_cchin.ca_moratorium_zips_august_2020 ca on q.zip_code = safecast(ca.Zips_to_Shut_Off as string) and upper(q.product) = ca.product
+            left join dbt_cchin.ca_moratorium_zips_august_2020 ca on q.zip_code = safe_cast(ca.Zips_to_Shut_Off as string) and upper(q.product) = ca.product
       where q.date_quote_first_seen >= '2020-01-01'
     --   and q.state = 'ca'
     --   and q.product <> 'ho5'
