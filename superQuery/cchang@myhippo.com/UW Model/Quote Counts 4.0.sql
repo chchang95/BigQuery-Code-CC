@@ -34,7 +34,7 @@ SELECT
     --   q.policy_number,
     --   q.policy_id,
     --   cast(q.date_quote_first_seen as DATE) as quote_date,
-    --   date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week
+      date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week,
       date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
     --   ,qs.org_name as organization_name
     --   ,q.organization_id
@@ -42,10 +42,10 @@ SELECT
       ,q.product
     --   ,q.carrier
 --       ,q.is_bulk_quoted
-      ,case when q.year_built is null then 'Missing'
-      when cast(q.year_built as numeric) >= 2000 then 'Post 2000' 
-      when cast(q.year_built as numeric) > 1980 then 'Pre 2000' 
-      else 'Pre 1980' end as year_built
+    --   ,case when q.year_built is null then 'Missing'
+    --   when cast(q.year_built as numeric) >= 2000 then 'Post 2000' 
+    --   when cast(q.year_built as numeric) > 1980 then 'Pre 2000' 
+    --   else 'Pre 1980' end as year_built
       , case when ca.status is null then 'Open' else ca.status end as ca_moratorium_status
     --   ,q.zip_code
     --   ,q.county
@@ -61,9 +61,9 @@ SELECT
     --   ,q.wind_deductible
     --   ,q.year_roof_built
     --   ,q.insurance_score
-      ,q.non_cat_risk_score
+    --   ,q.non_cat_risk_score
     --   ,q.cat_risk_score
-      ,q.non_cat_risk_class
+    --   ,q.non_cat_risk_class
     --   ,q.cat_risk_class
     --   ,q.ready_for_risk_score
     --   ,coalesce(q.non_cat_risk_class, 'not_applicable') as UW_Action
@@ -93,7 +93,7 @@ SELECT
       ,q.dnq_rule_ids
       ,q.is_suppress_quote_on_capacity_restriction
     --   ,q.date_bound
-    --   ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
+      ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
       ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
       ,q.channel
       ,SUM(CASE WHEN ddp.is_bound IS TRUE THEN 1 ELSE 0 END) AS bound_count
@@ -106,11 +106,11 @@ SELECT
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-08') ps on q.policy_id = ps.policy_id
             left join dw_prod.tx_moratorium_zips zips on safe_cast(q.zip_code as numeric) = safe_cast(zips.zip_code as numeric)
             left join dbt_cchin.ca_moratorium_zips_august_2020 ca on q.zip_code = safe_cast(ca.Zips_to_Shut_Off as string) and upper(q.product) = ca.product
-      where q.date_quote_first_seen >= '2010-01-01'
-    --   and q.state = 'ca'
+      where q.date_quote_first_seen >= '2020-10-01'
+      and q.state = 'ca'
     --   and q.product <> 'ho5'
       and q.carrier <> 'canopius'
     --   and q.state in ('ga','in','md','nv','oh','mo','il')
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 )
 select * from final
