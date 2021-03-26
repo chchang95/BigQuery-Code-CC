@@ -47,8 +47,8 @@ SELECT
     --   when cast(q.year_built as numeric) > 1980 then 'Pre 2000' 
     --   else 'Pre 1980' end as year_built
       , case when ca.status is null then 'Open' else ca.status end as ca_moratorium_status
-    --   ,q.zip_code
-    --   ,q.county
+      ,q.zip_code
+      ,q.county
     --   ,q.roof_type as quote_roof_type
     --   ,q.prefilled_roof_type as prefilled_roof_type
     --   ,property_data_roof_type as policy_roof_type
