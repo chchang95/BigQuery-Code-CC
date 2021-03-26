@@ -111,6 +111,6 @@ SELECT
     --   and q.product <> 'ho5'
       and q.carrier <> 'canopius'
     --   and q.state in ('ga','in','md','nv','oh','mo','il')
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 )
 select * from final
