@@ -142,4 +142,4 @@ incurred_total_net_recoveries_cumulative*loss_dev_age_in_days/30.5 as dollar_wtd
 CONCAT(analysis_peril, '/', state, '/' ,accident_year_recoded, '/', extract(MONTH from accident_month_recoded)) as CAT_id
 from x
 where 1=1
-and capped_incurred_loss_net_recoveries_at_100k > 100000
+and capped_loss_paid_net_recoveries_at_100k > 100000
