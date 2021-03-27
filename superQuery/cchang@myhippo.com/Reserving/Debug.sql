@@ -22,6 +22,8 @@ left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_sna
 left join dbt_actuaries.claims_peril_mappings_202103 map on mon.peril = map.string_field_0
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 where (mon.date_knowledge = last_day(date_trunc(mon.date_knowledge, QUARTER),QUARTER) or mon.date_knowledge in ('2021-03-26'))
+and claim_number<>'009077-000128-GD-01'
+
 --and is_ebsl=true
 )
 ,x as (
@@ -129,7 +131,7 @@ end as carrier_segment
 
 ,sum(case when claim_closed_no_total_payment is true then 0 when total_incurred_calc >= 100000 then claim_count else 0 end) as reported_claim_count_x_Closed_No_TOTAL_Pay_excess_100k
 ,sum(case when claim_closed_no_loss_payment is true then 0 when total_incurred_calc >= 100000 then claim_count else 0 end) as reported_claim_count_x_Closed_No_LOSS_Pay_excess_100k
-
+fsafd
 from claims_supp mon
 where 1=1
 and carrier <> 'canopius'
@@ -138,8 +140,10 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
 )
 select 
 *,
+
+
 incurred_total_net_recoveries_cumulative*loss_dev_age_in_days/30.5 as dollar_wtd_age,
 CONCAT(analysis_peril, '/', state, '/' ,accident_year_recoded, '/', extract(MONTH from accident_month_recoded)) as CAT_id
 from x
 where 1=1
-and claim_number<>'009077-000128-GD-01'
+and capped_incurred_loss_net_recoveries_at_100k > 100000
