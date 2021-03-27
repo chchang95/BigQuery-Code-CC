@@ -143,3 +143,4 @@ CONCAT(analysis_peril, '/', state, '/' ,accident_year_recoded, '/', extract(MONT
 from x
 where 1=1
 and capped_loss_paid_net_recoveries_at_100k > 100000
+order by evaluation_date
