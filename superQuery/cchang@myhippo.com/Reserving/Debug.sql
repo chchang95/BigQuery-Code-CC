@@ -131,7 +131,6 @@ end as carrier_segment
 
 ,sum(case when claim_closed_no_total_payment is true then 0 when total_incurred_calc >= 100000 then claim_count else 0 end) as reported_claim_count_x_Closed_No_TOTAL_Pay_excess_100k
 ,sum(case when claim_closed_no_loss_payment is true then 0 when total_incurred_calc >= 100000 then claim_count else 0 end) as reported_claim_count_x_Closed_No_LOSS_Pay_excess_100k
-fsafd
 from claims_supp mon
 where 1=1
 and carrier <> 'canopius'
@@ -140,8 +139,6 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
 )
 select 
 *,
-
-
 incurred_total_net_recoveries_cumulative*loss_dev_age_in_days/30.5 as dollar_wtd_age,
 CONCAT(analysis_peril, '/', state, '/' ,accident_year_recoded, '/', extract(MONTH from accident_month_recoded)) as CAT_id
 from x
