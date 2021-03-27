@@ -22,8 +22,7 @@ left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_sna
 left join dbt_actuaries.claims_peril_mappings_202103 map on mon.peril = map.string_field_0
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 where (mon.date_knowledge = last_day(date_trunc(mon.date_knowledge, QUARTER),QUARTER) or mon.date_knowledge in ('2021-03-26'))
-and claim_number<>'009077-000128-GD-01'
-
+and mon.claim_number<>'009077-000128-GD-01'
 --and is_ebsl=true
 )
 ,x as (
