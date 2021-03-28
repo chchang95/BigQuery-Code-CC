@@ -231,3 +231,4 @@ evaluation_date
 from capped
 where 1=1
 and claim_number<>'009077-000128-GD-01'
+and capped_incurred_loss_net_recoveries_at_100k > 100000
