@@ -74,7 +74,7 @@ and status = 'active'
 )
 select 
 state, count(*), avg(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line)
-*.
+-- *
 from pol
 -- where renewal_number > 0
 group by 1
