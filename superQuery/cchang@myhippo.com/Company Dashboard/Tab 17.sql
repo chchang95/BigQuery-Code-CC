@@ -63,8 +63,9 @@ left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.p
 where date_snapshot = '2021-03-30'
 -- and date_policy_effective >= '2020-07-01'
 -- and carrier <> 'Canopius'
-and product = 'ho5'
-and status = 'active'
+-- and product = 'ho5'
+-- and status = 'active'
+and state = 'fl'
 -- and carrier = 'spinnaker'
 -- and state = 'ca'
 -- and state = 'tx'
@@ -73,8 +74,8 @@ and status = 'active'
 -- and date_policy_effective <= '2020-05-31'
 )
 select 
-state, count(*), avg(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line)
--- *
+-- state, count(*), avg(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line)
+*
 from pol
 -- where renewal_number > 0
-group by 1
+-- group by 1
