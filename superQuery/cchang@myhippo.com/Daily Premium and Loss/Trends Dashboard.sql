@@ -107,6 +107,8 @@ select ac.date_knowledge, carrier, state, product, CAT, peril_group, peril_group
 , sum(ac.expense_paid_change) as expense_paid_change
 , sum(ac.expense_net_reserves_change) as expense_net_reserves_change
 , sum(ac.outstanding_expense_net_reserves) as outstanding_expense_net_reserves
+, sum(ac.reported_claim_count_x_CNP_change) as reported_claim_count_x_CNP_change
+, sum(ac.closed_claim_count_x_CNP_change) as closed_claim_count_x_CNP_change
 , sum(ac.cumulative_reported_claim_count) as cumulative_reported_claim_count
 , sum(ac.cumulative_reported_claim_count_x_CNP) as cumulative_reported_claim_count_x_CNP
 , sum(ac.cumulative_closed_claim_count_x_CNP) as cumulative_closed_claim_count_x_CNP
