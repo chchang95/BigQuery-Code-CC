@@ -62,11 +62,14 @@ loss_net_reserves as outstanding_loss_net_reserves,
 case when lag(expense_incurred) over(partition by claim_id order by date_knowledge) is null then expense_incurred else expense_incurred - lag(expense_incurred) over(partition by claim_id order by date_knowledge) end as expense_incurred_change,
 case when lag(expense_paid) over(partition by claim_id order by date_knowledge) is null then expense_paid else expense_paid - lag(expense_paid) over(partition by claim_id order by date_knowledge) end as expense_paid_change,
 case when lag(expense_net_reserves) over(partition by claim_id order by date_knowledge) is null then expense_net_reserves else expense_net_reserves - lag(expense_net_reserves) over(partition by claim_id order by date_knowledge) end as expense_net_reserves_change,
-expense_net_reserves as outstanding_expense_net_reserves
+expense_net_reserves as outstanding_expense_net_reserves,
 
-,reported_claim_count as cumulative_reported_claim_count
-,reported_claim_count_x_CNP as cumulative_reported_claim_count_x_CNP
-,closed_claim_count_x_CNP as cumulative_closed_claim_count_x_CNP
+case when lag(reported_claim_count_x_CNP) over(partition by claim_id order by date_knowledge) is null then reported_claim_count_x_CNP else reported_claim_count_x_CNP - lag(reported_claim_count_x_CNP) over(partition by claim_id order by date_knowledge) end as reported_claim_count_x_CNP_change,
+case when lag(closed_claim_count_x_CNP) over(partition by claim_id order by date_knowledge) is null then closed_claim_count_x_CNP else closed_claim_count_x_CNP - lag(closed_claim_count_x_CNP) over(partition by claim_id order by date_knowledge) end as closed_claim_count_x_CNP_change,
+
+reported_claim_count as cumulative_reported_claim_count,
+reported_claim_count_x_CNP as cumulative_reported_claim_count_x_CNP,
+closed_claim_count_x_CNP as cumulative_closed_claim_count_x_CNP
 
 from claims
 order by 1
@@ -110,6 +113,6 @@ select ac.date_knowledge, carrier, state, product, CAT, peril_group, peril_group
 
 from agg_claims ac
 left join claims_supp cs on ac.claim_id = cs.claim_id
-where ac.date_knowledge <> '2019-09-01'
+where ac.date_knowledge <> '2019-09-07'
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
 order by 1
