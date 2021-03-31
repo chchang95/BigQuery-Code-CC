@@ -53,16 +53,18 @@ select eps.policy_id
 ,coverage_b as cov_b
 ,coverage_c as cov_c
 ,coverage_d as cov_d
-,renewal_number
-,reinsurance_treaty_property
+,property_data_geocoordinates_latitude
+,property_data_geocoordinates_longitude
+-- ,renewal_number
+-- ,reinsurance_treaty_property
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
 where date_snapshot = '2021-02-28'
 -- and date_policy_effective >= '2020-07-01'
 -- and carrier <> 'Canopius'
-and product <> 'ho5'
--- and status = 'active'
+and product = 'ho5'
+and status = 'active'
 -- and carrier = 'spinnaker'
 -- and state = 'ca'
 -- and state = 'tx'
