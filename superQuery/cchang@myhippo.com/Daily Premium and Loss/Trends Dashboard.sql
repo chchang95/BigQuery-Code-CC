@@ -110,5 +110,6 @@ select ac.date_knowledge, carrier, state, product, CAT, peril_group, peril_group
 
 from agg_claims ac
 left join claims_supp cs on ac.claim_id = cs.claim_id
+where ac.date_knowledge <> '2019-09-01'
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
-order by 2,1
+order by 1
