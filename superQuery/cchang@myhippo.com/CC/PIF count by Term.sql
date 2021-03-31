@@ -1,6 +1,7 @@
 select state,
 property_data_address_zip,
 property_data_address_county,
+product,
 -- , carrier, date_snapshot
 -- , org_id, organization_name, root_organization_name,
 -- sum(case when renewal_number > 0 then 1 else 0 end) as renewal_count,
@@ -14,11 +15,12 @@ from dw_prod_extracts.ext_policy_snapshots eps
 -- left join (select organization_id, organization_name, root_organization_name, from dw_prod.dim_organization_mappings) org_table on dp.org_id = org_table.organization_id
 -- left join (select date, last_day_of_month from dw_prod.utils_dates where date = date(last_day_of_month)) ud on eps.date_snapshot = date(ud.last_day_of_month)
 where 1=1
-and date_snapshot = '2021-02-22'
+and date_snapshot = '2021-02-28'
 -- and ud.date is not null
 -- and carrier = 'spinnaker'
 -- and product <> 'ho5'
+and state = 'ca'
 and status = 'active'
 -- and state in ('ct','md','wa')
-group by 1,2,3
+group by 1,2,3,4
 order by 3,1,2
