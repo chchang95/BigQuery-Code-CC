@@ -14,9 +14,14 @@ mon.*
     when peril = 'wind' or peril = 'hail' or peril = 'hurricane' then 'Y'
     when cat_code is not null then 'Y'
         else 'N' end as CAT
+, last_day(date_trunc(date_effective,MONTH),MONTH) as term_policy_effective_month
+, last_day(date_trunc(date_first_effective, MONTH),MONTH) as policy_effective_month
+, case when renewal_number > 0 then 'renewal' else 'new' end as tenure
 from dw_prod_extracts.ext_claims_inception_to_date mon
-left join dbt_actuaries.cat_coding_w_loss_20210228 cc on mon.claim_number = cc.claim_number
+left join dbt_actuaries.cat_coding_w_loss_20210228_new cc on mon.claim_number = cc.claim_number
 left join dbt_actuaries.claims_mappings_202012 map on mon.peril = map.string_field_0
+left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
+left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = (select max(date_snapshot) from dw_prod_extracts.ext_claims_inception_to_date)) using(policy_id)
 where date_knowledge = (select max(date_knowledge) from dw_prod_extracts.ext_claims_inception_to_date)
 )
 ,claims as (
@@ -42,7 +47,7 @@ select date_knowledge
 from dw_prod_extracts.ext_claims_inception_to_date mon
 left join dbt_actuaries.cat_coding_w_loss_20210228 cc on mon.claim_number = cc.claim_number
 where date_knowledge >= '2019-09-01'
-and date_knowledge = last_day(date_knowledge,week)
+and date_knowledge = last_day(date_knowledge,MONTH)
 and carrier <> 'canopius'
 group by 1, 2
 )
@@ -79,7 +84,7 @@ select date_snapshot, carrier
 , sum(earned_base + earned_total_optionals -earned_optionals_equipment_breakdown -earned_optionals_service_line) as total_earned_x_ebsl_x_pol_fees
 from dw_prod_extracts.ext_policy_snapshots
 where date_snapshot >= '2019-09-01'
-and date_snapshot = date_trunc(date_snapshot,WEEK)
+and date_snapshot = date_trunc(date_snapshot,MONTH)
 and carrier <> 'canopius'
 group by 1, 2
 )
@@ -90,6 +95,7 @@ from premium
 order by 1
 )
 select ac.date_knowledge, carrier, state, product, CAT, peril_group, peril_group_grouped, accident_week, accident_month, accident_quarter, report_week, report_month, report_quarter
+, term_policy_effective_month, policy_effective_month, tenure
 , case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 7 DAY) then 'New_Claim' else 'Existing_Claim' end as claim_type_week
 , case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 1 DAY) then 'New_Claim' else 'Existing_Claim' end as claim_type_day
 , case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 1 MONTH) then 'New_Claim' else 'Existing_Claim' end as claim_type_month
@@ -115,6 +121,6 @@ select ac.date_knowledge, carrier, state, product, CAT, peril_group, peril_group
 
 from agg_claims ac
 left join claims_supp cs on ac.claim_id = cs.claim_id
-where ac.date_knowledge <> '2019-09-07'
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+where ac.date_knowledge <> '2019-09-31'
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
 order by 1
