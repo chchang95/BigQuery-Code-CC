@@ -94,7 +94,7 @@ total_earned_x_ebsl_x_pol_fees - lag(total_earned_x_ebsl_x_pol_fees) over(partit
 from premium
 order by 1
 )
-select ac.date_knowledge, last_day(date_knowledge, quarter) as date_knowledge_quarter, carrier, state, product, CAT, peril_group, peril_group_grouped, accident_week, accident_month, accident_quarter, report_week, report_month, report_quarter
+select ac.date_knowledge, last_day(ac.date_knowledge, quarter) as date_knowledge_quarter, carrier, state, product, CAT, peril_group, peril_group_grouped, accident_week, accident_month, accident_quarter, report_week, report_month, report_quarter
 , term_policy_effective_month, policy_effective_month, tenure
 , case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 7 DAY) then 'New_Claim' else 'Existing_Claim' end as claim_type_week
 , case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 1 DAY) then 'New_Claim' else 'Existing_Claim' end as claim_type_day
