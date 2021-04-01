@@ -27,11 +27,12 @@ left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_sna
 left join dbt_actuaries.claims_peril_mappings_202103 map on mon.peril = map.string_field_0
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 where (mon.date_knowledge = last_day(date_trunc(mon.date_knowledge, MONTH),MONTH) or mon.date_knowledge in ('2021-03-30'))
+and mon.claim_number<>'009077-000128-GD-01'
 )
 ,x as (
 select 
-mon.claim_number,
-mon.claims_policy_number,
+-- mon.claim_number,
+-- mon.claims_policy_number,
 claims_handler,
 last_day(date_trunc(date_knowledge, MONTH),MONTH) as evaluation_date
 ,last_day(date_trunc(date_knowledge, QUARTER),QUARTER) as calendar_quarter
@@ -132,7 +133,7 @@ from claims_supp mon
 where 1=1
 and carrier <> 'canopius'
 --and is_ebsl is false
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43
 ),
 
 capped as(
@@ -157,8 +158,8 @@ from x
 )
 select 
 evaluation_date
-,claim_number #add 
-,claims_policy_number #add
+-- ,claim_number #add 
+-- ,claims_policy_number #add
 ,date_of_loss #add
 ,claims_handler #add
 ,date_first_notice_of_loss #add 
@@ -235,5 +236,4 @@ evaluation_date
 ,reporting_lag_in_mos_by_quarter #add
 from capped
 where 1=1
-and claim_number<>'009077-000128-GD-01'
 --and claim_number='HIL-3247243-00-01'
