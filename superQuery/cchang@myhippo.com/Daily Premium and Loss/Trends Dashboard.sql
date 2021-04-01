@@ -21,7 +21,7 @@ from dw_prod_extracts.ext_claims_inception_to_date mon
 left join dbt_actuaries.cat_coding_w_loss_20210228_new cc on mon.claim_number = cc.claim_number
 left join dbt_actuaries.claims_mappings_202012 map on mon.peril = map.string_field_0
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
-left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = (select max(date_snapshot) from dw_prod_extracts.ext_claims_inception_to_date)) using(policy_id)
+left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = (select max(date_snapshot) from dw_prod_extracts.ext_policy_snapshots)) using(policy_id)
 where date_knowledge = (select max(date_knowledge) from dw_prod_extracts.ext_claims_inception_to_date)
 )
 ,claims as (
