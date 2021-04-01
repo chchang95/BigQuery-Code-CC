@@ -45,7 +45,7 @@ select date_knowledge
 , sum(case when claim_status = 'open' then 0 when claim_closed_no_total_payment is true then 0 else 1 end) as closed_claim_count_x_CNP
 
 from dw_prod_extracts.ext_claims_inception_to_date mon
-left join dbt_actuaries.cat_coding_w_loss_20210228 cc on mon.claim_number = cc.claim_number
+left join dbt_actuaries.cat_coding_w_loss_20210228_new cc on mon.claim_number = cc.claim_number
 where date_knowledge >= '2019-09-01'
 and date_knowledge = last_day(date_knowledge,MONTH)
 and carrier <> 'canopius'
@@ -94,7 +94,7 @@ total_earned_x_ebsl_x_pol_fees - lag(total_earned_x_ebsl_x_pol_fees) over(partit
 from premium
 order by 1
 )
-select ac.date_knowledge, carrier, state, product, CAT, peril_group, peril_group_grouped, accident_week, accident_month, accident_quarter, report_week, report_month, report_quarter
+select ac.date_knowledge, last_day(date_knowledge, quarter) as date_knowledge_quarter, carrier, state, product, CAT, peril_group, peril_group_grouped, accident_week, accident_month, accident_quarter, report_week, report_month, report_quarter
 , term_policy_effective_month, policy_effective_month, tenure
 , case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 7 DAY) then 'New_Claim' else 'Existing_Claim' end as claim_type_week
 , case when cs.date_first_notice_of_loss >= date_sub(ac.date_knowledge, INTERVAL 1 DAY) then 'New_Claim' else 'Existing_Claim' end as claim_type_day
@@ -122,5 +122,5 @@ select ac.date_knowledge, carrier, state, product, CAT, peril_group, peril_group
 from agg_claims ac
 left join claims_supp cs on ac.claim_id = cs.claim_id
 where ac.date_knowledge <> '2019-09-30'
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
 order by 1
