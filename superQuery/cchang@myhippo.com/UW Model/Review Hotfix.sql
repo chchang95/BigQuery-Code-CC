@@ -11,7 +11,6 @@
 select id, bound, data, transaction, policy_info from postgres_public.policies
 where createdat >= '2021-01-22'
 and bound is false
-limit 1000
 -- and carrier <> 'canopius'
 -- and state = 'tx'
 --           and product not in ('ho5')
