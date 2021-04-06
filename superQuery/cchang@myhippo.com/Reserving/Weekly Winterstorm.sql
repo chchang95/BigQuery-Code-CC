@@ -60,7 +60,8 @@ SELECT DISTINCT
   select 'Hippo' as ClaimsHandler
   ,lower(Carrier) as carrier
   ,Loss_State as Policy_State
-  ,date_trunc(loss_date, MONTH) as accident_month
+  ,date_trunc(original_loss_date, MONTH) as original_accident_month
+  ,date_trunc(recoded_loss_date, MONTH) as recoded_accident_month
   ,lower(Product) as Product
   ,policy_number
   ,Inception_Date
