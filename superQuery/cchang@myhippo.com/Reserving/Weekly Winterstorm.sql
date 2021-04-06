@@ -1,13 +1,14 @@
 with x as (
 SELECT DISTINCT
-       reinsurance_treaty AS Treaty
+    case when cc.updated_treaty is null then reinsurance_treaty else cc.updated_treaty end as recoded_reinsurance_treaty
       , policy_number AS Policy_Number
       , date_effective AS Inception_Date
       , product as Product
+          , case when cc.Updated_Policy_Number is null then policy_number else cc.Updated_Policy_Number end as recoded_policy_number
       , date_expires AS Expiration_Date
       , mon.claim_number AS Claim_Number
       , date_of_loss AS original_loss_date
-      , recoded_date_of_loss as recoded_loss_date
+      , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
       , date_first_notice_of_loss AS Report_Date 
       , insured_name AS Insured_Name
       , street AS Loss_Location
@@ -18,7 +19,12 @@ SELECT DISTINCT
       , peril AS Cause_Of_Loss
       , date_close AS Closed_Date
       --, '2019' AS Treaty_Year
-      , cat_code AS Cat_Code
+    , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
+      , case when cc.cat_ind is true then 'Y'
+    when cc.cat_ind is false then 'N'
+    when peril = 'wind' or peril = 'hail' then 'Y'
+    when cat_code is not null then 'Y'
+        else 'N' end as CAT
       , assigned_adjuster AS Adjuster_Name 
       , carrier AS Carrier
       , customer_email AS Customer_Email
@@ -40,11 +46,8 @@ SELECT DISTINCT
       , total_deductible_received AS Total_Deductibles
       , total_recovery_subr_salv AS Total_Recovery
       , Total_Recoverable_Depreciation
-      , case when peril = 'equipment_breakdown' or peril = 'service_line' then 'Y'
-      else 'N' end as EBSL
-      , case when peril = 'wind' or peril = 'hail' then 'Y'
-      when cat_code is not null then 'Y'
-      else 'N' end as CAT
+      , case when peril = 'equipment_breakdown' or peril = 'service_line' then true
+      else is_ebsl end as EBSL
       ,loss_description
       ,damage_description
       ,dp.org_id as organization_id
@@ -63,7 +66,8 @@ SELECT DISTINCT
   ,date_trunc(original_loss_date, MONTH) as original_accident_month
   ,date_trunc(recoded_loss_date, MONTH) as recoded_accident_month
   ,lower(Product) as Product
-  ,policy_number
+  ,policy_number as original_policy_number
+  ,recoded_policy_number as recoded_policy_number
   ,Inception_Date
   ,Expiration_Date
   ,Claim_Number
@@ -77,19 +81,24 @@ SELECT DISTINCT
   ,cause_of_loss
   ,closed_date
   ,CAT as CAT_indicator
-  ,'' as placeholder
-  ,EBSL
+,case when CAT = 'N' then null
+    when (CAT = 'Y' and recoded_loss_event in ('2115_direct', '2116_direct','2117_direct','2115_indirect','2116_indirect','2117_indirect','2115_indeterminate','2117_indeterminate'))
+        then '202102_winterstorm'
+    when (CAT = 'Y' and recoded_loss_event not in ('2115_direct', '2116_direct','2117_direct','2115_indirect','2116_indirect','2117_indirect','2115_indeterminate','2117_indeterminate'))
+        then 'non_winterstorm'
+    end as cat_group  
+    ,recoded_loss_event
+    ,EBSL
   ,loss_paid
   ,Loss_Net_Reserve
   ,expense_paid
   ,expense_net_reserve
   ,Total_Recovery
-  ,coalesce(loss_paid) + coalesce(loss_net_reserves) + coalesce(expense_paid) + coalesce(expense_net_Reserve) - coalesce(total_recovery)
+  ,coalesce(loss_paid) + coalesce(loss_net_reserve) + coalesce(expense_paid) + coalesce(expense_net_Reserve) - coalesce(total_recovery)
   ,organization_id
-  ,CAT_code as internal_CAT_code
   ,loss_description
   ,damage_description
-  ,treaty
+  ,recoded_reinsurance_treaty
 --   ,Adjuster_Name
 --   ,Total_Recoverable_Depreciation
   from x
