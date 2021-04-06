@@ -60,7 +60,9 @@ SELECT DISTINCT
   and carrier <> 'canopius'
 --   and is_ebsl is false
   )
-  select 'Hippo' as ClaimsHandler
+  select 
+  date_knowledge,
+  'Hippo' as ClaimsHandler
   ,lower(Carrier) as carrier
   ,Loss_State as Policy_State
   ,date_trunc(original_loss_date, MONTH) as original_accident_month
