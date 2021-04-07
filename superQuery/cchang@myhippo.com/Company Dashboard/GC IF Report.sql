@@ -53,11 +53,11 @@ select eps.policy_id
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
-where date_snapshot = '2021-02-28'
+where date_snapshot = '2021-03-31'
 and carrier <> 'canopius'
-and product <> 'ho5'
+-- and product <> 'ho5'
 and status = 'active'
--- and carrier = 'spinnaker'
+and carrier = 'spinnaker'
 -- and state = 'ca'
 -- and state = 'tx'
 -- and property_data_address_zip = '78332'
