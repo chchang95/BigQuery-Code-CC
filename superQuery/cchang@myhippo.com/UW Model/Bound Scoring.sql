@@ -196,8 +196,8 @@ policy_id, state, carrier, product, case when renewal_number > 0 then 'Renewal' 
 , round(exp(lin_comb) / (1+ exp(lin_comb)),6) as risk_score
 from scoring_inter
 )
-select *
--- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
+select policy_id
+, CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
 from scoring_final
 -- where policy_id = 3027598
 where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
