@@ -151,8 +151,8 @@ and product <> 'HO5'
 and carrier <> 'Canopius'
 -- and status = 'active'
 -- and date_policy_effective >= '2020-05-15'
-and calculated_fields_non_cat_risk_score is not null
-and renewal_number = 0
+-- and calculated_fields_non_cat_risk_score is not null
+-- and renewal_number = 0
 )
 ,scoring_inter as (
 select *
@@ -200,5 +200,5 @@ select *
 -- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
 from scoring_final
 -- where policy_id = 3027598
--- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
+where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
 -- 2513405
