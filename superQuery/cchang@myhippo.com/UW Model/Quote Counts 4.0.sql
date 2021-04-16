@@ -34,7 +34,7 @@ SELECT
     --   q.policy_number,
     --   q.policy_id,
     --   cast(q.date_quote_first_seen as DATE) as quote_date,
-    --   date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week,
+      date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week,
       date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
       ,qs.org_name as organization_name
       ,q.organization_id
@@ -93,7 +93,7 @@ SELECT
       ,q.dnq_rule_ids
       ,q.is_suppress_quote_on_capacity_restriction
     --   ,q.date_bound
-    --   ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
+      ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
       ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
       ,q.channel
       ,SUM(CASE WHEN ddp.is_bound IS TRUE THEN 1 ELSE 0 END) AS bound_count
@@ -111,6 +111,7 @@ SELECT
     --   and q.product <> 'ho5'
       and q.carrier <> 'canopius'
     --   and q.state in ('ga','in','md','nv','oh','mo','il')
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+    and 
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
 )
 select * from final
