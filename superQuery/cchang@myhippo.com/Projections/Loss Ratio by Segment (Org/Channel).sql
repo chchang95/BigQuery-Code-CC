@@ -8,6 +8,7 @@ select eps.policy_id
 , case when date_policy_effective >= '2020-08-01' then 'Post August' else 'Pre August' end as policy_cohort
 -- , round(Pure_premium_adjusted,0) as noncat_uw_score
 , property_data_address_zip as zip
+, property_data_address_county as county
 , case when property_data_year_built is null then 'Missing'
         when cast(property_data_year_built as numeric) >= 2000 then 'Post 2000' 
         when cast(property_data_year_built as numeric) >= 1980 then 'Pre 2000' 
@@ -137,7 +138,8 @@ accident_month
 ,product
 ,state
 ,channel
--- ,zip
+,zip
+,county
 -- ,noncat_uw_score
 -- ,zip_status
 -- ,year_built
@@ -171,7 +173,7 @@ where 1=1
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 -- and policy_id = 2051353
-group by 1,2,3,4,5,6,7
+group by 1,2,3,4,5,6,7,8,9
 )
 select 
 *
