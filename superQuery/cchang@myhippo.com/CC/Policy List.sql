@@ -8,8 +8,8 @@ select eps.policy_id
 -- ,date_policy_expires as expiration_date
 -- ,property_data_address_street as street
 -- ,property_data_address_city as city
--- ,property_data_address_zip as zip
--- ,property_data_address_county as county
+,property_data_address_zip as zip
+,property_data_address_county as county
 -- ,eps.state 
 -- ,eps.product 
 -- ,calculated_fields_age_of_home as age_of_home
@@ -58,6 +58,7 @@ LEFT JOIN dw_prod.dim_organizations o on dq.organization_id = o.organization_id
 where date_snapshot = '2021-03-31'
 -- and date_policy_effective >= '2020-07-01'
 and eps.carrier <> 'canopius'
+and state = 'ca'
 -- and eps.product = 'ho3'
 -- and status = 'active'
 -- and carrier = 'spinnaker'
