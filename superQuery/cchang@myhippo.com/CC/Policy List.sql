@@ -58,7 +58,7 @@ LEFT JOIN dw_prod.dim_organizations o on dq.organization_id = o.organization_id
 where date_snapshot = '2021-03-31'
 -- and date_policy_effective >= '2020-07-01'
 and eps.carrier <> 'canopius'
-and state = 'ca'
+and eps.state = 'ca'
 -- and eps.product = 'ho3'
 -- and status = 'active'
 -- and carrier = 'spinnaker'
