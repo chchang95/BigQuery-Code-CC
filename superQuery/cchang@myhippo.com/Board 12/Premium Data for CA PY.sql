@@ -49,8 +49,8 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
         state
         ,carrier
         ,product
-        ,date_accounting_start as calendar_month_start
-        ,date_accounting_end as calendar_month_end
+        -- ,date_accounting_start as calendar_month_start
+        -- ,date_accounting_end as calendar_month_end
         ,last_day(date_trunc(date_accounting_start, QUARTER),QUARTER) as calendar_quarter
         ,calendar_year
         ,reinsurance_treaty_property_accounting
@@ -91,7 +91,7 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
         ,sum(on_leveled_earned_prem_x_ebsl_x_pol_fees_x_exp_load) as on_leveled_earned_prem_x_ebsl_x_pol_fees_x_exp_load
         
 from premium p
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+group by 1,2,3,4,5,6,7,8,9,10,11
 )
 , summary as (
     select 
@@ -112,8 +112,8 @@ group by 1
 select * from aggregated
 where 1=1
 -- and product <> 'ho5'
-and calendar_month_start is not null
-and calendar_month_start >= '2019-01-01'
+and calendar_quarter is not null
+-- and calendar_month_start >= '2019-01-01'
 and state = 'ca'
 -- and reinsurance_treaty_property_accounting = 'spkr21_core'
 -- and policy_effective_month is null
