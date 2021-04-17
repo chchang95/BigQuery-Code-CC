@@ -113,6 +113,7 @@ select * from aggregated
 where 1=1
 -- and product <> 'ho5'
 and calendar_month_start is not null
+and calendar_month_start >= '2019-01-01'
 and state = 'ca'
 -- and reinsurance_treaty_property_accounting = 'spkr21_core'
 -- and policy_effective_month is null
