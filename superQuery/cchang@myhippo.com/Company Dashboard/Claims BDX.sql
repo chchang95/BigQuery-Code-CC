@@ -50,7 +50,7 @@ SELECT DISTINCT
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
   left join (select claim_id, claim_number, loss_description, damage_description from dw_prod.dim_claims) fc using (claim_number)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  WHERE date_knowledge = '2021-04-19'
+  WHERE date_knowledge = '2021-04-23'
   and carrier <> 'canopius'
 --   and is_ebsl is false
   )
