@@ -40,7 +40,7 @@ from dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums epud
 
         where date_knowledge = '2021-04-28'
         and epud.carrier <> 'canopius'
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9,10,11
 )
 , aggregated as (
     select 
