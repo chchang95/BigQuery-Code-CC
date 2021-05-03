@@ -33,7 +33,7 @@ with quotes_supp as (
 SELECT
     --   q.policy_number,
     --   q.policy_id,
-    --   cast(q.date_quote_first_seen as DATE) as quote_date,
+      cast(q.date_quote_first_seen as DATE) as quote_date,
       date_trunc(cast(q.date_quote_first_seen as DATE), WEEK) as quote_week,
       date_trunc(cast(q.date_quote_first_seen as DATE), MONTH) as quote_month
       ,qs.org_name as organization_name
@@ -92,7 +92,7 @@ SELECT
            else 'NA' end as UW_Action_w_DNQ
       ,q.dnq_rule_ids
       ,q.is_suppress_quote_on_capacity_restriction
-    --   ,q.date_bound
+      ,q.date_bound
       ,date_trunc(cast(q.date_bound as DATE), WEEK) as bound_week
       ,date_trunc(cast(q.date_bound as DATE), MONTH) as bound_month
       ,q.channel
@@ -106,11 +106,11 @@ SELECT
             left join (select policy_id, property_data_roof_type from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2020-12-08') ps on q.policy_id = ps.policy_id
             left join dw_prod.tx_moratorium_zips zips on safe_cast(q.zip_code as numeric) = safe_cast(zips.zip_code as numeric)
             left join dbt_cchin.ca_moratorium_zips_august_2020 ca on q.zip_code = safe_cast(ca.Zips_to_Shut_Off as string) and upper(q.product) = ca.product
-      where q.date_quote_first_seen >= '2020-10-01'
+      where q.date_quote_first_seen >= '2021-03-01'
       and q.state = 'ca'
     --   and q.product <> 'ho5'
       and q.carrier <> 'canopius'
     --   and q.state in ('ga','in','md','nv','oh','mo','il')
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
 )
 select * from final
