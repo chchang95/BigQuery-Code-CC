@@ -150,10 +150,10 @@ accident_month
 
 ,sum(coalesce(cat_incurred,0)) as cat_incurred
 ,sum(coalesce(noncat_incurred,0)) as noncat_incurred
-,sum(coalesce(total_incurred,0)) as total_incurred
+-- ,sum(coalesce(total_incurred,0)) as total_incurred
 ,sum(coalesce(noncat_capped_100k,0)) as noncat_capped_100k
 ,sum(coalesce(noncat_excess_100k,0)) as noncat_excess_100k
-,sum(coalesce(total_reported_claim_count_x_CNP,0)) as total_reported_claim_count_x_CNP
+-- ,sum(coalesce(total_reported_claim_count_x_CNP,0)) as total_reported_claim_count_x_CNP
 ,sum(coalesce(cat_reported_claim_count_x_CNP,0)) as cat_reported_claim_count_x_CNP
 ,sum(coalesce(noncat_reported_claim_count_x_CNP,0)) as noncat_reported_claim_count_x_CNP
 
@@ -161,8 +161,8 @@ accident_month
 ,sum(coalesce(earned_prem_x_ebsl_x_fees,0)) as earned_prem_x_ebsl_x_fees
 ,sum(coalesce(a.written_exposure,0)) as written_exposure
 ,sum(coalesce(a.earned_exposure,0)) as earned_exposure
-,sum(coalesce(a.written_policy_fee,0)) as written_policy_fee
-,sum(coalesce(a.earned_policy_fee,0)) as earned_policy_fee
+-- ,sum(coalesce(a.written_policy_fee,0)) as written_policy_fee
+-- ,sum(coalesce(a.earned_policy_fee,0)) as earned_policy_fee
 -- ,sum(coalesce(on_leveled_written_prem_x_ebsl_x_fees,0)) as on_leveled_written_prem_x_ebsl_x_fees
 -- ,sum(coalesce(on_leveled_earned_prem_x_ebsl_x_fees,0)) as on_leveled_earned_prem_x_ebsl_x_fees
 
