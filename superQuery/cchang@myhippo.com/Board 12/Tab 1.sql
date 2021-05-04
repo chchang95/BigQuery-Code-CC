@@ -19,7 +19,7 @@ coverage_deductible
 -- sum(written_optionals_equipment_breakdown + written_optionals_service_line) as total_WP_EBSL,
 ,count(eps.policy_id) as total_PIF_count
 -- ,count(eps.policy_id) / 
-,sum(count(eps.policy_id)) over () as count2
+,sum(count(eps.policy_id)) over (partition by coverage_deductible) as count2
 
 -- sum(coalesce(coverage_a,0)) as total_covA,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) as total_TIV,
