@@ -17,7 +17,10 @@ coverage_deductible
 -- sum(case when renewal_number = 0 then 1 else 0 end) as new_business_count,
 -- sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as total_WP_x_ebsl_x_pol_fee,
 -- sum(written_optionals_equipment_breakdown + written_optionals_service_line) as total_WP_EBSL,
-,count(eps.policy_id) as total_PIF_count,
+,count(eps.policy_id) as total_PIF_count
+-- ,count(eps.policy_id) / 
+,sum(1) over (partition by coverage_deductible) as count2
+
 -- sum(coalesce(coverage_a,0)) as total_covA,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) as total_TIV,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) / count(eps.policy_id) as avg_TIV
