@@ -34,4 +34,4 @@ and product = 'ho3'
 and status = 'active'
 and state in ('tx')
 group by 1
-order by 1,2,3
+order by 1,2
