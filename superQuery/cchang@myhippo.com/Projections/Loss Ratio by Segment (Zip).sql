@@ -135,9 +135,9 @@ accident_month
 -- end as accident_cohort
 -- ,org_id
 -- ,org_name
-,product
+-- ,product
 ,state
-,channel
+-- ,channel
 ,zip
 ,county
 -- ,noncat_uw_score
@@ -169,8 +169,8 @@ accident_month
 from aggregated a
 left join policies using(policy_id) 
 where 1=1
--- and state = 'ca'
--- and product <> 'ho5'
+and state = 'tx'
+and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 -- and policy_id = 2051353
 group by 1,2,3,4,5,6,7
