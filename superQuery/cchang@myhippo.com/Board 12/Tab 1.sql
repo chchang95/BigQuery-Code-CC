@@ -37,6 +37,6 @@ and product = 'ho3'
 and status = 'active'
 and state in ('tx')
 and property_data_address_county in ('Collin', 'Dallas', 'Denton', 'Tarrant')
-and coverage_deductible = 1
+-- and coverage_deductible = 1
 group by 1,2
 order by 1,2 
