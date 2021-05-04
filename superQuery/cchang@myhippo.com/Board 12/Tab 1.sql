@@ -2,11 +2,11 @@ select
 -- , carrier,
 -- state,
 -- property_data_address_zip,
-property_data_address_county
+-- property_data_address_county
 -- product
--- ,coverage_deductible
+,coverage_deductible
 -- ,coverage_deductible_amount
--- ,coverage_wind_deductible
+,coverage_wind_deductible
 -- ,coverage_wind_deductible_amount
 -- date_snapshot,
 -- date_trunc(date_policy_effective,MONTH) as policy_eff_month,
@@ -33,5 +33,6 @@ and date_snapshot = '2021-01-31'
 and product = 'ho3'
 and status = 'active'
 and state in ('tx')
-group by 1
-order by 2 desc
+and property_data_address_county in ('Collin', 'Dallas', 'Denton', 'Tarrant')
+group by 1,2
+order by 1,2 
