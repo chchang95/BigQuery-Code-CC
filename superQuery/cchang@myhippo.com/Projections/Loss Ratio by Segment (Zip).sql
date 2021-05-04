@@ -24,7 +24,7 @@ left join (select policy_id, case when channel is null then 'Online' else channe
 left join dbt_cchin.ca_moratorium_zips_august_2020 zips on safe_cast(eps.property_data_address_zip as numeric) = cast(zips.Zips_to_Shut_Off as numeric) and eps.product = lower(zips.Product)
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 left join dw_prod.dim_organizations do on org_id = do.organization_id
-where date_snapshot = '2020-03-31'
+where date_snapshot = '2021-03-31'
 )
 ,claims_supp as (
 select mon.*
@@ -67,7 +67,7 @@ FROM
     claims_supp mon
   where is_ebsl is false
   and carrier <> 'canopius'
-  and date_knowledge = '2020-03-31'
+  and date_knowledge = '2021-03-31'
   group by 1,2,3
  )
 , premium as (
@@ -86,7 +86,7 @@ FROM
 from dw_prod_extracts.ext_policy_monthly_premiums epud
     left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2021-03-31') seps on seps.policy_id = epud.policy_id
         where 1=1
-        and date_knowledge = '2020-03-31'
+        and date_knowledge = '2021-03-31'
         and carrier <> 'canopius'
 group by 1,2,3
 )
@@ -143,10 +143,10 @@ accident_month
 -- ,noncat_uw_score
 -- ,zip_status
 -- ,year_built
--- ,tenure
+,tenure
 -- ,policy_cohort
 -- ,term_policy_effective_month
--- ,orig_policy_effective_month
+,orig_policy_effective_month
 
 ,sum(coalesce(cat_incurred,0)) as cat_incurred
 ,sum(coalesce(noncat_incurred,0)) as noncat_incurred
@@ -173,7 +173,7 @@ and state = 'tx'
 and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 -- and policy_id = 2051353
-group by 1,2,3,4,5
+group by 1,2,3,4,5,6,7
 )
 select 
 *
