@@ -19,7 +19,7 @@ coverage_wind_deductible
 -- sum(written_optionals_equipment_breakdown + written_optionals_service_line) as total_WP_EBSL,
 ,count(eps.policy_id) as total_PIF_count
 ,round(count(eps.policy_id) / sum(count(eps.policy_id)) over (),2) as percent_dist
-,sum(count(eps.policy_id)) over (partition by coverage_deductible) as total_count
+,sum(count(eps.policy_id)) over (partition by coverage_wind_deductible) as total_count
 
 -- sum(coalesce(coverage_a,0)) as total_covA,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) as total_TIV,
