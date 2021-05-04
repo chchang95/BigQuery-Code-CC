@@ -18,7 +18,7 @@ coverage_deductible
 -- sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as total_WP_x_ebsl_x_pol_fee,
 -- sum(written_optionals_equipment_breakdown + written_optionals_service_line) as total_WP_EBSL,
 ,count(eps.policy_id) as total_PIF_count
-,count(eps.policy_id) / sum(count(eps.policy_id)) over (partition by coverage_deductible) as percent_dist
+,round(count(eps.policy_id) / sum(count(eps.policy_id)) over (partition by coverage_deductible),2) as percent_dist
 ,sum(count(eps.policy_id)) over (partition by coverage_deductible) as total_count
 
 -- sum(coalesce(coverage_a,0)) as total_covA,
