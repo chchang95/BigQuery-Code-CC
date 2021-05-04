@@ -4,9 +4,9 @@ select
 -- property_data_address_zip,
 -- property_data_address_county
 -- product
-coverage_deductible
+coverage_wind_deductible
 -- ,coverage_deductible_amount
-,coverage_wind_deductible
+,coverage_deductible
 -- ,coverage_wind_deductible_amount
 -- date_snapshot,
 -- date_trunc(date_policy_effective,MONTH) as policy_eff_month,
@@ -39,4 +39,4 @@ and state in ('tx')
 and property_data_address_county in ('Collin', 'Dallas', 'Denton', 'Tarrant')
 -- and coverage_deductible = 1
 group by 1,2
-order by 1,2 
+order by 1,2
