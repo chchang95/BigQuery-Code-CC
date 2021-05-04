@@ -4,7 +4,7 @@ select
 -- property_data_address_zip,
 -- property_data_address_county
 -- product
-,coverage_deductible
+coverage_deductible
 -- ,coverage_deductible_amount
 ,coverage_wind_deductible
 -- ,coverage_wind_deductible_amount
