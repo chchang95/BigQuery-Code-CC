@@ -14,7 +14,7 @@ state,
 -- sum(case when renewal_number = 0 then 1 else 0 end) as new_business_count,
 sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as total_WP_x_ebsl_x_pol_fee,
 sum(written_policy_fee) as pol_fee,
-
+sum(written_policy_fee) /sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as fee_rate,
 -- sum(written_optionals_equipment_breakdown + written_optionals_service_line) as total_WP_EBSL,
 -- count(eps.policy_id) as PIF_count,
 -- round(count(eps.policy_id) / (sum(count(eps.policy_id)) over ()),2) as PIF_distribution,
@@ -35,5 +35,5 @@ and date_snapshot = '2021-04-30'
 and date_policy_effective >= '2021-01-01'
 and status = 'active'
 -- and state in ('ca')
-group by 1,2
+group by 1
 order by 1,2
