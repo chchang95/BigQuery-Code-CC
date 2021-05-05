@@ -17,7 +17,7 @@ sum(written_base + written_total_optionals - written_optionals_equipment_breakdo
 count(eps.policy_id) as PIF_count,
 round(count(eps.policy_id) / (sum(count(eps.policy_id)) over ()),2) as PIF_distribution,
 -- (sum(count(eps.policy_id)) over ()),
--- sum(coalesce(coverage_a,0)) as total_covA,
+sum(coalesce(coverage_a,0)) / count(eps.policy_id) as avg_covA,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) as total_TIV,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) / count(eps.policy_id) as avg_TIV
 from dw_prod_extracts.ext_policy_snapshots eps
