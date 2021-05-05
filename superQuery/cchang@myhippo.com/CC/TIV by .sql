@@ -30,5 +30,5 @@ and date_snapshot = '2021-04-30'
 -- and product <> 'ho5'
 and status = 'active'
 and state in ('ca')
-group by 1,2,3,4
+group by 1,2
 order by 1,2
