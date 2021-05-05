@@ -31,11 +31,11 @@ SELECT DISTINCT
   left join (select claim_id, claim_number, loss_description, damage_description from dw_prod.dim_claims) fc using (claim_number)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join dbt_actuaries.cat_coding_w_loss_20210430 cc on mon.claim_number = cast(cc.claim_number as string)
-  WHERE date_knowledge = '2021-04-30'
+  WHERE date_knowledge = (last_day(date_knowledge, week(sunday))+1)
   and carrier <> 'canopius'
 --   and is_ebsl is false
   )
-select *,
+select 
 claim_number as Claim_Number,
 recoded_loss_date as Date_of_Loss,
 date_first_notice_of_loss as Date_Reported,
@@ -51,3 +51,4 @@ peril as Cause_of_Loss,
   from x
   where 1=1
   and recoded_loss_event in ('2115_direct', '2116_direct','2117_direct','2115_indirect','2116_indirect','2117_indirect','2115_indeterminate','2117_indeterminate')
+  
