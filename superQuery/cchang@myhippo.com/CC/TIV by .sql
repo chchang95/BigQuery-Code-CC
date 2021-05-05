@@ -36,4 +36,4 @@ and date_policy_effective >= '2021-01-01'
 and status = 'active'
 -- and state in ('ca')
 group by 1
-order by 1,2
+order by 2 desc
