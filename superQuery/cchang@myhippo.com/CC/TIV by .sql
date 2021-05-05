@@ -27,7 +27,7 @@ and date_snapshot = '2021-04-30'
 -- and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 -- and ud.date is not null
 -- and carrier = 'spinnaker'
--- and product <> 'ho5'
+and product = 'ho3'
 and status = 'active'
 and state in ('ca')
 group by 1,2
