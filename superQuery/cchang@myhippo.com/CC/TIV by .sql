@@ -15,7 +15,7 @@ property_data_building_quality,
 sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as total_WP_x_ebsl_x_pol_fee,
 -- sum(written_optionals_equipment_breakdown + written_optionals_service_line) as total_WP_EBSL,
 count(eps.policy_id) as PIF_count,
-count(eps.policy_id) / sum(count(eps.policy_id)) over (partition by property_data_building_quality) as PIF_distribution,
+count(eps.policy_id) / (sum(count(eps.policy_id)) over (partition by property_data_building_quality)) as PIF_distribution,
 -- sum(coalesce(coverage_a,0)) as total_covA,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) as total_TIV,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) / count(eps.policy_id) as avg_TIV
