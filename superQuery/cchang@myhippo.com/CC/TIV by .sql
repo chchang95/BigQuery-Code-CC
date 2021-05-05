@@ -7,17 +7,19 @@ state,
 -- date_snapshot,
 -- date_trunc(date_policy_effective,MONTH) as policy_eff_month,
 -- channel,
-property_data_building_quality,
+-- property_data_building_quality,
 -- case when renewal_number > 0 then 'renewal' else 'new' end as tenure,
 -- , org_id, organization_name, root_organization_name,
 -- sum(case when renewal_number > 0 then 1 else 0 end) as renewal_count,
 -- sum(case when renewal_number = 0 then 1 else 0 end) as new_business_count,
 sum(written_base + written_total_optionals - written_optionals_equipment_breakdown - written_optionals_service_line) as total_WP_x_ebsl_x_pol_fee,
+sum(written_policy_fee) as pol_fee,
+
 -- sum(written_optionals_equipment_breakdown + written_optionals_service_line) as total_WP_EBSL,
-count(eps.policy_id) as PIF_count,
-round(count(eps.policy_id) / (sum(count(eps.policy_id)) over ()),2) as PIF_distribution,
+-- count(eps.policy_id) as PIF_count,
+-- round(count(eps.policy_id) / (sum(count(eps.policy_id)) over ()),2) as PIF_distribution,
 -- (sum(count(eps.policy_id)) over ()),
-round(sum(coalesce(coverage_a,0)) / count(eps.policy_id),0) as avg_covA,
+-- round(sum(coalesce(coverage_a,0)) / count(eps.policy_id),0) as avg_covA,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) as total_TIV,
 -- sum(coalesce(coverage_a,0) + coalesce(coverage_b,0) + coalesce(coverage_c,0) + coalesce(coverage_d,0)) / count(eps.policy_id) as avg_TIV
 from dw_prod_extracts.ext_policy_snapshots eps
@@ -29,8 +31,9 @@ and date_snapshot = '2021-04-30'
 -- and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 -- and ud.date is not null
 -- and carrier = 'spinnaker'
-and product = 'ho3'
+-- and product = 'ho3'
+and date_policy_effective >= '2021-01-01'
 and status = 'active'
-and state in ('ca')
+-- and state in ('ca')
 group by 1,2
 order by 1,2
