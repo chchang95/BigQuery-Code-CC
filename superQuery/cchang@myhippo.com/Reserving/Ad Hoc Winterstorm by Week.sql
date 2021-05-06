@@ -36,6 +36,7 @@ SELECT DISTINCT
 --   and is_ebsl is false
   )
 select 
+date_knowledge as evaluation_date
 claim_number as Claim_Number,
 recoded_loss_date as Date_of_Loss,
 date_first_notice_of_loss as Date_Reported,
