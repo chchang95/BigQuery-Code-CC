@@ -31,7 +31,7 @@ SELECT DISTINCT
   left join (select claim_id, claim_number, loss_description, damage_description from dw_prod.dim_claims) fc using (claim_number)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join dbt_actuaries.cat_coding_w_loss_20210430 cc on mon.claim_number = cast(cc.claim_number as string)
-  WHERE date_knowledge = (last_day(date_knowledge, week(sunday))+1)
+  WHERE date_knowledge = date_add(last_day(date_sub(date_knowledge,interval 1 week), week(sunday)), interval 1 day)
   and carrier <> 'canopius'
 --   and is_ebsl is false
   )
