@@ -89,6 +89,7 @@ SELECT DISTINCT
   from x
   where 1=1
   and cause_of_loss in ('wind','hail')
+  and carrier = 'spinnaker'
 --   and Loss_State = 'mi'
 -- and loss_net_reserve > 0 and claim_status = 'closed'
 -- and report_date >= '2021-01-31'
