@@ -71,23 +71,24 @@ SELECT DISTINCT
   ,claim_status
   ,cause_of_loss
   ,closed_date
-  ,CAT as CAT_indicator
-  ,'' as placeholder
+--   ,CAT as CAT_indicator
+--   ,'' as placeholder
   ,EBSL
   ,loss_paid
   ,Loss_Net_Reserve
   ,expense_paid
   ,expense_net_reserve
   ,Total_Recovery
-  ,organization_id
-  ,CAT_code as internal_CAT_code
-  ,loss_description
-  ,damage_description
-  ,treaty
-  ,Adjuster_Name
+--   ,organization_id
+--   ,CAT_code as internal_CAT_code
+--   ,loss_description
+--   ,damage_description
+--   ,treaty
+--   ,Adjuster_Name
 --   ,Total_Recoverable_Depreciation
   from x
   where 1=1
+  and cause_of_loss in ('wind','hail')
 --   and Loss_State = 'mi'
 -- and loss_net_reserve > 0 and claim_status = 'closed'
 -- and report_date >= '2021-01-31'
