@@ -17,7 +17,7 @@ select eps.policy_id
 -- ,fpu.quote_premium_optionals
 -- ,fpu.quote_optionals_equipment_breakdown
 -- ,fpu.quote_optionals_service_line
-,written_base + written_total_optionals + written_policy_fee as written_total
+,written_base + written_total_optionals + written_policy_fee as written_total_w_fees
 ,written_base
 ,written_policy_fee
 ,written_total_optionals
@@ -50,9 +50,15 @@ select eps.policy_id
 ,coverage_b as cov_b
 ,coverage_c as cov_c
 ,coverage_d as cov_d
+, channel
+, org_id
+,do.name as org_name
+,property_data_territory_rater_code
 from dw_prod_extracts.ext_policy_snapshots eps
 left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(policy_id)
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
+left join (select policy_id, case when channel is null then 'Online' else channel end as channel, coalesce(organization_id,0) as org_id from dw_prod.dim_policies) using(policy_id)
+left join dw_prod.dim_organizations do on org_id = do.organization_id
 where date_snapshot = '2021-03-31'
 and carrier <> 'canopius'
 -- and product <> 'ho5'
