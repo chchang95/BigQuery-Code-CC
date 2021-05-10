@@ -55,7 +55,7 @@ SELECT DISTINCT
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
   left join (select claim_id, claim_number, loss_description, damage_description from dw_prod.dim_claims) fc using (claim_number)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  left join dbt_actuaries.cat_coding_w_loss_20210331 cc on cc.claim_number = mon.claim_number
+  left join dbt_actuaries.cat_coding_w_loss_20210430 cc on cc.claim_number = mon.claim_number
   WHERE date_knowledge = date_trunc(date_knowledge,week)
   and date_knowledge >= '2021-02-01'
   and carrier <> 'canopius'
@@ -92,12 +92,12 @@ SELECT DISTINCT
     end as cat_group  
     ,recoded_loss_event
     ,EBSL
-  ,loss_paid
+  ,loss_paid as loss_paid_x_recoveries
   ,Loss_Net_Reserve
-  ,expense_paid
+  ,expense_paid as expense_paid_x_recoveries
   ,expense_net_reserve
   ,Total_Recovery
-  ,coalesce(loss_paid) + coalesce(loss_net_reserve) + coalesce(expense_paid) + coalesce(expense_net_Reserve) - coalesce(total_recovery)
+  ,coalesce(loss_paid) + coalesce(loss_net_reserve) + coalesce(expense_paid) + coalesce(expense_net_Reserve) - coalesce(total_recovery) as total_incurred_inc_recoveries
   ,organization_id
   ,loss_description
   ,damage_description
