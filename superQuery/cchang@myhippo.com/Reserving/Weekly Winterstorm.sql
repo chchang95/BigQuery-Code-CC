@@ -107,6 +107,7 @@ SELECT DISTINCT
   from x
   where 1=1
   and CAT = 'Y'
+  and report_date between '2021-04-01' and '2021-04-30'
   order by 1
 --   and Loss_State = 'mi'
 -- and loss_net_reserve > 0 and claim_status = 'closed'
