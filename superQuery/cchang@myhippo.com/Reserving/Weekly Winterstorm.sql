@@ -56,8 +56,10 @@ SELECT DISTINCT
   left join (select claim_id, claim_number, loss_description, damage_description from dw_prod.dim_claims) fc using (claim_number)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join dbt_actuaries.cat_coding_w_loss_20210430 cc on cc.claim_number = mon.claim_number
-  WHERE date_knowledge = date_trunc(date_knowledge,week)
-  and date_knowledge >= '2021-02-01'
+  WHERE 1=1 
+--   and date_knowledge = date_trunc(date_knowledge,week)
+  and date_knowledge = '2021-04-30'
+--   and date_knowledge >= '2021-02-01'
   and carrier <> 'canopius'
 --   and is_ebsl is false
   )
@@ -106,8 +108,8 @@ SELECT DISTINCT
 --   ,Total_Recoverable_Depreciation
   from x
   where 1=1
-  and CAT = 'Y'
-  and report_date between '2021-04-01' and '2021-04-30'
+--   and CAT = 'Y'
+--   and report_date between '2021-04-01' and '2021-04-30'
   order by 1
 --   and Loss_State = 'mi'
 -- and loss_net_reserve > 0 and claim_status = 'closed'
