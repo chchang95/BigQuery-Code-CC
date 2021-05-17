@@ -23,15 +23,17 @@ SELECT DISTINCT
     , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
     , case when cc.Updated_Policy_Effective_Date is null then date_effective else cc.Updated_Policy_Effective_Date end as recoded_policy_effective_date
     , case when cc.Updated_Policy_Number is null then policy_number else cc.Updated_Policy_Number end as recoded_policy_number
-    , case when cc.Recoded_carrier is null then carrier else cc.Recoded_carrier end as recoded_carrier
+    -- , case when cc.Recoded_carrier is null then carrier else cc.Recoded_carrier end as recoded_carrier
       ,loss_description
       ,damage_description
       ,dp.org_id as organization_id
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
   left join (select claim_id, claim_number, loss_description, damage_description from dw_prod.dim_claims) fc using (claim_number)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  left join dbt_actuaries.cat_coding_w_loss_20210430 cc on mon.claim_number = cast(cc.claim_number as string)
+  left join dbt_actuaries.cat_coding_w_loss_20210510 cc on mon.claim_number = cast(cc.claim_number as string)
+  left join dbt_actuaries.sf_claims_as_20210506_v1 sf on mon.claim_id = sf.pod_claim_id
   WHERE date_knowledge = date_add(last_day(date_sub(date_knowledge,interval 1 week), week(sunday)), interval 1 day)
+  and date_first_notice_of_loss <= '2021-05-10'
   and carrier <> 'canopius'
 --   and is_ebsl is false
   )
