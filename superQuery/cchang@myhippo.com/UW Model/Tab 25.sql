@@ -62,7 +62,7 @@ SELECT
     --   ,q.wind_deductible
     --   ,q.year_roof_built
     --   ,q.insurance_score
-      ,q.non_cat_risk_score
+      ,ROUND(q.non_cat_risk_score,4) as non_cat_risk_score
     --   ,q.cat_risk_score
       ,q.non_cat_risk_class
     --   ,q.cat_risk_class
