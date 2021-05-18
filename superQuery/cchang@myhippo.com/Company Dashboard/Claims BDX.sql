@@ -47,10 +47,15 @@ SELECT DISTINCT
       ,loss_description
       ,damage_description
       ,dp.org_id as organization_id
+    , case when cc.recoded_loss_date is null then date_of_loss else cc.recoded_loss_date end as recoded_loss_date
+    , case when cc.recoded_loss_event is null then 'NA' else cc.recoded_loss_event end as recoded_loss_event
+    , case when cc.Updated_Policy_Effective_Date is null then date_effective else cc.Updated_Policy_Effective_Date end as recoded_policy_effective_date
+    , case when cc.Updated_Policy_Number is null then policy_number else cc.Updated_Policy_Number end as recoded_policy_number
   FROM dw_prod_extracts.ext_claims_inception_to_date mon
   left join (select claim_id, claim_number, loss_description, damage_description from dw_prod.dim_claims) fc using (claim_number)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
-  WHERE date_knowledge = '2021-05-10'
+  left join dbt_actuaries.cat_coding_w_loss_20210510 cc on mon.claim_number = cast(cc.claim_number as string)
+  WHERE date_knowledge = '2021-05-17'
   and carrier <> 'canopius'
 --   and is_ebsl is false
   )
@@ -60,10 +65,12 @@ SELECT DISTINCT
   ,date_trunc(loss_date, MONTH) as accident_month
   ,lower(Product) as Product
   ,policy_number
+  ,recoded_policy_number
   ,Inception_Date
   ,Expiration_Date
   ,Claim_Number
   ,loss_date
+  ,recoded_loss_date
   ,report_date
   ,loss_city
   ,loss_state
@@ -71,6 +78,7 @@ SELECT DISTINCT
   ,claim_status
   ,cause_of_loss
   ,closed_date
+  ,recoded_loss_event
 --   ,CAT as CAT_indicator
 --   ,'' as placeholder
   ,EBSL
@@ -88,9 +96,9 @@ SELECT DISTINCT
 --   ,Total_Recoverable_Depreciation
   from x
   where 1=1
-  and cause_of_loss in ('wind','hail')
-  and carrier = 'spinnaker'
-  and report_date >= '2021-03-01'
+--   and cause_of_loss in ('wind','hail')
+--   and carrier = 'spinnaker'
+--   and report_date >= '2021-03-01'
 --   and Loss_State = 'mi'
 -- and loss_net_reserve > 0 and claim_status = 'closed'
 -- and report_date >= '2021-01-31'
