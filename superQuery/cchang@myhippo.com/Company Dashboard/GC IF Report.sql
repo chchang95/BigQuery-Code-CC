@@ -63,7 +63,7 @@ left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.p
 left join (select policy_id, case when channel is null then 'Online' else channel end as channel, coalesce(organization_id,0) as org_id from dw_prod.dim_policies) using(policy_id)
 left join dw_prod.dim_organizations do on org_id = do.organization_id
 where date_snapshot = '2021-04-30'
--- and carrier <> 'canopius'
+and carrier <> 'canopius'
 -- and reinsurance_treaty_property = 'spkr21_core'
 -- and product <> 'ho5'
 and status = 'active'
