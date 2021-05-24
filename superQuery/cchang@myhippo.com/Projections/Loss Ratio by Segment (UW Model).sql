@@ -164,8 +164,8 @@ extract(year from accident_month) as accident_year
 -- ,zip_status
 -- ,year_built
 ,tenure
-,policy_cohort
--- ,term_policy_effective_month
+# ,policy_cohort
+,term_policy_effective_month
 # ,orig_policy_effective_month
 
 # ,sum(coalesce(cat_incurred,0)) as cat_incurred
