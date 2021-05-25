@@ -91,8 +91,8 @@ SELECT DISTINCT
   ,claim_id
 --   ,organization_id
 --   ,CAT_code as internal_CAT_code
---   ,loss_description
---   ,damage_description
+  ,loss_description
+  ,damage_description
 --   ,treaty
 --   ,Adjuster_Name
 --   ,Total_Recoverable_Depreciation
