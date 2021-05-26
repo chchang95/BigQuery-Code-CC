@@ -195,7 +195,7 @@ where 1=1
 -- and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 -- and policy_id = 2051353
-group by 1,2,3,4,5,6,7
+group by 1,2,3,4,5,6
 )
 select 
 *
