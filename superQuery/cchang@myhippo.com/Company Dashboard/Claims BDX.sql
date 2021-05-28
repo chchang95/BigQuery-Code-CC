@@ -98,6 +98,7 @@ SELECT DISTINCT
 --   ,Total_Recoverable_Depreciation
   from x
   where 1=1
+  and report_date >= '2021-03-01'
 --   and cause_of_loss in ('wind','hail')
 --   and carrier = 'spinnaker'
 --   and report_date >= '2021-03-01'
