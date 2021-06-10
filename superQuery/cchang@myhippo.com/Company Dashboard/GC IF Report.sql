@@ -62,12 +62,12 @@ left join (select policy_id, policy_number from dw_prod.dim_policies) dp USING(p
 left join dw_prod.fct_premium_updates fpu on eps.latest_policy_update_id = fpu.policy_update_id
 left join (select policy_id, case when channel is null then 'Online' else channel end as channel, coalesce(organization_id,0) as org_id from dw_prod.dim_policies) using(policy_id)
 left join dw_prod.dim_organizations do on org_id = do.organization_id
-where date_snapshot = '2021-03-31'
+where date_snapshot = '2021-05-31'
 and carrier <> 'canopius'
 -- and reinsurance_treaty_property = 'spkr21_core'
 -- and product <> 'ho5'
 and status = 'active'
--- and carrier = 'spinnaker'
+and carrier = 'spinnaker'
 -- and state = 'ca'
 -- and state = 'tx'
 -- and property_data_address_zip = '78332'
