@@ -1,4 +1,4 @@
-create table dbt_cchin.noncat_uw_scored_policies_20210228 as (
+-- create table dbt_cchin.noncat_uw_scored_policies_20210228 as (
 with scoring_begin as (
 select 
 policy_id, state, carrier, product, renewal_number, calculated_fields_non_cat_risk_class, calculated_fields_non_cat_risk_score, written_base, property_data_number_of_family_units, property_data_zillow, property_data_rebuilding_cost
@@ -186,9 +186,9 @@ policy_id
 from scoring_inter
 )
 select *
--- , CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
+, CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score
 from scoring_final
 -- where policy_id = 2944001
--- where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
+where abs(CAST(calculated_fields_non_cat_risk_score as numeric) - risk_score) > 0.005
 -- 2513405
-)
+-- )
