@@ -151,7 +151,7 @@ and product <> 'ho5'
 and carrier <> 'canopius'
 -- and status = 'active'
 -- and date_policy_effective >= '2020-05-15'
--- and calculated_fields_non_cat_risk_score is not null
+and calculated_fields_non_cat_risk_score is not null
 -- and renewal_number = 0
 )
 ,scoring_inter as (
