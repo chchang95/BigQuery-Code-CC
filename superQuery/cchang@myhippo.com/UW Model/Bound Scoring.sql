@@ -146,7 +146,7 @@ when coverage_e = 500000 or coverage_e = 1000000 then -0.073082463 else -999 end
 ,-1.63517384735612 as score_intercept
 from dw_prod_extracts.ext_policy_snapshots 
 where 1=1
-and date_snapshot = '2021-01-31'
+and date_snapshot = '2020-12-31'
 and product <> 'ho5'
 and carrier <> 'canopius'
 -- and status = 'active'
