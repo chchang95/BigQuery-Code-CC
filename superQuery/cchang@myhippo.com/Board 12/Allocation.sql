@@ -389,6 +389,7 @@ coalesce(l.uniqueKey, s.uniqueKey) as uniqueKey
 ,coalesce(earned_prem_x_ebsl_x_policy_fees, 0) as earned_prem_x_ebsl_x_policy_fees
 ,coalesce(earned_exposure, 0) as earned_exposure
 
+,incurred_total_net_recoveries
 ,coalesce(Reported_Loss_NonCat_xFire, 0) as Reported_Loss_NonCat_xFire
 ,coalesce(Case_Reserves_NonCat_xFire, 0) as Case_Reserves_NonCat_xFire
 ,coalesce(Paid_Losses_NonCat_xFire, 0) as Paid_Losses_NonCat_xFire
