@@ -570,136 +570,87 @@ state
 ,sum(Open_Counts_EBSL) over (partition by carrier, calendar_quarter, carrier_segment) as Open_Counts_EBSL_sum
 ,sum(Reported_Counts_EBSL) over (partition by carrier, calendar_quarter, carrier_segment) as Reported_Counts_EBSL_sum
 from full_data
-where incurred_total_net_recoveries is not null or earned_prem_x_ebsl_x_policy_fees + earned_exposure is not null
-order by state, product desc
+where (incurred_total_net_recoveries is not null or earned_prem_x_ebsl_x_policy_fees + earned_exposure is not null)
+and calendar_quarter is not null
+order by carrier, calendar_quarter, carrier_segment desc
 )
+, with_percents as (
 select 
-state
-,carrier
-,product
-,calendar_month_end
-,calendar_quarter
-,calendar_year
-,reinsurance_treaty_property_accounting
-,tenure
-,policy_effective_month
-,carrier_segment
-
-# Incrementals
-,written_prem_x_ebsl_x_policy_fees
--- ,written_exposure
--- ,earned_prem_x_ebsl_x_policy_fees
--- ,earned_exposure
--- ,incurred_total_net_recoveries
--- ,Reported_Loss_NonCat_xFire
--- ,Case_Reserves_NonCat_xFire
--- ,Paid_Losses_NonCat_xFire
--- ,Open_Counts_NonCat_xFire
--- ,Reported_Counts_NonCat_xFire
--- ,Reported_Loss_NonCat_Fire
--- ,Case_Reserves_NonCat_Fire
--- ,Paid_Losses_NonCat_Fire
--- ,Open_Counts_NonCat_Fire
--- ,Reported_Counts_NonCat_Fire
--- ,Reported_Loss_Excess
--- ,Case_Reserves_Excess
--- ,Paid_Losses_Excess
--- ,Open_Counts_Excess
--- ,Reported_Counts_Excess
--- ,Reported_Loss_NonCat_ALAE
--- ,Case_Reserves_NonCat_ALAE
--- ,Paid_Losses_NonCat_ALAE
--- ,Open_Counts_NonCat_ALAE
--- ,Reported_Counts_NonCat_ALAE
--- ,Reported_Loss_CATxWS_ALAE
--- ,Case_Reserves_CATxWS_ALAE
--- ,Paid_Losses_CATxWS_ALAE
--- ,Open_Counts_CATxWS_ALAE
--- ,Reported_Counts_CATxWS_ALAE
--- ,Reported_Loss_CATxWS
--- ,Case_Reserves_CATxWS
--- ,Paid_Losses_CATxWS
--- ,Open_Counts_CATxWS
--- ,Reported_Counts_CATxWS
--- ,Reported_Loss_CAT_WS_ALAE
--- ,Case_Reserves_CAT_WS_ALAE
--- ,Paid_Losses_CAT_WS_ALAE
--- ,Open_Counts_CAT_WS_ALAE
--- ,Reported_Counts_CAT_WS_ALAE
--- ,Reported_Loss_CAT_WS
--- ,Case_Reserves_CAT_WS
--- ,Paid_Losses_CAT_WS
--- ,Open_Counts_CAT_WS
--- ,Reported_Counts_CAT_WS
--- ,Reported_Loss_EBSL_ALAE
--- ,Case_Reserves_EBSL_ALAE
--- ,Paid_Losses_EBSL_ALAE
--- ,Open_Counts_EBSL_ALAE
--- ,Reported_Counts_EBSL_ALAE
--- ,Reported_Loss_EBSL
--- ,Case_Reserves_EBSL
--- ,Paid_Losses_EBSL
--- ,Open_Counts_EBSL
--- ,Reported_Counts_EBSL
-
-,written_prem_x_ebsl_x_policy_fees_sum
+*
 
 # Percents
 , case when written_prem_x_ebsl_x_policy_fees_sum = 0 then 0 else written_prem_x_ebsl_x_policy_fees / written_prem_x_ebsl_x_policy_fees_sum end as written_prem_x_ebsl_x_policy_fees_percent
--- , case when written_exposure_sum = 0 then 0 else written_exposure / written_exposure_sum end as written_exposure_percent
--- , case when earned_prem_x_ebsl_x_policy_fees_sum = 0 then 0 else earned_prem_x_ebsl_x_policy_fees / earned_prem_x_ebsl_x_policy_fees_sum end as earned_prem_x_ebsl_x_policy_fees_percent
--- , case when earned_exposure_sum = 0 then 0 else earned_exposure / earned_exposure_sum end as earned_exposure_percent
--- , case when Reported_Loss_NonCat_xFire_sum = 0 then 0 else Reported_Loss_NonCat_xFire / Reported_Loss_NonCat_xFire_sum end as Reported_Loss_NonCat_xFire_percent
--- , case when Case_Reserves_NonCat_xFire_sum = 0 then 0 else Case_Reserves_NonCat_xFire / Case_Reserves_NonCat_xFire_sum end as Case_Reserves_NonCat_xFire_percent
--- , case when Paid_Losses_NonCat_xFire_sum = 0 then 0 else Paid_Losses_NonCat_xFire / Paid_Losses_NonCat_xFire_sum end as Paid_Losses_NonCat_xFire_percent
--- , case when Open_Counts_NonCat_xFire_sum = 0 then 0 else Open_Counts_NonCat_xFire / Open_Counts_NonCat_xFire_sum end as Open_Counts_NonCat_xFire_percent
--- , case when Reported_Counts_NonCat_xFire_sum = 0 then 0 else Reported_Counts_NonCat_xFire / Reported_Counts_NonCat_xFire_sum end as Reported_Counts_NonCat_xFire_percent
--- , case when Reported_Loss_NonCat_Fire_sum = 0 then 0 else Reported_Loss_NonCat_Fire / Reported_Loss_NonCat_Fire_sum end as Reported_Loss_NonCat_Fire_percent
--- , case when Case_Reserves_NonCat_Fire_sum = 0 then 0 else Case_Reserves_NonCat_Fire / Case_Reserves_NonCat_Fire_sum end as Case_Reserves_NonCat_Fire_percent
--- , case when Paid_Losses_NonCat_Fire_sum = 0 then 0 else Paid_Losses_NonCat_Fire / Paid_Losses_NonCat_Fire_sum end as Paid_Losses_NonCat_Fire_percent
--- , case when Open_Counts_NonCat_Fire_sum = 0 then 0 else Open_Counts_NonCat_Fire / Open_Counts_NonCat_Fire_sum end as Open_Counts_NonCat_Fire_percent
--- , case when Reported_Counts_NonCat_Fire_sum = 0 then 0 else Reported_Counts_NonCat_Fire / Reported_Counts_NonCat_Fire_sum end as Reported_Counts_NonCat_Fire_percent
--- , case when Reported_Loss_Excess_sum = 0 then 0 else Reported_Loss_Excess / Reported_Loss_Excess_sum end as Reported_Loss_Excess_percent
--- , case when Case_Reserves_Excess_sum = 0 then 0 else Case_Reserves_Excess / Case_Reserves_Excess_sum end as Case_Reserves_Excess_percent
--- , case when Paid_Losses_Excess_sum = 0 then 0 else Paid_Losses_Excess / Paid_Losses_Excess_sum end as Paid_Losses_Excess_percent
--- , case when Open_Counts_Excess_sum = 0 then 0 else Open_Counts_Excess / Open_Counts_Excess_sum end as Open_Counts_Excess_percent
--- , case when Reported_Counts_Excess_sum = 0 then 0 else Reported_Counts_Excess / Reported_Counts_Excess_sum end as Reported_Counts_Excess_percent
--- , case when Reported_Loss_NonCat_ALAE_sum = 0 then 0 else Reported_Loss_NonCat_ALAE / Reported_Loss_NonCat_ALAE_sum end as Reported_Loss_NonCat_ALAE_percent
--- , case when Case_Reserves_NonCat_ALAE_sum = 0 then 0 else Case_Reserves_NonCat_ALAE / Case_Reserves_NonCat_ALAE_sum end as Case_Reserves_NonCat_ALAE_percent
--- , case when Paid_Losses_NonCat_ALAE_sum = 0 then 0 else Paid_Losses_NonCat_ALAE / Paid_Losses_NonCat_ALAE_sum end as Paid_Losses_NonCat_ALAE_percent
--- , case when Open_Counts_NonCat_ALAE_sum = 0 then 0 else Open_Counts_NonCat_ALAE / Open_Counts_NonCat_ALAE_sum end as Open_Counts_NonCat_ALAE_percent
--- , case when Reported_Counts_NonCat_ALAE_sum = 0 then 0 else Reported_Counts_NonCat_ALAE / Reported_Counts_NonCat_ALAE_sum end as Reported_Counts_NonCat_ALAE_percent
--- , case when Reported_Loss_CATxWS_ALAE_sum = 0 then 0 else Reported_Loss_CATxWS_ALAE / Reported_Loss_CATxWS_ALAE_sum end as Reported_Loss_CATxWS_ALAE_percent
--- , case when Case_Reserves_CATxWS_ALAE_sum = 0 then 0 else Case_Reserves_CATxWS_ALAE / Case_Reserves_CATxWS_ALAE_sum end as Case_Reserves_CATxWS_ALAE_percent
--- , case when Paid_Losses_CATxWS_ALAE_sum = 0 then 0 else Paid_Losses_CATxWS_ALAE / Paid_Losses_CATxWS_ALAE_sum end as Paid_Losses_CATxWS_ALAE_percent
--- , case when Open_Counts_CATxWS_ALAE_sum = 0 then 0 else Open_Counts_CATxWS_ALAE / Open_Counts_CATxWS_ALAE_sum end as Open_Counts_CATxWS_ALAE_percent
--- , case when Reported_Counts_CATxWS_ALAE_sum = 0 then 0 else Reported_Counts_CATxWS_ALAE / Reported_Counts_CATxWS_ALAE_sum end as Reported_Counts_CATxWS_ALAE_percent
--- , case when Reported_Loss_CATxWS_sum = 0 then 0 else Reported_Loss_CATxWS / Reported_Loss_CATxWS_sum end as Reported_Loss_CATxWS_percent
--- , case when Case_Reserves_CATxWS_sum = 0 then 0 else Case_Reserves_CATxWS / Case_Reserves_CATxWS_sum end as Case_Reserves_CATxWS_percent
--- , case when Paid_Losses_CATxWS_sum = 0 then 0 else Paid_Losses_CATxWS / Paid_Losses_CATxWS_sum end as Paid_Losses_CATxWS_percent
--- , case when Open_Counts_CATxWS_sum = 0 then 0 else Open_Counts_CATxWS / Open_Counts_CATxWS_sum end as Open_Counts_CATxWS_percent
--- , case when Reported_Counts_CATxWS_sum = 0 then 0 else Reported_Counts_CATxWS / Reported_Counts_CATxWS_sum end as Reported_Counts_CATxWS_percent
--- , case when Reported_Loss_CAT_WS_ALAE_sum = 0 then 0 else Reported_Loss_CAT_WS_ALAE / Reported_Loss_CAT_WS_ALAE_sum end as Reported_Loss_CAT_WS_ALAE_percent
--- , case when Case_Reserves_CAT_WS_ALAE_sum = 0 then 0 else Case_Reserves_CAT_WS_ALAE / Case_Reserves_CAT_WS_ALAE_sum end as Case_Reserves_CAT_WS_ALAE_percent
--- , case when Paid_Losses_CAT_WS_ALAE_sum = 0 then 0 else Paid_Losses_CAT_WS_ALAE / Paid_Losses_CAT_WS_ALAE_sum end as Paid_Losses_CAT_WS_ALAE_percent
--- , case when Open_Counts_CAT_WS_ALAE_sum = 0 then 0 else Open_Counts_CAT_WS_ALAE / Open_Counts_CAT_WS_ALAE_sum end as Open_Counts_CAT_WS_ALAE_percent
--- , case when Reported_Counts_CAT_WS_ALAE_sum = 0 then 0 else Reported_Counts_CAT_WS_ALAE / Reported_Counts_CAT_WS_ALAE_sum end as Reported_Counts_CAT_WS_ALAE_percent
--- , case when Reported_Loss_CAT_WS_sum = 0 then 0 else Reported_Loss_CAT_WS / Reported_Loss_CAT_WS_sum end as Reported_Loss_CAT_WS_percent
--- , case when Case_Reserves_CAT_WS_sum = 0 then 0 else Case_Reserves_CAT_WS / Case_Reserves_CAT_WS_sum end as Case_Reserves_CAT_WS_percent
--- , case when Paid_Losses_CAT_WS_sum = 0 then 0 else Paid_Losses_CAT_WS / Paid_Losses_CAT_WS_sum end as Paid_Losses_CAT_WS_percent
--- , case when Open_Counts_CAT_WS_sum = 0 then 0 else Open_Counts_CAT_WS / Open_Counts_CAT_WS_sum end as Open_Counts_CAT_WS_percent
--- , case when Reported_Counts_CAT_WS_sum = 0 then 0 else Reported_Counts_CAT_WS / Reported_Counts_CAT_WS_sum end as Reported_Counts_CAT_WS_percent
--- , case when Reported_Loss_EBSL_ALAE_sum = 0 then 0 else Reported_Loss_EBSL_ALAE / Reported_Loss_EBSL_ALAE_sum end as Reported_Loss_EBSL_ALAE_percent
--- , case when Case_Reserves_EBSL_ALAE_sum = 0 then 0 else Case_Reserves_EBSL_ALAE / Case_Reserves_EBSL_ALAE_sum end as Case_Reserves_EBSL_ALAE_percent
--- , case when Paid_Losses_EBSL_ALAE_sum = 0 then 0 else Paid_Losses_EBSL_ALAE / Paid_Losses_EBSL_ALAE_sum end as Paid_Losses_EBSL_ALAE_percent
--- , case when Open_Counts_EBSL_ALAE_sum = 0 then 0 else Open_Counts_EBSL_ALAE / Open_Counts_EBSL_ALAE_sum end as Open_Counts_EBSL_ALAE_percent
--- , case when Reported_Counts_EBSL_ALAE_sum = 0 then 0 else Reported_Counts_EBSL_ALAE / Reported_Counts_EBSL_ALAE_sum end as Reported_Counts_EBSL_ALAE_percent
--- , case when Reported_Loss_EBSL_sum = 0 then 0 else Reported_Loss_EBSL / Reported_Loss_EBSL_sum end as Reported_Loss_EBSL_percent
--- , case when Case_Reserves_EBSL_sum = 0 then 0 else Case_Reserves_EBSL / Case_Reserves_EBSL_sum end as Case_Reserves_EBSL_percent
--- , case when Paid_Losses_EBSL_sum = 0 then 0 else Paid_Losses_EBSL / Paid_Losses_EBSL_sum end as Paid_Losses_EBSL_percent
--- , case when Open_Counts_EBSL_sum = 0 then 0 else Open_Counts_EBSL / Open_Counts_EBSL_sum end as Open_Counts_EBSL_percent
--- , case when Reported_Counts_EBSL_sum = 0 then 0 else Reported_Counts_EBSL / Reported_Counts_EBSL_sum end as Reported_Counts_EBSL_percent
+, case when written_exposure_sum = 0 then 0 else written_exposure / written_exposure_sum end as written_exposure_percent
+, case when earned_prem_x_ebsl_x_policy_fees_sum = 0 then 0 else earned_prem_x_ebsl_x_policy_fees / earned_prem_x_ebsl_x_policy_fees_sum end as earned_prem_x_ebsl_x_policy_fees_percent
+, case when earned_exposure_sum = 0 then 0 else earned_exposure / earned_exposure_sum end as earned_exposure_percent
+, case when Reported_Loss_NonCat_xFire_sum = 0 then 0 else Reported_Loss_NonCat_xFire / Reported_Loss_NonCat_xFire_sum end as Reported_Loss_NonCat_xFire_percent
+, case when Case_Reserves_NonCat_xFire_sum = 0 then 0 else Case_Reserves_NonCat_xFire / Case_Reserves_NonCat_xFire_sum end as Case_Reserves_NonCat_xFire_percent
+, case when Paid_Losses_NonCat_xFire_sum = 0 then 0 else Paid_Losses_NonCat_xFire / Paid_Losses_NonCat_xFire_sum end as Paid_Losses_NonCat_xFire_percent
+, case when Open_Counts_NonCat_xFire_sum = 0 then 0 else Open_Counts_NonCat_xFire / Open_Counts_NonCat_xFire_sum end as Open_Counts_NonCat_xFire_percent
+, case when Reported_Counts_NonCat_xFire_sum = 0 then 0 else Reported_Counts_NonCat_xFire / Reported_Counts_NonCat_xFire_sum end as Reported_Counts_NonCat_xFire_percent
+, case when Reported_Loss_NonCat_Fire_sum = 0 then 0 else Reported_Loss_NonCat_Fire / Reported_Loss_NonCat_Fire_sum end as Reported_Loss_NonCat_Fire_percent
+, case when Case_Reserves_NonCat_Fire_sum = 0 then 0 else Case_Reserves_NonCat_Fire / Case_Reserves_NonCat_Fire_sum end as Case_Reserves_NonCat_Fire_percent
+, case when Paid_Losses_NonCat_Fire_sum = 0 then 0 else Paid_Losses_NonCat_Fire / Paid_Losses_NonCat_Fire_sum end as Paid_Losses_NonCat_Fire_percent
+, case when Open_Counts_NonCat_Fire_sum = 0 then 0 else Open_Counts_NonCat_Fire / Open_Counts_NonCat_Fire_sum end as Open_Counts_NonCat_Fire_percent
+, case when Reported_Counts_NonCat_Fire_sum = 0 then 0 else Reported_Counts_NonCat_Fire / Reported_Counts_NonCat_Fire_sum end as Reported_Counts_NonCat_Fire_percent
+, case when Reported_Loss_Excess_sum = 0 then 0 else Reported_Loss_Excess / Reported_Loss_Excess_sum end as Reported_Loss_Excess_percent
+, case when Case_Reserves_Excess_sum = 0 then 0 else Case_Reserves_Excess / Case_Reserves_Excess_sum end as Case_Reserves_Excess_percent
+, case when Paid_Losses_Excess_sum = 0 then 0 else Paid_Losses_Excess / Paid_Losses_Excess_sum end as Paid_Losses_Excess_percent
+, case when Open_Counts_Excess_sum = 0 then 0 else Open_Counts_Excess / Open_Counts_Excess_sum end as Open_Counts_Excess_percent
+, case when Reported_Counts_Excess_sum = 0 then 0 else Reported_Counts_Excess / Reported_Counts_Excess_sum end as Reported_Counts_Excess_percent
+, case when Reported_Loss_NonCat_ALAE_sum = 0 then 0 else Reported_Loss_NonCat_ALAE / Reported_Loss_NonCat_ALAE_sum end as Reported_Loss_NonCat_ALAE_percent
+, case when Case_Reserves_NonCat_ALAE_sum = 0 then 0 else Case_Reserves_NonCat_ALAE / Case_Reserves_NonCat_ALAE_sum end as Case_Reserves_NonCat_ALAE_percent
+, case when Paid_Losses_NonCat_ALAE_sum = 0 then 0 else Paid_Losses_NonCat_ALAE / Paid_Losses_NonCat_ALAE_sum end as Paid_Losses_NonCat_ALAE_percent
+, case when Open_Counts_NonCat_ALAE_sum = 0 then 0 else Open_Counts_NonCat_ALAE / Open_Counts_NonCat_ALAE_sum end as Open_Counts_NonCat_ALAE_percent
+, case when Reported_Counts_NonCat_ALAE_sum = 0 then 0 else Reported_Counts_NonCat_ALAE / Reported_Counts_NonCat_ALAE_sum end as Reported_Counts_NonCat_ALAE_percent
+, case when Reported_Loss_CATxWS_ALAE_sum = 0 then 0 else Reported_Loss_CATxWS_ALAE / Reported_Loss_CATxWS_ALAE_sum end as Reported_Loss_CATxWS_ALAE_percent
+, case when Case_Reserves_CATxWS_ALAE_sum = 0 then 0 else Case_Reserves_CATxWS_ALAE / Case_Reserves_CATxWS_ALAE_sum end as Case_Reserves_CATxWS_ALAE_percent
+, case when Paid_Losses_CATxWS_ALAE_sum = 0 then 0 else Paid_Losses_CATxWS_ALAE / Paid_Losses_CATxWS_ALAE_sum end as Paid_Losses_CATxWS_ALAE_percent
+, case when Open_Counts_CATxWS_ALAE_sum = 0 then 0 else Open_Counts_CATxWS_ALAE / Open_Counts_CATxWS_ALAE_sum end as Open_Counts_CATxWS_ALAE_percent
+, case when Reported_Counts_CATxWS_ALAE_sum = 0 then 0 else Reported_Counts_CATxWS_ALAE / Reported_Counts_CATxWS_ALAE_sum end as Reported_Counts_CATxWS_ALAE_percent
+, case when Reported_Loss_CATxWS_sum = 0 then 0 else Reported_Loss_CATxWS / Reported_Loss_CATxWS_sum end as Reported_Loss_CATxWS_percent
+, case when Case_Reserves_CATxWS_sum = 0 then 0 else Case_Reserves_CATxWS / Case_Reserves_CATxWS_sum end as Case_Reserves_CATxWS_percent
+, case when Paid_Losses_CATxWS_sum = 0 then 0 else Paid_Losses_CATxWS / Paid_Losses_CATxWS_sum end as Paid_Losses_CATxWS_percent
+, case when Open_Counts_CATxWS_sum = 0 then 0 else Open_Counts_CATxWS / Open_Counts_CATxWS_sum end as Open_Counts_CATxWS_percent
+, case when Reported_Counts_CATxWS_sum = 0 then 0 else Reported_Counts_CATxWS / Reported_Counts_CATxWS_sum end as Reported_Counts_CATxWS_percent
+, case when Reported_Loss_CAT_WS_ALAE_sum = 0 then 0 else Reported_Loss_CAT_WS_ALAE / Reported_Loss_CAT_WS_ALAE_sum end as Reported_Loss_CAT_WS_ALAE_percent
+, case when Case_Reserves_CAT_WS_ALAE_sum = 0 then 0 else Case_Reserves_CAT_WS_ALAE / Case_Reserves_CAT_WS_ALAE_sum end as Case_Reserves_CAT_WS_ALAE_percent
+, case when Paid_Losses_CAT_WS_ALAE_sum = 0 then 0 else Paid_Losses_CAT_WS_ALAE / Paid_Losses_CAT_WS_ALAE_sum end as Paid_Losses_CAT_WS_ALAE_percent
+, case when Open_Counts_CAT_WS_ALAE_sum = 0 then 0 else Open_Counts_CAT_WS_ALAE / Open_Counts_CAT_WS_ALAE_sum end as Open_Counts_CAT_WS_ALAE_percent
+, case when Reported_Counts_CAT_WS_ALAE_sum = 0 then 0 else Reported_Counts_CAT_WS_ALAE / Reported_Counts_CAT_WS_ALAE_sum end as Reported_Counts_CAT_WS_ALAE_percent
+, case when Reported_Loss_CAT_WS_sum = 0 then 0 else Reported_Loss_CAT_WS / Reported_Loss_CAT_WS_sum end as Reported_Loss_CAT_WS_percent
+, case when Case_Reserves_CAT_WS_sum = 0 then 0 else Case_Reserves_CAT_WS / Case_Reserves_CAT_WS_sum end as Case_Reserves_CAT_WS_percent
+, case when Paid_Losses_CAT_WS_sum = 0 then 0 else Paid_Losses_CAT_WS / Paid_Losses_CAT_WS_sum end as Paid_Losses_CAT_WS_percent
+, case when Open_Counts_CAT_WS_sum = 0 then 0 else Open_Counts_CAT_WS / Open_Counts_CAT_WS_sum end as Open_Counts_CAT_WS_percent
+, case when Reported_Counts_CAT_WS_sum = 0 then 0 else Reported_Counts_CAT_WS / Reported_Counts_CAT_WS_sum end as Reported_Counts_CAT_WS_percent
+, case when Reported_Loss_EBSL_ALAE_sum = 0 then 0 else Reported_Loss_EBSL_ALAE / Reported_Loss_EBSL_ALAE_sum end as Reported_Loss_EBSL_ALAE_percent
+, case when Case_Reserves_EBSL_ALAE_sum = 0 then 0 else Case_Reserves_EBSL_ALAE / Case_Reserves_EBSL_ALAE_sum end as Case_Reserves_EBSL_ALAE_percent
+, case when Paid_Losses_EBSL_ALAE_sum = 0 then 0 else Paid_Losses_EBSL_ALAE / Paid_Losses_EBSL_ALAE_sum end as Paid_Losses_EBSL_ALAE_percent
+, case when Open_Counts_EBSL_ALAE_sum = 0 then 0 else Open_Counts_EBSL_ALAE / Open_Counts_EBSL_ALAE_sum end as Open_Counts_EBSL_ALAE_percent
+, case when Reported_Counts_EBSL_ALAE_sum = 0 then 0 else Reported_Counts_EBSL_ALAE / Reported_Counts_EBSL_ALAE_sum end as Reported_Counts_EBSL_ALAE_percent
+, case when Reported_Loss_EBSL_sum = 0 then 0 else Reported_Loss_EBSL / Reported_Loss_EBSL_sum end as Reported_Loss_EBSL_percent
+, case when Case_Reserves_EBSL_sum = 0 then 0 else Case_Reserves_EBSL / Case_Reserves_EBSL_sum end as Case_Reserves_EBSL_percent
+, case when Paid_Losses_EBSL_sum = 0 then 0 else Paid_Losses_EBSL / Paid_Losses_EBSL_sum end as Paid_Losses_EBSL_percent
+, case when Open_Counts_EBSL_sum = 0 then 0 else Open_Counts_EBSL / Open_Counts_EBSL_sum end as Open_Counts_EBSL_percent
+, case when Reported_Counts_EBSL_sum = 0 then 0 else Reported_Counts_EBSL / Reported_Counts_EBSL_sum end as Reported_Counts_EBSL_percent
 
 from with_window_totals
+)
+select * 
 
+,earned_prem_x_ebsl_x_policy_fees_sum * 0.1 + earned_exposure_sum * 0.2 + Reported_Loss_NonCat_xFire_sum * 0.3 + Case_Reserves_NonCat_xFire_sum * 0.1 + Paid_Losses_NonCat_xFire_sum * 0.1 + Open_Counts_NonCat_xFire_sum * 0.1 + Reported_Counts_NonCat_xFire_sum * 0.1 as NonCat_xFire_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0.1 + earned_exposure_sum * 0.2 + Reported_Loss_NonCat_Fire_sum * 0.3 + Case_Reserves_NonCat_Fire_sum * 0.1 + Paid_Losses_NonCat_Fire_sum * 0.1 + Open_Counts_NonCat_Fire_sum * 0.1 + Reported_Counts_NonCat_Fire_sum * 0.1 as NonCat_Fire_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0.1 + earned_exposure_sum * 0.2 + Reported_Loss_Excess_sum * 0.3 + Case_Reserves_Excess_sum * 0.1 + Paid_Losses_Excess_sum * 0.1 + Open_Counts_Excess_sum * 0.1 + Reported_Counts_Excess_sum * 0.1 as Excess_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0.1 + earned_exposure_sum * 0.2 + Reported_Loss_NonCat_ALAE_sum * 0.3 + Case_Reserves_NonCat_ALAE_sum * 0.1 + Paid_Losses_NonCat_ALAE_sum * 0.1 + Open_Counts_NonCat_ALAE_sum * 0.1 + Reported_Counts_NonCat_ALAE_sum * 0.1 as NonCat_ALAE_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0.1 + earned_exposure_sum * 0.2 + Reported_Loss_CATxWS_sum * 0.3 + Case_Reserves_CATxWS_sum * 0.1 + Paid_Losses_CATxWS_sum * 0.1 + Open_Counts_CATxWS_sum * 0.1 + Reported_Counts_CATxWS_sum * 0.1 as CATxWS_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0.1 + earned_exposure_sum * 0.2 + Reported_Loss_CATxWS_ALAE_sum * 0.3 + Case_Reserves_CATxWS_ALAE_sum * 0.1 + Paid_Losses_CATxWS_ALAE_sum * 0.1 + Open_Counts_CATxWS_ALAE_sum * 0.1 + Reported_Counts_CATxWS_ALAE_sum * 0.1 as CatxWS_ALAE_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0 + earned_exposure_sum * 0 + Reported_Loss_CAT_WS_sum * 0.5 + Case_Reserves_CAT_WS_sum * 0.1 + Paid_Losses_CAT_WS_sum * 0.05 + Open_Counts_CAT_WS_sum * 0.3 + Reported_Counts_CAT_WS_sum * 0.05 as CAT_WS_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0 + earned_exposure_sum * 0 + Reported_Loss_CAT_WS_ALAE_sum * 0.5 + Case_Reserves_CAT_WS_ALAE_sum * 0.1 + Paid_Losses_CAT_WS_ALAE_sum * 0.05 + Open_Counts_CAT_WS_ALAE_sum * 0.3 + Reported_Counts_CAT_WS_ALAE_sum * 0.05 as CAT_WS_ALAE_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0 + earned_exposure_sum * 0.2 + Reported_Loss_EBSL_sum * 0.5 + Case_Reserves_EBSL_sum * 0.05 + Paid_Losses_EBSL_sum * 0.05 + Open_Counts_EBSL_sum * 0.1 + Reported_Counts_EBSL_sum * 0.1 as EBSL_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0 + earned_exposure_sum * 0.2 + Reported_Loss_EBSL_ALAE_sum * 0.5 + Case_Reserves_EBSL_ALAE_sum * 0.05 + Paid_Losses_EBSL_ALAE_sum * 0.05 + Open_Counts_EBSL_ALAE_sum * 0.1 + Reported_Counts_EBSL_ALAE_sum * 0.1 as EBSL_ALAE_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0.4 + earned_exposure_sum * 0.4 + Reported_Loss_NonCat_xFire_sum * 0.2 + Case_Reserves_NonCat_xFire_sum * 0 + Paid_Losses_NonCat_xFire_sum * 0 + Open_Counts_NonCat_xFire_sum * 0 + Reported_Counts_NonCat_xFire_sum * 0 as NonCat_Claim_Count_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0.4 + earned_exposure_sum * 0.4 + Reported_Loss_CATxWS_sum * 0.2 + Case_Reserves_CATxWS_sum * 0 + Paid_Losses_CATxWS_sum * 0 + Open_Counts_CATxWS_sum * 0 + Reported_Counts_CATxWS_sum * 0 as Cat_Claim_Count_Selected_Allocation
+,earned_prem_x_ebsl_x_policy_fees_sum * 0.4 + earned_exposure_sum * 0.4 + Reported_Loss_EBSL_sum * 0.2 + Case_Reserves_EBSL_sum * 0 + Paid_Losses_EBSL_sum * 0 + Open_Counts_EBSL_sum * 0 + Reported_Counts_EBSL_sum * 0 as EBSL_Claim_Count_Selected_Allocation
+
+from with_percents
 
