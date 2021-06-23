@@ -567,7 +567,7 @@ state
 ,sum(Open_Counts_EBSL) over (partition by carrier, calendar_quarter, carrier_segment) as Open_Counts_EBSL_sum
 ,sum(Reported_Counts_EBSL) over (partition by carrier, calendar_quarter, carrier_segment) as Reported_Counts_EBSL_sum
 from full_data
-where incurred_total_net_recoveries is not null and written_prem_x_ebsl_x_policy_fees + earned_prem_x_ebsl_x_policy_fees + earned_exposure is not null
+where incurred_total_net_recoveries is not null or written_prem_x_ebsl_x_policy_fees + earned_prem_x_ebsl_x_policy_fees + earned_exposure is not null
 order by state, product desc
 )
 select 
