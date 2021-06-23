@@ -383,61 +383,63 @@ coalesce(l.uniqueKey, s.uniqueKey) as uniqueKey
 ,coalesce(l.tenure, s.tenure) as tenure
 ,coalesce(l.policy_effective_month, s.policy_effective_month) as policy_effective_month
 ,coalesce(l.carrier_segment, s.carrier_segment) as carrier_segment
-,written_prem_x_ebsl_x_policy_fees
-,written_exposure
-,earned_prem_x_ebsl_x_policy_fees
-,earned_exposure
-,incurred_total_net_recoveries
-,Reported_Loss_NonCat_xFire
-,Case_Reserves_NonCat_xFire
-,Paid_Losses_NonCat_xFire
-,Open_Counts_NonCat_xFire
-,Reported_Counts_NonCat_xFire
-,Reported_Loss_NonCat_Fire
-,Case_Reserves_NonCat_Fire
-,Paid_Losses_NonCat_Fire
-,Open_Counts_NonCat_Fire
-,Reported_Counts_NonCat_Fire
-,Reported_Loss_Excess
-,Case_Reserves_Excess
-,Paid_Losses_Excess
-,Open_Counts_Excess
-,Reported_Counts_Excess
-,Reported_Loss_NonCat_ALAE
-,Case_Reserves_NonCat_ALAE
-,Paid_Losses_NonCat_ALAE
-,Open_Counts_NonCat_ALAE
-,Reported_Counts_NonCat_ALAE
-,Reported_Loss_CATxWS_ALAE
-,Case_Reserves_CATxWS_ALAE
-,Paid_Losses_CATxWS_ALAE
-,Open_Counts_CATxWS_ALAE
-,Reported_Counts_CATxWS_ALAE
-,Reported_Loss_CATxWS
-,Case_Reserves_CATxWS
-,Paid_Losses_CATxWS
-,Open_Counts_CATxWS
-,Reported_Counts_CATxWS
-,Reported_Loss_CAT_WS_ALAE
-,Case_Reserves_CAT_WS_ALAE
-,Paid_Losses_CAT_WS_ALAE
-,Open_Counts_CAT_WS_ALAE
-,Reported_Counts_CAT_WS_ALAE
-,Reported_Loss_CAT_WS
-,Case_Reserves_CAT_WS
-,Paid_Losses_CAT_WS
-,Open_Counts_CAT_WS
-,Reported_Counts_CAT_WS
-,Reported_Loss_EBSL_ALAE
-,Case_Reserves_EBSL_ALAE
-,Paid_Losses_EBSL_ALAE
-,Open_Counts_EBSL_ALAE
-,Reported_Counts_EBSL_ALAE
-,Reported_Loss_EBSL
-,Case_Reserves_EBSL
-,Paid_Losses_EBSL
-,Open_Counts_EBSL
-,Reported_Counts_EBSL
+
+,coalesce(written_prem_x_ebsl_x_policy_fees, 0) as written_prem_x_ebsl_x_policy_fees
+,coalesce(written_exposure, 0) as written_exposure
+,coalesce(earned_prem_x_ebsl_x_policy_fees, 0) as earned_prem_x_ebsl_x_policy_fees
+,coalesce(earned_exposure, 0) as earned_exposure
+
+,coalesce(Reported_Loss_NonCat_xFire, 0) as Reported_Loss_NonCat_xFire
+,coalesce(Case_Reserves_NonCat_xFire, 0) as Case_Reserves_NonCat_xFire
+,coalesce(Paid_Losses_NonCat_xFire, 0) as Paid_Losses_NonCat_xFire
+,coalesce(Open_Counts_NonCat_xFire, 0) as Open_Counts_NonCat_xFire
+,coalesce(Reported_Counts_NonCat_xFire, 0) as Reported_Counts_NonCat_xFire
+,coalesce(Reported_Loss_NonCat_Fire, 0) as Reported_Loss_NonCat_Fire
+,coalesce(Case_Reserves_NonCat_Fire, 0) as Case_Reserves_NonCat_Fire
+,coalesce(Paid_Losses_NonCat_Fire, 0) as Paid_Losses_NonCat_Fire
+,coalesce(Open_Counts_NonCat_Fire, 0) as Open_Counts_NonCat_Fire
+,coalesce(Reported_Counts_NonCat_Fire, 0) as Reported_Counts_NonCat_Fire
+,coalesce(Reported_Loss_Excess, 0) as Reported_Loss_Excess
+,coalesce(Case_Reserves_Excess, 0) as Case_Reserves_Excess
+,coalesce(Paid_Losses_Excess, 0) as Paid_Losses_Excess
+,coalesce(Open_Counts_Excess, 0) as Open_Counts_Excess
+,coalesce(Reported_Counts_Excess, 0) as Reported_Counts_Excess
+,coalesce(Reported_Loss_NonCat_ALAE, 0) as Reported_Loss_NonCat_ALAE
+,coalesce(Case_Reserves_NonCat_ALAE, 0) as Case_Reserves_NonCat_ALAE
+,coalesce(Paid_Losses_NonCat_ALAE, 0) as Paid_Losses_NonCat_ALAE
+,coalesce(Open_Counts_NonCat_ALAE, 0) as Open_Counts_NonCat_ALAE
+,coalesce(Reported_Counts_NonCat_ALAE, 0) as Reported_Counts_NonCat_ALAE
+,coalesce(Reported_Loss_CATxWS_ALAE, 0) as Reported_Loss_CATxWS_ALAE
+,coalesce(Case_Reserves_CATxWS_ALAE, 0) as Case_Reserves_CATxWS_ALAE
+,coalesce(Paid_Losses_CATxWS_ALAE, 0) as Paid_Losses_CATxWS_ALAE
+,coalesce(Open_Counts_CATxWS_ALAE, 0) as Open_Counts_CATxWS_ALAE
+,coalesce(Reported_Counts_CATxWS_ALAE, 0) as Reported_Counts_CATxWS_ALAE
+,coalesce(Reported_Loss_CATxWS, 0) as Reported_Loss_CATxWS
+,coalesce(Case_Reserves_CATxWS, 0) as Case_Reserves_CATxWS
+,coalesce(Paid_Losses_CATxWS, 0) as Paid_Losses_CATxWS
+,coalesce(Open_Counts_CATxWS, 0) as Open_Counts_CATxWS
+,coalesce(Reported_Counts_CATxWS, 0) as Reported_Counts_CATxWS
+,coalesce(Reported_Loss_CAT_WS_ALAE, 0) as Reported_Loss_CAT_WS_ALAE
+,coalesce(Case_Reserves_CAT_WS_ALAE, 0) as Case_Reserves_CAT_WS_ALAE
+,coalesce(Paid_Losses_CAT_WS_ALAE, 0) as Paid_Losses_CAT_WS_ALAE
+,coalesce(Open_Counts_CAT_WS_ALAE, 0) as Open_Counts_CAT_WS_ALAE
+,coalesce(Reported_Counts_CAT_WS_ALAE, 0) as Reported_Counts_CAT_WS_ALAE
+,coalesce(Reported_Loss_CAT_WS, 0) as Reported_Loss_CAT_WS
+,coalesce(Case_Reserves_CAT_WS, 0) as Case_Reserves_CAT_WS
+,coalesce(Paid_Losses_CAT_WS, 0) as Paid_Losses_CAT_WS
+,coalesce(Open_Counts_CAT_WS, 0) as Open_Counts_CAT_WS
+,coalesce(Reported_Counts_CAT_WS, 0) as Reported_Counts_CAT_WS
+,coalesce(Reported_Loss_EBSL_ALAE, 0) as Reported_Loss_EBSL_ALAE
+,coalesce(Case_Reserves_EBSL_ALAE, 0) as Case_Reserves_EBSL_ALAE
+,coalesce(Paid_Losses_EBSL_ALAE, 0) as Paid_Losses_EBSL_ALAE
+,coalesce(Open_Counts_EBSL_ALAE, 0) as Open_Counts_EBSL_ALAE
+,coalesce(Reported_Counts_EBSL_ALAE, 0) as Reported_Counts_EBSL_ALAE
+,coalesce(Reported_Loss_EBSL, 0) as Reported_Loss_EBSL
+,coalesce(Case_Reserves_EBSL, 0) as Case_Reserves_EBSL
+,coalesce(Paid_Losses_EBSL, 0) as Paid_Losses_EBSL
+,coalesce(Open_Counts_EBSL, 0) as Open_Counts_EBSL
+,coalesce(Reported_Counts_EBSL, 0) as Reported_Counts_EBSL
+
 from dist_full_segment s
 left join (select uniqueKey, written_prem_x_ebsl_x_policy_fees, written_exposure, earned_prem_x_ebsl_x_policy_fees, earned_exposure from premium_data) p ON s.uniqueKey=p.uniqueKey
 left join loss_data l on s.uniqueKey = l.uniqueKey)
