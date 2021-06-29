@@ -8,10 +8,10 @@
 -- select * from `dw_prod_extracts.ext_policy_monthly_premiums` 
 -- )
 
--- create table dbt_actuaries.ext_today_knowledge_policy_monthly_premiums_20210628 as (
--- select * from `dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums` 
--- )
+create table dbt_actuaries.ext_today_knowledge_policy_monthly_premiums_20210628 as (
+select * from `dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums` 
+)
 
 -- drop table dbt_actuaries.ext_today_knowledge_policy_monthly_premiums_20210131
 
-select * from `dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums`
+-- select * from `dw_prod_extracts.ext_today_knowledge_policy_monthly_premiums`
