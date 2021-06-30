@@ -9,6 +9,7 @@
 --3) offer a renewal, they accept the renewal, then decide to cancel after accepting (flat or midterm cancel renewal)---> new_renewal_flag_cancelled
 --if renewal_cancellation_flat_flag = false and renewal_policy_status = terminated then this policy did have some exposure > 0 i.e. midterm cancellation for renewal
 with top as(SELECT 
+    current_date,
     upd.update_action,
     upd.date_customer_update_made,
     upd.date_update_effective,          
