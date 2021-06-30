@@ -32,7 +32,7 @@ with top as(SELECT
     dp1.product,              
     dp1.tenure,               
     dp1.carrier,              
-    s.written_base + s.written_total_optionals -s.written_optionals_equipment_breakdown - s.written_optionals_service_line as written_total_ex_ebsl_ex_pol_fee         
+    s.written_base + s.written_total_optionals -s.written_optionals_equipment_breakdown - s.written_optionals_service_line as written_total_ex_ebsl_ex_pol_fee,
     -- s.written_total_optionals,      
     -- s.written_total,            
     s.status as policy_status_at_snapshot,           
