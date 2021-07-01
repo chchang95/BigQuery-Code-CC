@@ -112,7 +112,6 @@ WHERE 1=1
 )
 select state, product, channel, 
 initial_policy_effective_month,
-initial_policy_number,
 initial_term_number,
 renewal_offered_flag,
 renewal_accepted_flag,
@@ -130,7 +129,7 @@ sum(renewal_quote_premium_w_pol_fees) as renewal_quote_premium_w_pol_fees,
 sum(renewal_coverage_a) as renewal_coverage_a,
 
 from top
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+group by 1,2,3,4,5,6,7,8,9,10,11,12
 order by initial_policy_effective_month asc
 
 -- ),mid as (
