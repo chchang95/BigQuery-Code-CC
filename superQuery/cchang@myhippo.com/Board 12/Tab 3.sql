@@ -25,9 +25,11 @@ with top as(SELECT
     cast(case when dp2.date_activation_update_made IS NULL THEN 0 ELSE 1 END as numeric) AS renewal_accepted_flag,    
     dp2.date_effective as renewal_policy_effective_date,      
     date_trunc(dp2.date_effective, month) as renewal_policy_effective_month,
-    date(dp1.timestamp_renewal_offered) as renewal_date_offer,              
+    date(dp1.timestamp_renewal_offered) as renewal_offered_date,    
+    date_trunc(date(dp1.timestamp_renewal_offered),month) as renewal_offered_month,              
     rensnap2.policy_id as renewal_policy_id,
     rensnap2.policy_number as renewal_policy_number,
+    rensnap2.quote_premium_base + rensnap2.quote_premium_optionals + rensnap2.quote_policy_fee as renewal_quote_premium_w_pol_fees,
     rensnap2.coverage_a as renewal_coverage_a,
     rensnap2.renewal_number as renewal_term_number,
     
@@ -108,7 +110,29 @@ WHERE 1=1
     and dp1.carrier <> 'canopius'     
     -- order by original_date_effective          
 )
-select * from top
+select state, product, channel, 
+initial_policy_effective_month,
+initial_policy_number,
+initial_term_number,
+renewal_offered_flag,
+renewal_accepted_flag,
+renewal_policy_effective_month,
+renewal_offered_month,
+renewal_term_number,
+original_cancellation_reason,
+original_cancellation_flat_flag,
+
+sum(initial_quote_premium_w_pol_fees) as initial_quote_premium_w_pol_fees,
+sum(initial_coverage_a) as initial_coverage_a,
+sum(initial_at_offer_quote_premium_w_pol_fees) as initial_at_offer_quote_premium_w_pol_fees,
+sum(initial_at_offer_coverage_a) as initial_at_offer_coverage_a,
+sum(renewal_quote_premium_w_pol_fees) as renewal_quote_premium_w_pol_fees,
+sum(renewal_coverage_a) as renewal_coverage_a,
+
+from top
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+order by initial_policy_effective_month asc
+
 -- ),mid as (
 -- select 
 -- case when renewal_accepted = 0 and original_cancellation_reason is not null then date_diff(date_customer_update_made, date_renewal_offered, day) else null end as days_Delta_original,--how long after seeing the renewal did the client ask us to cancel the original term
