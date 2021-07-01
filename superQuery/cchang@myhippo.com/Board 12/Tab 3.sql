@@ -14,7 +14,7 @@ with top as(SELECT
     date_trunc(dp1.date_effective, month) as initial_policy_effective_month,
     dp1.policy_id as initial_policy_id,
     dp1.policy_number as initial_policy_number,
-    coalesce(effsnap1.quote_premium_base,0) + coalesce(effsnap1.quote_premium_optionals,0) + coalesce(effsnap1.quote_policy_fee,0) as initial_quote_premium_w_pol_fees,
+    coalesce(effsnap1.written_base,0) + coalesce(effsnap1.written_total_optionals,0) + coalesce(effsnap1.written_policy_fee,0) as initial_written_premium_w_pol_fees,
     effsnap1.coverage_a as initial_coverage_a,
     effsnap1.renewal_number as initial_term_number,
     
@@ -105,10 +105,13 @@ LEFT JOIN dw_prod.dim_policies dp2 ON dp1.next_policy_id = dp2.policy_id
 LEFT JOIN dw_prod_extracts.ext_policy_snapshots rensnap2 ON rensnap2.policy_id = dp1.next_policy_id and rensnap2.date_snapshot = (case when dp2.date_effective > '2021-06-29' then '2021-06-29' else dp2.date_effective end)        
 left join dw_prod.fct_policy_updates upd on currsnap1.latest_policy_update_id = upd.policy_update_id
 WHERE 1=1
-    -- dp1.timestamp_renewal_offered is not null             
+    -- dp1.timestamp_renewal_offered is not null        
+    and effsnap1.written_base > 0
     --and dp1.state='ca'                
     and dp1.carrier <> 'canopius'     
-    -- order by original_date_effective          
+    -- order by original_date_effective   
+        and dp1.is_rewritten is false
+
 )
 select state, product, channel, 
 initial_policy_effective_month,
@@ -121,12 +124,18 @@ renewal_term_number,
 original_cancellation_reason,
 original_cancellation_flat_flag,
 
-sum(initial_quote_premium_w_pol_fees) as initial_quote_premium_w_pol_fees,
+sum(initial_written_premium_w_pol_fees) as initial_written_premium_w_pol_fees,
 sum(initial_coverage_a) as initial_coverage_a,
+sum(1) as initial_policy_count,
+
 sum(initial_at_offer_quote_premium_w_pol_fees) as initial_at_offer_quote_premium_w_pol_fees,
 sum(initial_at_offer_coverage_a) as initial_at_offer_coverage_a,
+sum(renewal_offered_flag) as initial_at_offer_policy_count,
+
 sum(renewal_quote_premium_w_pol_fees) as renewal_quote_premium_w_pol_fees,
 sum(renewal_coverage_a) as renewal_coverage_a,
+sum(renewal_accepted_flag) as renewal_policy_count
+
 
 from top
 group by 1,2,3,4,5,6,7,8,9,10,11,12
