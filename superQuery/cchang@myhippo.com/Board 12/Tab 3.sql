@@ -14,12 +14,12 @@ with top as(SELECT
     date_trunc(dp1.date_effective, month) as initial_policy_effective_month,
     dp1.policy_id as initial_policy_id,
     dp1.policy_number as initial_policy_number,
-    effsnap1.quote_premium_base + effsnap1.quote_premium_optionals + effsnap1.quote_policy_fee as initial_quote_premium_w_pol_fees,
+    coalesce(effsnap1.quote_premium_base,0) + coalesce(effsnap1.quote_premium_optionals,0) + coalesce(effsnap1.quote_policy_fee,0) as initial_quote_premium_w_pol_fees,
     effsnap1.coverage_a as initial_coverage_a,
     effsnap1.renewal_number as initial_term_number,
     
     case when dp1.timestamp_renewal_offered is null then 0 else 1 end as renewal_offered_flag,
-    offersnap1.quote_premium_base + offersnap1.quote_premium_optionals + offersnap1.quote_policy_fee as initial_at_offer_quote_premium_w_pol_fees,
+    coalesce(offersnap1.quote_premium_base,0) + coalesce(offersnap1.quote_premium_optionals,0) + coalesce(offersnap1.quote_policy_fee,0) as initial_at_offer_quote_premium_w_pol_fees,
     offersnap1.coverage_a as initial_at_offer_coverage_a,
     
     cast(case when dp2.date_activation_update_made IS NULL THEN 0 ELSE 1 END as numeric) AS renewal_accepted_flag,    
@@ -29,7 +29,7 @@ with top as(SELECT
     date_trunc(date(dp1.timestamp_renewal_offered),month) as renewal_offered_month,              
     rensnap2.policy_id as renewal_policy_id,
     rensnap2.policy_number as renewal_policy_number,
-    rensnap2.quote_premium_base + rensnap2.quote_premium_optionals + rensnap2.quote_policy_fee as renewal_quote_premium_w_pol_fees,
+    coalesce(rensnap2.quote_premium_base,0) + coalesce(rensnap2.quote_premium_optionals,0) + coalesce(rensnap2.quote_policy_fee,0) as renewal_quote_premium_w_pol_fees,
     rensnap2.coverage_a as renewal_coverage_a,
     rensnap2.renewal_number as renewal_term_number,
     
