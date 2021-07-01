@@ -102,7 +102,7 @@ LEFT JOIN dw_prod.dim_policies dp2 ON dp1.next_policy_id = dp2.policy_id
 LEFT JOIN dw_prod_extracts.ext_policy_snapshots rensnap2 ON rensnap2.policy_id = dp1.next_policy_id and rensnap2.date_snapshot = (case when dp2.date_effective > current_date then current_date else dp2.date_effective end)        
 left join dw_prod.fct_policy_updates upd on currsnap1.latest_policy_update_id = upd.policy_update_id
 WHERE               
-    dp1.timestamp_renewal_offered is not null             
+    -- dp1.timestamp_renewal_offered is not null             
     --and dp1.state='ca'                
     and dp1.carrier <> 'canopius'     
     -- order by original_date_effective          
