@@ -18,6 +18,7 @@ with top as(SELECT
     effsnap1.coverage_a as initial_coverage_a,
     effsnap1.renewal_number as initial_term_number,
     
+    case when timestamp_renewal_offered is null then 0 else 1 end as renewal_offered_flag
     offersnap1.quote_premium_base + offersnap1.quote_premium_optionals + offersnap1.quote_policy_fee as initial_at_offer_quote_premium_w_pol_fees,
     offersnap1.coverage_a as initial_at_offer_coverage_a,
     
@@ -95,7 +96,7 @@ with top as(SELECT
     -- ren.county                
 FROM                
     dw_prod.dim_policies dp1 
-JOIN dw_prod_extracts.ext_policy_snapshots currsnap1 ON currsnap1.policy_id = dp1.policy_id  and currsnap1.date_snapshot = '2021-06-29'          
+JOIN dw_prod_extracts.ext_policy_snapshots currsnap1 ON currsnap1.policy_id = dp1.policy_id and currsnap1.date_snapshot = '2021-06-29'          
 left join dw_prod_extracts.ext_policy_snapshots effsnap1 on effsnap1.policy_id = dp1.policy_id and effsnap1.date_snapshot = dp1.date_effective
 left join dw_prod_extracts.ext_policy_snapshots offersnap1 on offersnap1.policy_id = dp1.policy_id and offersnap1.date_snapshot = date(dp1.timestamp_renewal_offered)
 LEFT JOIN dw_prod.dim_policies dp2 ON dp1.next_policy_id = dp2.policy_id                
