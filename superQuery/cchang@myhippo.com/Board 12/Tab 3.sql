@@ -18,7 +18,7 @@ with top as(SELECT
     effsnap1.coverage_a as initial_coverage_a,
     effsnap1.renewal_number as initial_term_number,
     
-    case when timestamp_renewal_offered is null then 0 else 1 end as renewal_offered_flag,
+    case when dp1.timestamp_renewal_offered is null then 0 else 1 end as renewal_offered_flag,
     offersnap1.quote_premium_base + offersnap1.quote_premium_optionals + offersnap1.quote_policy_fee as initial_at_offer_quote_premium_w_pol_fees,
     offersnap1.coverage_a as initial_at_offer_coverage_a,
     
