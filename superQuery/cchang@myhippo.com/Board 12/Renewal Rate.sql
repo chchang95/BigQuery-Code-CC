@@ -141,8 +141,8 @@ sum(renewal_offered_flag) as initial_at_offer_policy_count,
 sum(renewal_offer_premium_w_pol_fees) as renewal_offer_quote_premium_w_pol_fees,
 sum(renewal_offer_coverage_a) as renewal_offer_coverage_a,
 
-sum(renewal_accepted_premium_w_pol_fees) as renewal_accepted_premium_w_pol_fees,
-sum(renewal_accepted_coverage_a) as renewal_accepted_coverage_a,
+sum(renewal_accepted_premium_w_pol_fees) as renewal_effective_premium_w_pol_fees,
+sum(renewal_accepted_coverage_a) as renewal_effective_coverage_a,
 sum(renewal_accepted_flag) as renewal_policy_count
 
 
