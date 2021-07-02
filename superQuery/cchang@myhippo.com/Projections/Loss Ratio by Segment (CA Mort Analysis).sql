@@ -6,7 +6,7 @@ select eps.policy_id
 , state
 , date_trunc(date_policy_effective, MONTH) as term_policy_effective_month
 , date_trunc(date_first_effective, MONTH) as orig_policy_effective_month
-, case when date_policy_effective >= '2020-08-01' then 'Post August' else 'Pre August' end as policy_cohort
+, case when date_policy_effective >= '2020-08-21' then 'Post Moratorium' else 'Pre Moratorium' end as policy_cohort
 -- , round(Pure_premium_adjusted,0) as noncat_uw_score
 , property_data_address_zip as zip
 , case when property_data_year_built is null then 'Missing'
@@ -38,7 +38,7 @@ left join dbt_cchin.ca_moratorium_zips_august_2020 zips on safe_cast(eps.propert
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
 left join dw_prod.dim_organizations do on org_id = do.organization_id
 left join dbt_actuaries.uw_model_v2_scores_20210131 using (policy_id)
-where date_snapshot = '2021-01-31'
+where date_snapshot = '2021-06-30'
 )
 ,claims_supp as (
 select mon.*
@@ -58,7 +58,7 @@ select mon.*
 ,coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) as expense_incurred_calc
 ,coalesce(loss_paid,0) + coalesce(loss_net_reserve,0) + coalesce(expense_paid,0) + coalesce(expense_net_reserve,0) - coalesce(recoveries,0) as total_incurred_calc
 from dw_prod_extracts.ext_all_claims_combined mon
-left join dbt_actuaries.cat_coding_w_loss_20210131 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
+left join dbt_actuaries.cat_coding_w_loss_20210630 cc on (case when tbl_source = 'topa_tpa_claims' then trim(mon.claim_number,'0') else mon.claim_number end) = cast(cc.claim_number as string)
 left join (select policy_id, renewal_number from dw_prod_extracts.ext_policy_snapshots where date_snapshot = '2021-01-31') using(policy_id)
 left join dbt_cchin.claims_mappings_202012 map on mon.peril = map.string_field_0
 left join (select policy_id, date_first_effective from dw_prod.dim_policies left join dw_prod.dim_policy_groups using (policy_group_id)) using (policy_id)
@@ -77,13 +77,13 @@ SELECT
     sum(case when claim_closed_no_total_payment is true then 0 else 1 end) as total_reported_claim_count_x_CNP,
     sum(case when claim_closed_no_total_payment is true then 0 when CAT = 'Y' then 1 else 0 end) as cat_reported_claim_count_x_CNP,
     sum(case when claim_closed_no_total_payment is true then 0 when CAT = 'N' then 1 else 0 end) as noncat_reported_claim_count_x_CNP,
-    sum(case when new_peril_group = 'water' and CAT = 'N' then total_incurred_calc else 0 end) as noncat_water_incurred,
-    sum(case when claim_closed_no_total_payment is true then 0 when new_peril_group = 'water' and CAT = 'N' then 1 else 0 end) as noncat_water_reported_claim_count_x_CNP
+    sum(case when new_peril_group = 'Water' and CAT = 'N' then total_incurred_calc else 0 end) as noncat_water_incurred,
+    sum(case when claim_closed_no_total_payment is true then 0 when new_peril_group = 'Water' and CAT = 'N' then 1 else 0 end) as noncat_water_reported_claim_count_x_CNP
 FROM
     claims_supp mon
   where is_ebsl is false
   and carrier <> 'canopius'
-  and date_knowledge = '2021-01-31'
+  and date_knowledge = '2021-06-30'
   group by 1,2,3
  )
 , premium as (
@@ -102,7 +102,7 @@ FROM
 from dw_prod_extracts.ext_policy_monthly_premiums epud
     left join (select policy_id, on_level_factor from dw_staging_extracts.ext_policy_snapshots where date_snapshot = '2021-01-31') seps on seps.policy_id = epud.policy_id
         where 1=1
-        and date_knowledge = '2021-01-31'
+        and date_knowledge = '2021-06-30'
         and carrier <> 'canopius'
 group by 1,2,3
 )
@@ -183,8 +183,8 @@ extract(year from accident_month) as accident_year
 ,sum(coalesce(a.earned_exposure,0)) as earned_exposure
 # ,sum(coalesce(a.written_policy_fee,0)) as written_policy_fee
 # ,sum(coalesce(a.earned_policy_fee,0)) as earned_policy_fee
--- ,sum(coalesce(on_leveled_written_prem_x_ebsl_x_fees,0)) as on_leveled_written_prem_x_ebsl_x_fees
--- ,sum(coalesce(on_leveled_earned_prem_x_ebsl_x_fees,0)) as on_leveled_earned_prem_x_ebsl_x_fees
+,sum(coalesce(on_leveled_written_prem_x_ebsl_x_fees,0)) as on_leveled_written_prem_x_ebsl_x_fees
+,sum(coalesce(on_leveled_earned_prem_x_ebsl_x_fees,0)) as on_leveled_earned_prem_x_ebsl_x_fees
 
 from aggregated a
 left join policies using(policy_id) 
