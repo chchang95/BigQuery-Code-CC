@@ -162,9 +162,9 @@ extract(year from accident_month) as accident_year
 -- ,zip_status
 -- ,year_built
 ,tenure
-,policy_cohort
--- ,term_policy_effective_month
-# ,orig_policy_effective_month
+-- ,policy_cohort
+,term_policy_effective_month
+,orig_policy_effective_month
 
 ,sum(coalesce(cat_incurred,0)) as cat_incurred
 ,sum(coalesce(noncat_incurred,0)) as noncat_incurred
@@ -193,12 +193,13 @@ and state = 'ca'
 and product <> 'ho5'
 -- and accident_month >= '2019-01-01'
 -- and policy_id = 2051353
-group by 1,2,3,4,5,6,7,8
+group by 1,2,3,4,5,6,7,8,9
 )
 select 
 *
 -- sum(total_incurred), sum(noncat_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
 from final
 where accident_year is not null
+and orig_policy_effective_month >= '2020-05-01'
 -- and calendar_month <> accident_month
 order by 2
