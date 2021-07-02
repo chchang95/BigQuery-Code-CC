@@ -196,8 +196,8 @@ and product <> 'ho5'
 group by 1,2,3,4,5,6,7,8
 )
 select 
--- *
-sum(total_incurred), sum(noncat_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
+*
+-- sum(total_incurred), sum(noncat_incurred), sum(cat_incurred), sum(written_prem_x_ebsl_x_fees)
 from final
 where accident_year is not null
 -- and calendar_month <> accident_month
