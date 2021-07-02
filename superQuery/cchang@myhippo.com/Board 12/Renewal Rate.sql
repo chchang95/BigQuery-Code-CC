@@ -117,7 +117,9 @@ WHERE 1=1
         and dp1.is_rewritten is false
 
 )
-select state, product, channel, 
+select 
+
+state, product, channel, 
 initial_policy_effective_month,
 initial_term_number,
 renewal_offered_flag,
@@ -136,8 +138,8 @@ sum(initial_at_offer_premium_w_pol_fees) as initial_at_offer_quote_premium_w_pol
 sum(initial_at_offer_coverage_a) as initial_at_offer_coverage_a,
 sum(renewal_offered_flag) as initial_at_offer_policy_count,
 
-sum(renewal_offer_premium_w_pol_fees) as initial_at_offer_quote_premium_w_pol_fees,
-sum(renewal_offer_coverage_a) as initial_at_offer_coverage_a,
+sum(renewal_offer_premium_w_pol_fees) as renewal_offer_quote_premium_w_pol_fees,
+sum(renewal_offer_coverage_a) as renewal_offer_coverage_a,
 
 sum(renewal_accepted_premium_w_pol_fees) as renewal_quote_premium_w_pol_fees,
 sum(renewal_accepted_coverage_a) as renewal_coverage_a,
