@@ -166,9 +166,9 @@ extract(year from accident_month) as accident_year
 -- ,term_policy_effective_month
 # ,orig_policy_effective_month
 
-# ,sum(coalesce(cat_incurred,0)) as cat_incurred
+,sum(coalesce(cat_incurred,0)) as cat_incurred
 ,sum(coalesce(noncat_incurred,0)) as noncat_incurred
-# ,sum(coalesce(total_incurred,0)) as total_incurred
+,sum(coalesce(total_incurred,0)) as total_incurred
 ,sum(coalesce(noncat_capped_100k,0)) as noncat_capped_100k
 # ,sum(coalesce(noncat_excess_100k,0)) as noncat_excess_100k
 # ,sum(coalesce(total_reported_claim_count_x_CNP,0)) as total_reported_claim_count_x_CNP
