@@ -1,6 +1,6 @@
 
 with top as(SELECT 
-
+    policy_number,
     dp1.date_effective as initial_policy_effective_date,  
     date_trunc(dp1.date_effective, month) as initial_policy_effective_month,
     dp1.policy_id as initial_policy_id,
