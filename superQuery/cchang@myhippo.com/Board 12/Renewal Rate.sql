@@ -31,7 +31,7 @@ with top as(SELECT
     currsnap1.is_cancellation_flat as original_cancellation_flat_flag,                
     currsnap1.date_cancellation as original_date_cancellation,   
     
-    currsnap2.cancellation_reason1 as renewal_cancellation
+    currsnap2.cancellation_reason1 as renewal_cancellation,
     currsnap2.is_cancellation_flat as renewal_cancellation_flat_flag,             
     currsnap2.date_cancellation as renewal_date_cancellation,   
     
