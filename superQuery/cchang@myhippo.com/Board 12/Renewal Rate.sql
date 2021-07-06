@@ -89,8 +89,9 @@ WHERE 1=1
 -- limit 100000
 
 select * from top
-where state = 'ca'
+where 1=1
+-- and state = 'ca'
 -- and initial_policy_effective_month = '2020-05-01'
 and renewal_effective_premium_w_pol_fees = 0
-and renewal_accepted_flag = 1
+and renewal_accepted_flag <> 0
 
