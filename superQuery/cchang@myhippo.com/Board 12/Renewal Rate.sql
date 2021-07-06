@@ -31,6 +31,10 @@ with top as(SELECT
     currsnap1.is_cancellation_flat as original_cancellation_flat_flag,                
     currsnap1.date_cancellation as original_date_cancellation,   
     
+    currsnap2.cancellation_reason1 as renewal_cancellation
+    currsnap2.is_cancellation_flat as renewal_cancellation_flat_flag,             
+    currsnap2.date_cancellation as renewal_date_cancellation,   
+    
     dp1.channel,              
     dp1.state,                
     dp1.product,     
@@ -44,7 +48,8 @@ left join dw_prod_extracts.ext_policy_snapshots effsnap1 on effsnap1.policy_id =
 left join dw_prod_extracts.ext_policy_snapshots offersnap1 on offersnap1.policy_id = dp1.policy_id and offersnap1.date_snapshot = date(dp1.timestamp_renewal_offered)
 LEFT JOIN dw_prod.dim_policies dp2 ON dp1.next_policy_id = dp2.policy_id                
 LEFT JOIN dw_prod_extracts.ext_policy_snapshots renoffersnap2 ON renoffersnap2.policy_id = dp1.next_policy_id and renoffersnap2.date_snapshot = date(dp1.timestamp_renewal_offered)     
-LEFT JOIN dw_prod_extracts.ext_policy_snapshots rensnap2 ON rensnap2.policy_id = dp1.next_policy_id and rensnap2.date_snapshot = (case when dp2.date_effective > '2021-06-29' then '2021-06-29' else dp2.date_effective end)        
+LEFT JOIN dw_prod_extracts.ext_policy_snapshots rensnap2 ON rensnap2.policy_id = dp1.next_policy_id and rensnap2.date_snapshot = (case when dp2.date_effective > '2021-06-29' then '2021-06-29' else dp2.date_effective end) 
+LEFT JOIN dw_prod_extracts.ext_policy_snapshots currsnap2 ON currsnap2.policy_id = dp1.next_policy_id and currsnap2.date_snapshot = '2021-06-29'        
 left join dw_prod.fct_policy_updates upd on currsnap1.latest_policy_update_id = upd.policy_update_id
 WHERE 1=1
     -- dp1.timestamp_renewal_offered is not null        
