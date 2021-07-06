@@ -90,7 +90,7 @@ WHERE 1=1
 
 select * from top
 where state = 'ca'
-and initial_policy_effective_month = '2020-05-01'
+-- and initial_policy_effective_month = '2020-05-01'
 and renewal_effective_premium_w_pol_fees = 0
 and renewal_accepted_flag = 1
 
