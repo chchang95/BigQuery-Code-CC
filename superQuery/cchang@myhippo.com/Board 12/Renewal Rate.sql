@@ -56,7 +56,7 @@ WHERE 1=1
 
 )
 select 
-
+policy_number,
 state, product, channel, 
 initial_policy_effective_month,
 initial_term_number,
@@ -84,7 +84,7 @@ sum(case when renewal_accepted_flag = 0 then 0 else renewal_effective_coverage_a
 sum(renewal_accepted_flag) as renewal_policy_count
 
 from top
-group by 1,2,3,4,5,6,7,8,9,10,11,12
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 order by initial_policy_effective_month asc
 
 -- select * from top
