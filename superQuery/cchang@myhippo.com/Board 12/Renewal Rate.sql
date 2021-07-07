@@ -60,7 +60,7 @@ WHERE 1=1
     --and dp1.state='ca'                
     and dp1.carrier <> 'canopius'     
     -- order by original_date_effective   
-        and dp1.is_rewritten is false
+    and dp1.is_rewritten is false
 
 )
 -- select 
