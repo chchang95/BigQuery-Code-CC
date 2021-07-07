@@ -37,5 +37,5 @@ where 1=1
 -- and date_policy_effective >= '2021-01-01'
 -- and status = 'active'
 -- and state in ('ca')
-group by 1
+group by 1,2,3,4,5,6
 order by 2 desc
