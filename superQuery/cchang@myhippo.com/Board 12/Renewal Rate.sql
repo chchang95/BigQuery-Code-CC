@@ -63,45 +63,47 @@ WHERE 1=1
     and dp1.is_rewritten is false
 
 )
--- select 
--- policy_number,
--- state, product, channel, 
--- initial_policy_effective_month,
--- initial_term_number,
--- renewal_offered_flag,
--- renewal_accepted_flag,
--- renewal_flat_cancelled,
--- renewal_policy_effective_month,
--- renewal_offered_month,
--- renewal_term_number,
--- original_cancellation_reason,
--- original_cancellation_flat_flag,
+select 
+policy_number,
+state, product, channel, 
+initial_policy_effective_month,
+initial_term_number,
+renewal_offered_flag,
+renewal_accepted_flag,
+renewal_flat_cancelled,
+renewal_policy_effective_month,
+renewal_offered_month,
+renewal_term_number,
+original_cancellation_reason,
+original_cancellation_flat_flag,
 
--- sum(initial_written_premium_w_pol_fees) as initial_written_premium_w_pol_fees,
--- sum(initial_coverage_a) as initial_coverage_a,
--- sum(1) as initial_policy_count,
+sum(initial_written_premium_w_pol_fees) as initial_written_premium_w_pol_fees,
+sum(initial_coverage_a) as initial_coverage_a,
+sum(1) as initial_policy_count,
 
--- sum(case when renewal_offered_flag = 0 then 0 else initial_at_offer_premium_w_pol_fees end) as initial_at_offer_quote_premium_w_pol_fees,
--- sum(case when renewal_offered_flag = 0 then 0 else initial_at_offer_coverage_a end) as initial_at_offer_coverage_a,
--- sum(renewal_offered_flag) as initial_at_offer_policy_count,
+sum(case when renewal_offered_flag = 0 then 0 else initial_at_offer_premium_w_pol_fees end) as initial_at_offer_quote_premium_w_pol_fees,
+sum(case when renewal_offered_flag = 0 then 0 else initial_at_offer_coverage_a end) as initial_at_offer_coverage_a,
+sum(renewal_offered_flag) as initial_at_offer_policy_count,
 
--- sum(renewal_offer_premium_w_pol_fees) as renewal_offer_quote_premium_w_pol_fees,
--- sum(renewal_offer_coverage_a) as renewal_offer_coverage_a,
+sum(renewal_offer_premium_w_pol_fees) as renewal_offer_quote_premium_w_pol_fees,
+sum(renewal_offer_coverage_a) as renewal_offer_coverage_a,
 
--- sum(case when renewal_accepted_flag = 0 then 0 else renewal_effective_premium_w_pol_fees end) as renewal_effective_premium_w_pol_fees,
--- sum(case when renewal_accepted_flag = 0 then 0 else renewal_effective_coverage_a end) as renewal_effective_coverage_a,
--- sum(renewal_accepted_flag) as renewal_policy_count,
+sum(case when renewal_accepted_flag = 0 then 0 else renewal_effective_premium_w_pol_fees end) as renewal_effective_premium_w_pol_fees,
+sum(case when renewal_accepted_flag = 0 then 0 else renewal_effective_coverage_a end) as renewal_effective_coverage_a,
+sum(renewal_accepted_flag) as renewal_policy_count,
 
--- sum(renewal_flat_cancelled) as renewal_flat_cancelled_count
+sum(case when renewal_flat_cancelled = 0 then 0 else renewal_effective_premium_w_pol_fees end) as renewal_post_flat_cancel_premium_w_pol_fees,
+sum(case when renewal_flat_cancelled = 0 then 0 else renewal_effective_coverage_a end) as renewal_post_flat_cancel_coverage_a,
+sum(renewal_flat_cancelled) as renewal_flat_cancelled_count
 
--- from top
--- group by 1,2,3,4,5,6,7,8,9,10,11,12,13
--- limit 100000
+from top
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+limit 100000
 
-select * from top
-where 1=1
--- and state = 'ca'
--- and initial_policy_effective_month between '2020-01-01' and '2020-05-01'
-and renewal_effective_premium_w_pol_fees = 0
-and renewal_accepted_flag <> 0
+-- select * from top
+-- where 1=1
+-- -- and state = 'ca'
+-- -- and initial_policy_effective_month between '2020-01-01' and '2020-05-01'
+-- and renewal_effective_premium_w_pol_fees = 0
+-- and renewal_accepted_flag <> 0
 
