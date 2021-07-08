@@ -32,7 +32,6 @@ with top as(SELECT
     currsnap1.date_cancellation as original_date_cancellation,   
     
     currsnap2.cancellation_reason1 as renewal_cancellation,
-    -- currsnap2.is_cancellation_flat as renewal_cancellation_flat_flag,             
     currsnap2.date_cancellation as renewal_date_cancellation,   
     case when dp2.date_activation_update_made is null then 0 
          when currsnap2.date_cancellation = dp2.date_effective then 1
@@ -63,7 +62,7 @@ WHERE 1=1
     and dp1.is_rewritten is false
 
 )
-select 
+,agg as (select 
 -- policy_number,
 state, product, channel, 
 initial_policy_effective_month,
@@ -103,12 +102,12 @@ sum(renewal_flat_cancelled) as renewal_flat_cancelled_count
 
 from top
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
--- limit 100000
+)
 
--- select * from top
--- where 1=1
--- -- and state = 'ca'
--- -- and initial_policy_effective_month between '2020-01-01' and '2020-05-01'
+select * from agg
+where 1=1
+-- and state = 'ca'
+-- and initial_policy_effective_month between '2020-01-01' and '2020-05-01'
 -- and renewal_effective_premium_w_pol_fees = 0
 -- and renewal_accepted_flag <> 0
-
+and initial_at_offer_to_renewal_offer > 0.6
