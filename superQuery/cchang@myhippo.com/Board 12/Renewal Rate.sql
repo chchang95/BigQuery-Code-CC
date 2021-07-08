@@ -98,7 +98,7 @@ sum(renewal_flat_cancelled) as renewal_flat_cancelled_count
 
 from top
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
-limit 100000
+-- limit 100000
 
 -- select * from top
 -- where 1=1
