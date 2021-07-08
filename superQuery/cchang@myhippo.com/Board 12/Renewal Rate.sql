@@ -94,7 +94,7 @@ sum(renewal_accepted_flag) as renewal_policy_count,
 
 sum(case when renewal_flat_cancelled = 1 then 0 else renewal_effective_premium_w_pol_fees end) as renewal_post_flat_cancel_premium_w_pol_fees,
 sum(case when renewal_flat_cancelled = 1 then 0 else renewal_effective_coverage_a end) as renewal_post_flat_cancel_coverage_a,
-sum(1-renewal_flat_cancelled) as renewal_post_flat_cancel_count
+sum(1-renewal_flat_cancelled) as renewal_post_flat_cancel_count,
 sum(renewal_flat_cancelled) as renewal_flat_cancelled_count
 
 from top
