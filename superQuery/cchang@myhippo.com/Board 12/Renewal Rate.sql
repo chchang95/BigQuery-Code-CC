@@ -64,7 +64,7 @@ WHERE 1=1
 
 )
 select 
-policy_number,
+-- policy_number,
 state, product, channel, 
 initial_policy_effective_month,
 initial_term_number,
@@ -102,7 +102,7 @@ sum(1-renewal_flat_cancelled) as renewal_post_flat_cancel_count,
 sum(renewal_flat_cancelled) as renewal_flat_cancelled_count
 
 from top
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
 -- limit 100000
 
 -- select * from top
