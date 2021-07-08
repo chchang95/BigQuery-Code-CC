@@ -107,7 +107,7 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
 select * from agg
 where 1=1
 -- and state = 'ca'
--- and initial_policy_effective_month between '2020-01-01' and '2020-05-01'
+and initial_policy_effective_month between '2020-01-01' and '2020-05-01'
 -- and renewal_effective_premium_w_pol_fees = 0
 -- and renewal_accepted_flag <> 0
 and initial_at_offer_to_renewal_offer > 0.6
