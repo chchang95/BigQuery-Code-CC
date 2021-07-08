@@ -1,8 +1,9 @@
 select
--- , carrier,
+carrier,
 state,
 -- property_data_address_zip,
 -- property_data_address_county,
+reinsurance_treaty_property,
 product,
 status,
 date_snapshot,
@@ -37,5 +38,5 @@ and extract(day from DATE_ADD(date_snapshot, interval 1 day)) = 1
 -- and date_policy_effective >= '2021-01-01'
 -- and status = 'active'
 -- and state in ('ca')
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7,8
 order by 4 desc
