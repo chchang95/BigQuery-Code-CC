@@ -76,6 +76,11 @@ renewal_offered_month,
 renewal_term_number,
 original_cancellation_reason,
 original_cancellation_flat_flag,
+case when renewal_offered_flag = 0 then null else round(initial_at_offer_premium_w_pol_fees / initial_written_premium_w_pol_fees,1) end as initial_to_initial_at_offer,
+case when renewal_offered_flag = 0 then null else round(renewal_offer_premium_w_pol_fees / initial_at_offer_premium_w_pol_fees,1) end as initial_at_offer_to_renewal_offer,
+case when renewal_accepted_flag = 0 then null else round(renewal_effective_premium_w_pol_fees / renewal_offer_premium_w_pol_fees,1) end as renewal_offer_to_renewal_effective,
+case when renewal_accepted_flag = 0 then null else round(renewal_effective_premium_w_pol_fees / initial_written_premium_w_pol_fees,1) end as initial_to_renewal_effective,
+
 
 sum(initial_written_premium_w_pol_fees) as initial_written_premium_w_pol_fees,
 sum(initial_coverage_a) as initial_coverage_a,
@@ -85,8 +90,8 @@ sum(case when renewal_offered_flag = 0 then 0 else initial_at_offer_premium_w_po
 sum(case when renewal_offered_flag = 0 then 0 else initial_at_offer_coverage_a end) as initial_at_offer_coverage_a,
 sum(renewal_offered_flag) as initial_at_offer_policy_count,
 
-sum(renewal_offer_premium_w_pol_fees) as renewal_offer_quote_premium_w_pol_fees,
-sum(renewal_offer_coverage_a) as renewal_offer_coverage_a,
+sum(case when renewal_offered_flag = 0 then 0 else renewal_offer_premium_w_pol_fees end) as renewal_offer_quote_premium_w_pol_fees,
+sum(case when renewal_offered_flag = 0 then 0 else renewal_offer_coverage_a end) as renewal_offer_coverage_a,
 
 sum(case when renewal_accepted_flag = 0 then 0 else renewal_effective_premium_w_pol_fees end) as renewal_effective_premium_w_pol_fees,
 sum(case when renewal_accepted_flag = 0 then 0 else renewal_effective_coverage_a end) as renewal_effective_coverage_a,
@@ -98,7 +103,7 @@ sum(1-renewal_flat_cancelled) as renewal_post_flat_cancel_count,
 sum(renewal_flat_cancelled) as renewal_flat_cancelled_count
 
 from top
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
 -- limit 100000
 
 -- select * from top
