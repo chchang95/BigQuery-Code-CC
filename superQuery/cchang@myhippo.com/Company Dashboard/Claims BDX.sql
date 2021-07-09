@@ -56,7 +56,7 @@ SELECT DISTINCT
   left join (select claim_id, claim_number, loss_description, damage_description from dw_prod.dim_claims) fc using (claim_number)
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join dbt_actuaries.cat_coding_w_loss_20210524 cc on mon.claim_number = cast(cc.claim_number as string)
-  WHERE date_knowledge = '2021-06-30'
+  WHERE date_knowledge = '2021-07-07'
   and carrier <> 'canopius'
 --   and is_ebsl is false
   )
@@ -90,7 +90,7 @@ SELECT DISTINCT
   ,Total_Recovery
   ,claim_id
 --   ,organization_id
---   ,CAT_code as internal_CAT_code
+  ,CAT_code as internal_CAT_code
   ,loss_description
   ,damage_description
 --   ,treaty
@@ -98,6 +98,7 @@ SELECT DISTINCT
 --   ,Total_Recoverable_Depreciation
   from x
   where 1=1
+  and cat_code is not null
 --   and report_date >= '2021-03-01'
 --   and cause_of_loss in ('wind','hail')
 --   and carrier = 'spinnaker'
