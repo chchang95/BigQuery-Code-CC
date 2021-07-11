@@ -56,6 +56,6 @@ coalesce(loss_paid,0) - coalesce(total_recovery,0) + coalesce(expense_paid,0) as
 peril as Cause_of_Loss,
   from x
   where 1=1
-  and peril in ('hail','wind','roof_leak')
+  and peril in ('hail')
 --   and (recoded_loss_event in ('2115_direct', '2116_direct','2117_direct','2115_indirect','2116_indirect','2117_indirect','2115_indeterminate','2117_indeterminate')
 --         or (peril = 'pipe_freezing' and date_first_notice_of_loss >= '2021-06-30'))
