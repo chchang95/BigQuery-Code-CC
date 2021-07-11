@@ -32,8 +32,8 @@ SELECT DISTINCT
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join dbt_actuaries.cat_coding_w_loss_20210630 cc on mon.claim_number = cast(cc.claim_number as string)
 --   left join dbt_actuaries.sf_claims_as_20210506_v1 sf on mon.claim_id = sf.pod_claim_id
-  WHERE (date_knowledge = date_add(last_day(date_sub(date_knowledge,interval 1 week), week(sunday)), interval 1 day) or date_knowledge = '2021-07-07')
-  and date_first_notice_of_loss <= '2021-07-07'
+  WHERE (date_knowledge = date_add(last_day(date_sub(date_knowledge,interval 1 week), week(sunday)), interval 1 day) or date_knowledge = '2021-07-10')
+  and date_first_notice_of_loss <= '2021-07-10'
   and carrier <> 'canopius'
 --   and is_ebsl is false
   )
@@ -56,5 +56,6 @@ coalesce(loss_paid,0) - coalesce(total_recovery,0) + coalesce(expense_paid,0) as
 peril as Cause_of_Loss,
   from x
   where 1=1
-  and (recoded_loss_event in ('2115_direct', '2116_direct','2117_direct','2115_indirect','2116_indirect','2117_indirect','2115_indeterminate','2117_indeterminate')
-        or (peril = 'pipe_freezing' and date_first_notice_of_loss >= '2021-06-30'))
+  and peril in ('hail','wind','roof_leak')
+--   and (recoded_loss_event in ('2115_direct', '2116_direct','2117_direct','2115_indirect','2116_indirect','2117_indirect','2115_indeterminate','2117_indeterminate')
+--         or (peril = 'pipe_freezing' and date_first_notice_of_loss >= '2021-06-30'))
