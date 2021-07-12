@@ -32,7 +32,7 @@ SELECT DISTINCT
   left join (select policy_id, case when organization_id is null then 0 else organization_id end as org_id from dw_prod.dim_policies) dp on mon.policy_id = dp.policy_id
   left join dbt_actuaries.cat_coding_w_loss_20210630 cc on mon.claim_number = cast(cc.claim_number as string)
 --   left join dbt_actuaries.sf_claims_as_20210506_v1 sf on mon.claim_id = sf.pod_claim_id
-  WHERE (date_knowledge = date_add(last_day(date_sub(date_knowledge,interval 1 week), week(sunday)), interval 1 day) or date_knowledge = '2021-07-10')
+  WHERE (date_knowledge = date_add(last_day(date_sub(date_knowledge,interval 1 week), week(sunday)), interval 1 day) or date_knowledge = '2021-07-11')
   and date_first_notice_of_loss <= '2021-07-11'
   and date_first_notice_of_loss >= '2021-01-01'
   and carrier <> 'canopius'
